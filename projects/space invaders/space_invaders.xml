@@ -1,0 +1,690 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="events_when_event_happens" x="10" y="1">
+    <field name="EVENT">ON_STARTUP</field>
+    <statement name="EVENT_CODE">
+      <block type="variables_set">
+        <field name="VAR">alive</field>
+        <value name="VALUE">
+          <block type="logic_boolean">
+            <field name="BOOL">TRUE</field>
+          </block>
+        </value>
+        <next>
+          <block type="sprites_set_current_sprite">
+            <field name="sprite">ship</field>
+            <next>
+              <block type="motion_set_x_to">
+                <value name="X">
+                  <block type="math_number">
+                    <field name="NUM">300</field>
+                  </block>
+                </value>
+                <next>
+                  <block type="motion_set_y_to">
+                    <value name="Y">
+                      <block type="math_number">
+                        <field name="NUM">375</field>
+                      </block>
+                    </value>
+                    <next>
+                      <block type="sprites_show_current_sprite">
+                        <next>
+                          <block type="sprites_set_current_sprite">
+                            <field name="sprite">bullet</field>
+                            <next>
+                              <block type="sprites_show_current_sprite">
+                                <next>
+                                  <block type="motion_set_y_to">
+                                    <value name="Y">
+                                      <block type="math_number">
+                                        <field name="NUM">-100</field>
+                                      </block>
+                                    </value>
+                                    <next>
+                                      <block type="sprites_set_current_sprite">
+                                        <field name="sprite">alien</field>
+                                        <next>
+                                          <block type="sprites_hide_current_sprite">
+                                            <next>
+                                              <block type="controls_repeat_ext">
+                                                <value name="TIMES">
+                                                  <block type="math_number">
+                                                    <field name="NUM">15</field>
+                                                  </block>
+                                                </value>
+                                                <statement name="DO">
+                                                  <block type="sprites_create_clone_of_current_sprite"></block>
+                                                </statement>
+                                                <next>
+                                                  <block type="variables_set">
+                                                    <field name="VAR">number_of_aliens</field>
+                                                    <value name="VALUE">
+                                                      <block type="math_number">
+                                                        <field name="NUM">1</field>
+                                                      </block>
+                                                    </value>
+                                                    <next>
+                                                      <block type="variables_set">
+                                                        <field name="VAR">offset_y</field>
+                                                        <value name="VALUE">
+                                                          <block type="math_number">
+                                                            <field name="NUM">30</field>
+                                                          </block>
+                                                        </value>
+                                                        <next>
+                                                          <block type="variables_set">
+                                                            <field name="VAR">origin_x</field>
+                                                            <value name="VALUE">
+                                                              <block type="math_number">
+                                                                <field name="NUM">30</field>
+                                                              </block>
+                                                            </value>
+                                                            <next>
+                                                              <block type="variables_set">
+                                                                <field name="VAR">offset_x</field>
+                                                                <value name="VALUE">
+                                                                  <block type="variables_get">
+                                                                    <field name="VAR">origin_x</field>
+                                                                  </block>
+                                                                </value>
+                                                                <next>
+                                                                  <block type="sprites_for_each_clone_of_current_sprite">
+                                                                    <statement name="STATEMENT_CODE">
+                                                                      <block type="motion_set_y_to">
+                                                                        <value name="Y">
+                                                                          <block type="variables_get">
+                                                                            <field name="VAR">offset_y</field>
+                                                                          </block>
+                                                                        </value>
+                                                                        <next>
+                                                                          <block type="motion_set_x_to">
+                                                                            <value name="X">
+                                                                              <block type="variables_get">
+                                                                                <field name="VAR">offset_x</field>
+                                                                              </block>
+                                                                            </value>
+                                                                            <next>
+                                                                              <block type="variables_set">
+                                                                                <field name="VAR">offset_x</field>
+                                                                                <value name="VALUE">
+                                                                                  <block type="math_arithmetic">
+                                                                                    <field name="OP">ADD</field>
+                                                                                    <value name="A">
+                                                                                      <block type="variables_get">
+                                                                                        <field name="VAR">offset_x</field>
+                                                                                      </block>
+                                                                                    </value>
+                                                                                    <value name="B">
+                                                                                      <block type="math_number">
+                                                                                        <field name="NUM">70</field>
+                                                                                      </block>
+                                                                                    </value>
+                                                                                  </block>
+                                                                                </value>
+                                                                                <next>
+                                                                                  <block type="controls_if">
+                                                                                    <value name="IF0">
+                                                                                      <block type="logic_compare">
+                                                                                        <field name="OP">EQ</field>
+                                                                                        <value name="A">
+                                                                                          <block type="math_modulo">
+                                                                                            <value name="DIVIDEND">
+                                                                                              <shadow type="math_number">
+                                                                                                <field name="NUM">64</field>
+                                                                                              </shadow>
+                                                                                              <block type="variables_get">
+                                                                                                <field name="VAR">number_of_aliens</field>
+                                                                                              </block>
+                                                                                            </value>
+                                                                                            <value name="DIVISOR">
+                                                                                              <shadow type="math_number">
+                                                                                                <field name="NUM">10</field>
+                                                                                              </shadow>
+                                                                                              <block type="math_number">
+                                                                                                <field name="NUM">5</field>
+                                                                                              </block>
+                                                                                            </value>
+                                                                                          </block>
+                                                                                        </value>
+                                                                                        <value name="B">
+                                                                                          <block type="math_number">
+                                                                                            <field name="NUM">0</field>
+                                                                                          </block>
+                                                                                        </value>
+                                                                                      </block>
+                                                                                    </value>
+                                                                                    <statement name="DO0">
+                                                                                      <block type="variables_set">
+                                                                                        <field name="VAR">offset_y</field>
+                                                                                        <value name="VALUE">
+                                                                                          <block type="math_arithmetic">
+                                                                                            <field name="OP">ADD</field>
+                                                                                            <value name="A">
+                                                                                              <block type="variables_get">
+                                                                                                <field name="VAR">offset_y</field>
+                                                                                              </block>
+                                                                                            </value>
+                                                                                            <value name="B">
+                                                                                              <block type="math_number">
+                                                                                                <field name="NUM">70</field>
+                                                                                              </block>
+                                                                                            </value>
+                                                                                          </block>
+                                                                                        </value>
+                                                                                        <next>
+                                                                                          <block type="variables_set">
+                                                                                            <field name="VAR">offset_x</field>
+                                                                                            <value name="VALUE">
+                                                                                              <block type="variables_get">
+                                                                                                <field name="VAR">origin_x</field>
+                                                                                              </block>
+                                                                                            </value>
+                                                                                          </block>
+                                                                                        </next>
+                                                                                      </block>
+                                                                                    </statement>
+                                                                                    <next>
+                                                                                      <block type="variables_set">
+                                                                                        <field name="VAR">number_of_aliens</field>
+                                                                                        <value name="VALUE">
+                                                                                          <block type="math_arithmetic">
+                                                                                            <field name="OP">ADD</field>
+                                                                                            <value name="A">
+                                                                                              <block type="variables_get">
+                                                                                                <field name="VAR">number_of_aliens</field>
+                                                                                              </block>
+                                                                                            </value>
+                                                                                            <value name="B">
+                                                                                              <block type="math_number">
+                                                                                                <field name="NUM">1</field>
+                                                                                              </block>
+                                                                                            </value>
+                                                                                          </block>
+                                                                                        </value>
+                                                                                      </block>
+                                                                                    </next>
+                                                                                  </block>
+                                                                                </next>
+                                                                              </block>
+                                                                            </next>
+                                                                          </block>
+                                                                        </next>
+                                                                      </block>
+                                                                    </statement>
+                                                                    <next>
+                                                                      <block type="variables_set">
+                                                                        <field name="VAR">direction</field>
+                                                                        <value name="VALUE">
+                                                                          <block type="text">
+                                                                            <field name="TEXT">r</field>
+                                                                          </block>
+                                                                        </value>
+                                                                        <next>
+                                                                          <block type="variables_set">
+                                                                            <field name="VAR">down</field>
+                                                                            <value name="VALUE">
+                                                                              <block type="logic_boolean">
+                                                                                <field name="BOOL">FALSE</field>
+                                                                              </block>
+                                                                            </value>
+                                                                          </block>
+                                                                        </next>
+                                                                      </block>
+                                                                    </next>
+                                                                  </block>
+                                                                </next>
+                                                              </block>
+                                                            </next>
+                                                          </block>
+                                                        </next>
+                                                      </block>
+                                                    </next>
+                                                  </block>
+                                                </next>
+                                              </block>
+                                            </next>
+                                          </block>
+                                        </next>
+                                      </block>
+                                    </next>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="events_when_event_happens" x="99" y="917">
+    <field name="EVENT">EACH_FRAME</field>
+    <statement name="EVENT_CODE">
+      <block type="controls_if">
+        <value name="IF0">
+          <block type="variables_get">
+            <field name="VAR">alive</field>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="sprites_set_current_sprite">
+            <field name="sprite">alien</field>
+            <next>
+              <block type="sprites_for_each_clone_of_current_sprite">
+                <statement name="STATEMENT_CODE">
+                  <block type="controls_if">
+                    <value name="IF0">
+                      <block type="logic_compare">
+                        <field name="OP">GTE</field>
+                        <value name="A">
+                          <block type="sprites_value_of_x"></block>
+                        </value>
+                        <value name="B">
+                          <block type="math_number">
+                            <field name="NUM">550</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <statement name="DO0">
+                      <block type="variables_set">
+                        <field name="VAR">direction</field>
+                        <value name="VALUE">
+                          <block type="text">
+                            <field name="TEXT">l</field>
+                          </block>
+                        </value>
+                        <next>
+                          <block type="variables_set">
+                            <field name="VAR">down</field>
+                            <value name="VALUE">
+                              <block type="logic_boolean">
+                                <field name="BOOL">TRUE</field>
+                              </block>
+                            </value>
+                          </block>
+                        </next>
+                      </block>
+                    </statement>
+                    <next>
+                      <block type="controls_if">
+                        <value name="IF0">
+                          <block type="logic_compare">
+                            <field name="OP">LTE</field>
+                            <value name="A">
+                              <block type="sprites_value_of_x"></block>
+                            </value>
+                            <value name="B">
+                              <block type="math_number">
+                                <field name="NUM">20</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                        <statement name="DO0">
+                          <block type="variables_set">
+                            <field name="VAR">direction</field>
+                            <value name="VALUE">
+                              <block type="text">
+                                <field name="TEXT">r</field>
+                              </block>
+                            </value>
+                            <next>
+                              <block type="variables_set">
+                                <field name="VAR">down</field>
+                                <value name="VALUE">
+                                  <block type="logic_boolean">
+                                    <field name="BOOL">TRUE</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </next>
+                          </block>
+                        </statement>
+                      </block>
+                    </next>
+                  </block>
+                </statement>
+                <next>
+                  <block type="sprites_for_each_clone_of_current_sprite">
+                    <statement name="STATEMENT_CODE">
+                      <block type="controls_if">
+                        <value name="IF0">
+                          <block type="logic_compare">
+                            <field name="OP">EQ</field>
+                            <value name="A">
+                              <block type="variables_get">
+                                <field name="VAR">direction</field>
+                              </block>
+                            </value>
+                            <value name="B">
+                              <block type="text">
+                                <field name="TEXT">r</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                        <statement name="DO0">
+                          <block type="motion_set_x_to">
+                            <value name="X">
+                              <block type="math_arithmetic">
+                                <field name="OP">ADD</field>
+                                <value name="A">
+                                  <block type="sprites_value_of_x"></block>
+                                </value>
+                                <value name="B">
+                                  <block type="math_number">
+                                    <field name="NUM">5</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                          </block>
+                        </statement>
+                        <next>
+                          <block type="controls_if">
+                            <value name="IF0">
+                              <block type="logic_compare">
+                                <field name="OP">EQ</field>
+                                <value name="A">
+                                  <block type="variables_get">
+                                    <field name="VAR">direction</field>
+                                  </block>
+                                </value>
+                                <value name="B">
+                                  <block type="text">
+                                    <field name="TEXT">l</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                            <statement name="DO0">
+                              <block type="motion_set_x_to">
+                                <value name="X">
+                                  <block type="math_arithmetic">
+                                    <field name="OP">MINUS</field>
+                                    <value name="A">
+                                      <block type="sprites_value_of_x"></block>
+                                    </value>
+                                    <value name="B">
+                                      <block type="math_number">
+                                        <field name="NUM">5</field>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                              </block>
+                            </statement>
+                          </block>
+                        </next>
+                      </block>
+                    </statement>
+                    <next>
+                      <block type="sprites_for_each_clone_of_current_sprite">
+                        <statement name="STATEMENT_CODE">
+                          <block type="controls_if">
+                            <value name="IF0">
+                              <block type="logic_compare">
+                                <field name="OP">EQ</field>
+                                <value name="A">
+                                  <block type="variables_get">
+                                    <field name="VAR">down</field>
+                                  </block>
+                                </value>
+                                <value name="B">
+                                  <block type="logic_boolean">
+                                    <field name="BOOL">TRUE</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                            <statement name="DO0">
+                              <block type="motion_set_y_to">
+                                <value name="Y">
+                                  <block type="math_arithmetic">
+                                    <field name="OP">ADD</field>
+                                    <value name="A">
+                                      <block type="sprites_value_of_y"></block>
+                                    </value>
+                                    <value name="B">
+                                      <block type="math_number">
+                                        <field name="NUM">20</field>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                              </block>
+                            </statement>
+                          </block>
+                        </statement>
+                        <next>
+                          <block type="variables_set">
+                            <field name="VAR">down</field>
+                            <value name="VALUE">
+                              <block type="logic_boolean">
+                                <field name="BOOL">FALSE</field>
+                              </block>
+                            </value>
+                            <next>
+                              <block type="sprites_set_current_sprite">
+                                <field name="sprite">alien</field>
+                                <next>
+                                  <block type="sprites_set_target_sprite">
+                                    <field name="sprite">bullet</field>
+                                    <next>
+                                      <block type="sprites_for_each_clone_of_current_sprite">
+                                        <statement name="STATEMENT_CODE">
+                                          <block type="controls_if">
+                                            <value name="IF0">
+                                              <block type="sprites_is_colliding_with_target"></block>
+                                            </value>
+                                            <statement name="DO0">
+                                              <block type="sprites_destroy_current_sprite">
+                                                <next>
+                                                  <block type="sprites_set_current_sprite">
+                                                    <field name="sprite">bullet</field>
+                                                    <next>
+                                                      <block type="motion_set_y_to">
+                                                        <value name="Y">
+                                                          <block type="math_number">
+                                                            <field name="NUM">-100</field>
+                                                          </block>
+                                                        </value>
+                                                        <next>
+                                                          <block type="sprites_set_current_sprite">
+                                                            <field name="sprite">alien</field>
+                                                          </block>
+                                                        </next>
+                                                      </block>
+                                                    </next>
+                                                  </block>
+                                                </next>
+                                              </block>
+                                            </statement>
+                                          </block>
+                                        </statement>
+                                        <next>
+                                          <block type="sprites_set_target_sprite">
+                                            <field name="sprite">ship</field>
+                                            <next>
+                                              <block type="sprites_for_each_clone_of_current_sprite">
+                                                <statement name="STATEMENT_CODE">
+                                                  <block type="controls_if">
+                                                    <value name="IF0">
+                                                      <block type="sprites_is_colliding_with_target"></block>
+                                                    </value>
+                                                    <statement name="DO0">
+                                                      <block type="sprites_set_current_sprite">
+                                                        <field name="sprite">ship</field>
+                                                        <next>
+                                                          <block type="sprites_hide_current_sprite">
+                                                            <next>
+                                                              <block type="variables_set">
+                                                                <field name="VAR">alive</field>
+                                                                <value name="VALUE">
+                                                                  <block type="logic_boolean">
+                                                                    <field name="BOOL">FALSE</field>
+                                                                  </block>
+                                                                </value>
+                                                              </block>
+                                                            </next>
+                                                          </block>
+                                                        </next>
+                                                      </block>
+                                                    </statement>
+                                                  </block>
+                                                </statement>
+                                                <next>
+                                                  <block type="sprites_set_current_sprite">
+                                                    <field name="sprite">bullet</field>
+                                                    <next>
+                                                      <block type="motion_set_y_to">
+                                                        <value name="Y">
+                                                          <block type="math_arithmetic">
+                                                            <field name="OP">MINUS</field>
+                                                            <value name="A">
+                                                              <block type="sprites_value_of_y"></block>
+                                                            </value>
+                                                            <value name="B">
+                                                              <block type="math_number">
+                                                                <field name="NUM">10</field>
+                                                              </block>
+                                                            </value>
+                                                          </block>
+                                                        </value>
+                                                      </block>
+                                                    </next>
+                                                  </block>
+                                                </next>
+                                              </block>
+                                            </next>
+                                          </block>
+                                        </next>
+                                      </block>
+                                    </next>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+  <block type="events_when_event_happens" x="90" y="2222">
+    <field name="EVENT">LEFT_KEY_PRESSED</field>
+    <statement name="EVENT_CODE">
+      <block type="sprites_set_current_sprite">
+        <field name="sprite">ship</field>
+        <next>
+          <block type="motion_set_x_to">
+            <value name="X">
+              <block type="math_arithmetic">
+                <field name="OP">MINUS</field>
+                <value name="A">
+                  <block type="sprites_value_of_x"></block>
+                </value>
+                <value name="B">
+                  <block type="math_number">
+                    <field name="NUM">10</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="events_when_event_happens" x="71" y="2358">
+    <field name="EVENT">RIGHT_KEY_PRESSED</field>
+    <statement name="EVENT_CODE">
+      <block type="sprites_set_current_sprite">
+        <field name="sprite">ship</field>
+        <next>
+          <block type="motion_set_x_to">
+            <value name="X">
+              <block type="math_arithmetic">
+                <field name="OP">ADD</field>
+                <value name="A">
+                  <block type="sprites_value_of_x"></block>
+                </value>
+                <value name="B">
+                  <block type="math_number">
+                    <field name="NUM">10</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="events_when_event_happens" x="85" y="2546">
+    <field name="EVENT">UP_KEY_PRESSED</field>
+    <statement name="EVENT_CODE">
+      <block type="controls_if">
+        <value name="IF0">
+          <block type="variables_get">
+            <field name="VAR">alive</field>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="sprites_set_current_sprite">
+            <field name="sprite">ship</field>
+            <next>
+              <block type="variables_set">
+                <field name="VAR">ship_x</field>
+                <value name="VALUE">
+                  <block type="sprites_value_of_x"></block>
+                </value>
+                <next>
+                  <block type="sprites_set_current_sprite">
+                    <field name="sprite">bullet</field>
+                    <next>
+                      <block type="motion_set_x_to">
+                        <value name="X">
+                          <block type="variables_get">
+                            <field name="VAR">ship_x</field>
+                          </block>
+                        </value>
+                        <next>
+                          <block type="motion_set_y_to">
+                            <value name="Y">
+                              <block type="math_number">
+                                <field name="NUM">400</field>
+                              </block>
+                            </value>
+                            <next>
+                              <block type="sprites_show_current_sprite"></block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+</xml>
