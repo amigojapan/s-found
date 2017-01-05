@@ -54,7 +54,7 @@
 		</div>
 		<div id="toolbar">
 			Click here to add a backgroud:<input type="file" id="files2" />
-			<img id="backgroudn" />
+			<img id="background" />
 		</div>		
 		<div id="toolbar">
 			Click here to open a project:<input type="file" id="files_project_upload" />
@@ -230,14 +230,6 @@
 	var game = new Phaser.Game(600, 400, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update });
 
 
-	// Groups for drawing layers
-	var background = game.add.group();
-	var mid_layer = game.add.group();
-	var front_layer = game.add.group();
-	// It doesn't matter what order you add things to these groups, the draw order will be back, mid, front (unless you change it...)back_layer.create(0, 0, "bg");front_layer.create(0, 0, "front");mid_layer.create(300, 200, "object1");mid_layer.create(500, 400, "object2"); icp likes this
-
-
-
 	function preload() {
 		//game.load.image('star', 'assets/firstaid.png');
 	}
@@ -262,10 +254,23 @@
 	}
 
 	var cursors;
+	var background_;
+	var mid_layer;
+	var front_layer;
 
 	function create() {
 	    cursors = game.input.keyboard.createCursorKeys();  
-		game.time.advancedTiming=true;  
+		game.time.advancedTiming=true; 
+		
+	// Groups for drawing layers
+	
+	background_ = game.add.group();
+	mid_layer = game.add.group();
+	front_layer = game.add.group();
+	
+	// It doesn't matter what order you add things to these groups, the draw order will be back, mid, front (unless you change it...)back_layer.create(0, 0, "bg");front_layer.create(0, 0, "front");mid_layer.create(300, 200, "object1");mid_layer.create(500, 400, "object2"); icp likes this
+
+		 
 	}
 	var retVal;
 	function update(){ 
@@ -290,7 +295,8 @@
 		
 		//sprites[sprites.length-1].sprite = game.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[sprites.length-1].name);
 		var clone={};
-		clone.sprite = front_layer.add.sprite(game_object.sprite.x, game_object.sprite.y, game_object.sprite.key, game_object.sprite.frame);
+		clone.sprite = game.add.sprite(game_object.sprite.x, game_object.sprite.y, game_object.sprite.key, game_object.sprite.frame);
+		front_layer.add(clone.sprite);
 		clone.sprite.angle=game_object.sprite.angle;
 		game.physics.enable(clone.sprite, Phaser.Physics.ARCADE);
 		//set it so that the sprites rotate on hte center axis
@@ -1488,6 +1494,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	
 	var project={}
 	project.images=[]
+	project.background_="not set";
 	
 	//toolbar code
 	function guid() {
@@ -1501,7 +1508,8 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	
 	onLoaded = function(){
 		//console.log('image loaded');
-		sprites[sprites.length-1].sprite = front_layer.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[sprites.length-1].name);
+		sprites[sprites.length-1].sprite = game.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[sprites.length-1].name);
+		front_layer.add(sprites[sprites.length-1].sprite);
 		game.physics.enable(sprites[sprites.length-1].sprite, Phaser.Physics.ARCADE);
 		//set it so that the sprites rotate on hte center axis
 		sprites[sprites.length-1].sprite.anchor.setTo(0.5, 0.5);
@@ -1511,9 +1519,10 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	}
 	onLoadedBackground = function(){
 		//console.log('image loaded');
-		backgroud.add.sprite(game.world.centerX,game.world.centerY, "backgroud");
+		bg=game.add.sprite(0,0, "backgroud");
+		background_.add(bg);
 		//set it so that the sprites rotate on hte center axis
-		backgroud.anchor.setTo(0, 0);
+		//background_.anchor.setTo(0, 0);
 	}
 
 	
@@ -1564,54 +1573,34 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	        // get loaded data and render thumbnail.
 	        document.getElementById("background").src = e.target.result;
 			//game.load.image('userSprite1', 'assets/firstaid.png');
-
-			/*
-			//prompt for sprite name
-			var name=prompt("Give me a name for this sprite","Sprite-"+guid());
-			for(var obj in sprites){
-				if(sprites[obj].name==name) {
-					alert("You must give each sprite a unique name");
-					return;				
-				}
-			}
-			if(name=="") {
-				alert("You must give each sprite a name");
-				return;
-			}
-			//append image name to object model
-			//add new sprite to object model
-			sprites.push({})
-			sprites[sprites.length-1].name=name;
-			*/
-				
 			loader = new Phaser.Loader(game)
 			loader.image("backgroud", e.target.result );
 			loader.onLoadComplete.addOnce(onLoadedBackground)
-			loader.start()
-			background={}
-			background=name;
-			background.data=e.target.result
-			project.background.push(background);
-	
+			loader.start()				
+			//backgroundObj={}
+			//backgroundObj=name;
+			//backgroundObj.data=e.target.result
+			project.background_ = document.getElementById("background").src;	
 	    };
 
 	    // read the image file as a data URL.
 	    reader.readAsDataURL(this.files[0]);
 	};
 
-	
 	//i neededd to make a better loader for when I have many sprites from a project, cause the images seem to load not in real time, so I need to make sure the current sprite gets to be the right one.... by incrementing thed variable below I ensure that the right sprite is put in the right slot...maybe to clean up we can use this second loader for the first case too? try it later...I think it should work
+	//loadproject
 	var loader_current_sprite=-1;
 	onLoaded2 = function(){
 		loader_current_sprite++;
 		//console.log('image loaded');
-		sprites[loader_current_sprite].sprite = front_layer.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[loader_current_sprite].name);
+		sprites[loader_current_sprite].sprite = game.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[loader_current_sprite].name);
+		front_layer.add(sprites[loader_current_sprite].sprite);
 		game.physics.enable(sprites[loader_current_sprite].sprite, Phaser.Physics.ARCADE);
 		//set it so that the sprites rotate on hte center axis
 		sprites[loader_current_sprite].sprite.anchor.setTo(0.5, 0.5);
 		sprites[loader_current_sprite].clones=[];
 		//add sprite to blockly blocks
-		//Blockly.Blocks['motion_point_in_direction'].init()
+		//load background
 	}
 	
 	document.getElementById("files_project_upload").onchange = function () {
@@ -1631,6 +1620,16 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				loader = new Phaser.Loader(game)
 				loader.image("img"+project.images[image].name, project.images[image].data );
 				loader.onLoadComplete.addOnce(onLoaded2)
+				
+
+				if(background_!="not set") {
+					loader = new Phaser.Loader(game)
+					loader.image("backgroud", project.background_ );
+					loader.onLoadComplete.addOnce(onLoadedBackground)
+					loader.start()									
+					onLoadedBackground();
+				}
+			
 				loader.start()
 			}
 			
@@ -1642,6 +1641,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	    // read the image file as a data URL.
 	    reader.readAsText(this.files[0]);
 	};
+	var project;
 	function loadURLproject() {
 		var URL=prompt("Enter URL to project:");
 		var req = new XMLHttpRequest();  
@@ -1654,16 +1654,28 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		}
 		alert("project_json:"+project_json);
 		
-		var project = JSON.parse(project_json);
+		project = JSON.parse(project_json);
+		
+		
+		
+		if(typeof project.background_ != 'undefined' || project.background_!="not set") {
+			loader = new Phaser.Loader(game);
+			loader.image("backgroud", project.background_ );
+			loader.onLoadComplete.addOnce(onLoadedBackground);
+			loader.start();								
+			onLoadedBackground();
+		}
+		
+		
 		loader_current_sprite=-1;
 		for(image in project.images) {
 			sprites.push({})
 			sprites[sprites.length-1].name=project.images[image].name;
 			
-			loader = new Phaser.Loader(game)
+			loader = new Phaser.Loader(game);
 			loader.image("img"+project.images[image].name, project.images[image].data );
-			loader.onLoadComplete.addOnce(onLoaded2)
-			loader.start()
+			loader.onLoadComplete.addOnce(onLoaded2);
+			loader.start();
 		}
 		
 		Blockly.mainWorkspace.clear();
