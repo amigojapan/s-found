@@ -4,11 +4,11 @@
 <head>
   <meta charset="utf-8">
   <title>Blockly and Phaser combines, scratch-like demo</title>
-  <script src="/NeilFraser-JS-Interpreter-9c09d45/acorn_interpreter.js"></script>
-  <script src="/google-blockly-a77788d/blockly_compressed.js"></script>
-  <script src="/google-blockly-a77788d/blocks_compressed.js"></script>
-  <script src="/google-blockly-a77788d/javascript_compressed.js"></script>
-  <script src="/google-blockly-a77788d/msg/js/en.js"></script>
+  <script src="interpreter/NeilFraser-JS-Interpreter-9c09d45/acorn_interpreter.js"></script>
+  <script src="gb/google-blockly-a77788d/blockly_compressed.js"></script>
+  <script src="gb/google-blockly-a77788d/blocks_compressed.js"></script>
+  <script src="gb/google-blockly-a77788d/javascript_compressed.js"></script>
+  <script src="gb/google-blockly-a77788d/msg/js/en.js"></script>
   <!--
   <style>
     body {
@@ -155,9 +155,7 @@
 		    <category name="Variables" custom="VARIABLE"></category>
 		    <category name="Functions" custom="PROCEDURE"></category>
 		    <category name="Functional">
-		      <block type="procedures_defreturn_functional"></block>
-		      <block type="call_first_class_function"></block>
-		      <block type="set_timer"></block>
+		      <block type="functional_first_class_function"></block>
 		    </category>
 			
 			
@@ -1215,227 +1213,6 @@
 			sprites[sprite].clones=[];//remove this elements from the clones
 		}
 	}
-	//timer https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#iqgsvm
-	Blockly.Blocks['set_timer'] = {
-	  init: function() {
-		this.appendStatementInput("statement")
-			.setCheck(null)
-			.appendField("timer")
-			.appendField(new Blockly.FieldTextInput("timer name"), "timer_name")
-			.appendField("milliseconds")
-			.appendField(new Blockly.FieldTextInput("1000"), "milliseconds");
-		this.setColour(160);
-		this.setTooltip('');
-		this.setHelpUrl('http://www.example.com/');
-	  }
-	};
-	timersObj={}
-	Blockly.JavaScript['set_timer'] = function(block) {
-		var text_timer_name = block.getFieldValue('timer_name');
-		var text_milliseconds = block.getFieldValue('milliseconds');
-		var statements_statement = Blockly.JavaScript.statementToCode(block, 'statement');
-		// TODO: Assemble JavaScript into code variable.
-		var code = 'timersObj["'+text_timer_name+'"] = function() {\n';
-		code=code+ statements_statement+'\n';
-		code=code+'}\n';
-		code=code+'setInterval(timersObj["'+text_timer_name+'"], '+text_milliseconds+');\n';
-		return code;
-	};
-	//https://blockly-demo.appspot.com/static/blocks/procedures.js
-	Blockly.Blocks['procedures_defreturn_functional'] = {
-  /**
-   * Block for defining a procedure with a return value.
-   * @this Blockly.Block
-   */
-  init: function() {
-	//this.appendValueInput("value_input")
-    //    .setCheck(null)
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldVariable("item"), "variable_name");
-    var nameField = new Blockly.FieldTextInput(
-        Blockly.Msg.PROCEDURES_DEFRETURN_PROCEDURE,
-        Blockly.Procedures.rename);
-    nameField.setSpellcheck(false);
-    this.appendDummyInput()
-        .appendField("=function")
-        .appendField(nameField, 'NAME')
-        .appendField('', 'PARAMS');
-    this.appendValueInput('RETURN')
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField(Blockly.Msg.PROCEDURES_DEFRETURN_RETURN);
-    this.setMutator(new Blockly.Mutator(['procedures_mutatorarg']));
-    if ((this.workspace.options.comments ||
-         (this.workspace.options.parentWorkspace &&
-          this.workspace.options.parentWorkspace.options.comments)) &&
-        Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT) {
-      this.setCommentText(Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT);
-    }
-    this.setColour(Blockly.Blocks.procedures.HUE);
-    this.setTooltip(Blockly.Msg.PROCEDURES_DEFRETURN_TOOLTIP);
-    this.setHelpUrl(Blockly.Msg.PROCEDURES_DEFRETURN_HELPURL);
-    this.arguments_ = [];
-    this.setStatements_(true);
-    this.statementConnection_ = null;
-  },
-  //
-  //contextMenuType_: 'variables_set',
-  /**
-   * Add menu option to create getter/setter block for this setter/getter.
-   * @param {!Array} options List of menu options to add to.
-   * @this Blockly.Block
-   */
-  /*
-  customContextMenu: function(options) {
-    var option = {enabled: true};
-    var name = this.getFieldValue('variable_name');
-    option.text = this.contextMenuMsg_.replace('%1', name);
-    var xmlField = goog.dom.createDom('field', null, name);
-    xmlField.setAttribute('name', 'variable_name');
-    var xmlBlock = goog.dom.createDom('block', null, xmlField);
-    xmlBlock.setAttribute('type', this.contextMenuType_);
-    option.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
-    options.push(option);
-  } 
-  */
-  //
-  setStatements_: Blockly.Blocks['procedures_defnoreturn'].setStatements_,
-  updateParams_: Blockly.Blocks['procedures_defnoreturn'].updateParams_,
-  mutationToDom: Blockly.Blocks['procedures_defnoreturn'].mutationToDom,
-  domToMutation: Blockly.Blocks['procedures_defnoreturn'].domToMutation,
-  decompose: Blockly.Blocks['procedures_defnoreturn'].decompose,
-  compose: Blockly.Blocks['procedures_defnoreturn'].compose,
-  /**
-   * Return the signature of this procedure definition.
-   * @return {!Array} Tuple containing three elements:
-   *     - the name of the defined procedure,
-   *     - a list of all its arguments,
-   *     - that it DOES have a return value.
-   * @this Blockly.Block
-   */
-  getProcedureDef: function() {
-    return [this.getFieldValue('NAME'), this.arguments_, true];
-  },
-  getVars: Blockly.Blocks['procedures_defnoreturn'].getVars,
-  renameVar: Blockly.Blocks['procedures_defnoreturn'].renameVar,
-  customContextMenu: Blockly.Blocks['procedures_defnoreturn'].customContextMenu,
-  callType_: 'procedures_callreturn'
-};
-
-/**
-@license
-Copyright 2015 Hendrik Diel
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-@fileoverview
-this file enables predefined variables. You can add a variables by calling
-addPredefinedVar(name) and remove by calling removePredefinedVar(name).
-@author
-diel.hendrik@gmail.com (Hendrik Diel)
-*/
-(function(){
-  Blockly.Variables.predefinedVars = [];
-  Blockly.Variables.addPredefiendVar = function(name){
-    Blockly.Variables.predefinedVars.push(name);
-  };
-  
-  Blockly.Variables.removePredefiendVar = function(name){
-    var index = array.indexOf(name);
-    if (index > -1) {
-      Blockly.Variables.predefinedVars.splice(index, 1);
-    }
-  };
-  
-  var old = Blockly.Variables.allVariables;
-  Blockly.Variables.allVariables = function(root) {
-    var vars = old.call(this, root);
-    Blockly.Variables.predefinedVars.forEach(function(x){
-      if(vars.indexOf(x) < 0)
-      vars.push(x);
-    });
-    return vars;
-  };
-})();
-Blockly.JavaScript['procedures_defreturn_functional'] = function(block) {
-  // Define a procedure with a return value.
-    var variable_variable_name = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('variable_name'), Blockly.Variables.NAME_TYPE);
-  //var value_value_input = Blockly.JavaScript.valueToCode(block, 'value_input', Blockly.JavaScript.ORDER_ATOMIC);
-  
-  var funcName = Blockly.JavaScript.variableDB_.getName(
-      block.getFieldValue('NAME'), Blockly.Procedures.NAME_TYPE);
-  var branch = Blockly.JavaScript.statementToCode(block, 'STACK');
-  if (Blockly.JavaScript.STATEMENT_PREFIX) {
-    branch = Blockly.JavaScript.prefixLines(
-        Blockly.JavaScript.STATEMENT_PREFIX.replace(/%1/g,
-        '\'' + block.id + '\''), Blockly.JavaScript.INDENT) + branch;
-  }
-  if (Blockly.JavaScript.INFINITE_LOOP_TRAP) {
-    branch = Blockly.JavaScript.INFINITE_LOOP_TRAP.replace(/%1/g,
-        '\'' + block.id + '\'') + branch;
-  }
-  var returnValue = Blockly.JavaScript.valueToCode(block, 'RETURN',
-      Blockly.JavaScript.ORDER_NONE) || '';
-  if (returnValue) {
-    returnValue = '  return ' + returnValue + ';\n';
-  }
-  var args = [];
-  for (var i = 0; i < block.arguments_.length; i++) {
-    args[i] = Blockly.JavaScript.variableDB_.getName(block.arguments_[i],
-        Blockly.Variables.NAME_TYPE);
-  }
-  //custom code
-  /*
-  var xmlField = goog.dom.createDom('field', null, variable_variable_name);
-  xmlField.setAttribute('name', variable_variable_name);
-  var xmlBlock = goog.dom.createDom('block', null, xmlField);
-  xmlBlock.setAttribute('type', 'variables_set');
-  */
-  Blockly.Variables.addPredefiendVar(variable_variable_name);
-
-  var code = variable_variable_name + ' = function(' + args.join(', ') + ') {\n' +
-      branch + returnValue + '}';
-  //end custom code
-  code = Blockly.JavaScript.scrub_(block, code);
-  // Add % so as not to collide with helper functions in definitions list.
-  Blockly.JavaScript.definitions_['%' + funcName] = code;
-  return null;
-};
-
-	//functional variable call 
-	//https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#ndqffg
-Blockly.Blocks['call_first_class_function'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField("return to")
-        .appendField(new Blockly.FieldVariable("item"), "return_to")
-        .appendField("call first class function")
-        .appendField(new Blockly.FieldVariable("item"), "variable_name")
-        .appendField("parameter")
-        .appendField(new Blockly.FieldVariable("item"), "parameter");
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
-    this.setTooltip('');
-    this.setHelpUrl('http://www.example.com/');
-  }
-};
-Blockly.JavaScript['call_first_class_function'] = function(block) {
-  var variable_return_to = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('return_to'), Blockly.Variables.NAME_TYPE);
-  var variable_variable_name = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('variable_name'), Blockly.Variables.NAME_TYPE);
-  var variable_parameter = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('parameter'), Blockly.Variables.NAME_TYPE);
-  // TODO: Assemble JavaScript into code variable.
-  var code = variable_return_to+'='+variable_variable_name+'('+variable_parameter+');\n';
-  return code;
-};
 	//On Startup
 	var workspaceChanged = function() {
 	            //console.log("changed");
