@@ -53,6 +53,10 @@
 			<img id="image" />
 		</div>
 		<div id="toolbar">
+			Click here to add a backgroud:<input type="file" id="files2" />
+			<img id="backgroudn" />
+		</div>		
+		<div id="toolbar">
 			Click here to open a project:<input type="file" id="files_project_upload" />
 		</div>
 		<div id="phaser-example"></div>
@@ -1546,6 +1550,51 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	    // read the image file as a data URL.
 	    reader.readAsDataURL(this.files[0]);
 	};
+
+	document.getElementById("files2").onchange = function () {
+	    var reader = new FileReader();
+
+	    reader.onload = function (e) {
+	        // get loaded data and render thumbnail.
+	        document.getElementById("background").src = e.target.result;
+			//game.load.image('userSprite1', 'assets/firstaid.png');
+
+			/*
+			//prompt for sprite name
+			var name=prompt("Give me a name for this sprite","Sprite-"+guid());
+			for(var obj in sprites){
+				if(sprites[obj].name==name) {
+					alert("You must give each sprite a unique name");
+					return;				
+				}
+			}
+			if(name=="") {
+				alert("You must give each sprite a name");
+				return;
+			}
+			//append image name to object model
+			//add new sprite to object model
+			sprites.push({})
+			sprites[sprites.length-1].name=name;
+			*/
+			background.add.sprite(0,0, "background");
+				
+			loader = new Phaser.Loader(game)
+			loader.image("img"+name, e.target.result );
+			loader.onLoadComplete.addOnce(onLoaded)
+			loader.start()
+			image={}
+			image.name=name;
+			image.data=e.target.result
+			project.images.push(image);
+	
+	    };
+
+	    // read the image file as a data URL.
+	    reader.readAsDataURL(this.files[0]);
+	};
+
+	
 	//i neededd to make a better loader for when I have many sprites from a project, cause the images seem to load not in real time, so I need to make sure the current sprite gets to be the right one.... by incrementing thed variable below I ensure that the right sprite is put in the right slot...maybe to clean up we can use this second loader for the first case too? try it later...I think it should work
 	var loader_current_sprite=-1;
 	onLoaded2 = function(){
