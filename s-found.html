@@ -1509,6 +1509,12 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		//add sprite to blockly blocks
 		//Blockly.Blocks['motion_point_in_direction'].init()
 	}
+	onLoadedBackground = function(){
+		//console.log('image loaded');
+		backgroud.add.sprite(game.world.centerX,game.world.centerY, "backgroud");
+		//set it so that the sprites rotate on hte center axis
+		backgroud.anchor.setTo(0, 0);
+	}
 
 	
 	document.getElementById("files").onchange = function () {
@@ -1577,16 +1583,15 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			sprites.push({})
 			sprites[sprites.length-1].name=name;
 			*/
-			background.add.sprite(0,0, "background");
 				
 			loader = new Phaser.Loader(game)
-			loader.image("img"+name, e.target.result );
-			loader.onLoadComplete.addOnce(onLoaded)
+			loader.image("backgroud", e.target.result );
+			loader.onLoadComplete.addOnce(onLoadedBackground)
 			loader.start()
-			image={}
-			image.name=name;
-			image.data=e.target.result
-			project.images.push(image);
+			background={}
+			background=name;
+			background.data=e.target.result
+			project.background.push(background);
 	
 	    };
 
