@@ -226,6 +226,13 @@
 	var game = new Phaser.Game(600, 400, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update });
 
 
+	// Groups for drawing layers
+	var background = game.add.group();
+	var mid_layer = game.add.group();
+	var front_layer = game.add.group();
+	// It doesn't matter what order you add things to these groups, the draw order will be back, mid, front (unless you change it...)back_layer.create(0, 0, "bg");front_layer.create(0, 0, "front");mid_layer.create(300, 200, "object1");mid_layer.create(500, 400, "object2"); icp likes this
+
+
 
 	function preload() {
 		//game.load.image('star', 'assets/firstaid.png');
@@ -279,7 +286,7 @@
 		
 		//sprites[sprites.length-1].sprite = game.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[sprites.length-1].name);
 		var clone={};
-		clone.sprite = game.add.sprite(game_object.sprite.x, game_object.sprite.y, game_object.sprite.key, game_object.sprite.frame);
+		clone.sprite = front_layer.add.sprite(game_object.sprite.x, game_object.sprite.y, game_object.sprite.key, game_object.sprite.frame);
 		clone.sprite.angle=game_object.sprite.angle;
 		game.physics.enable(clone.sprite, Phaser.Physics.ARCADE);
 		//set it so that the sprites rotate on hte center axis
@@ -1490,7 +1497,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	
 	onLoaded = function(){
 		//console.log('image loaded');
-		sprites[sprites.length-1].sprite = game.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[sprites.length-1].name);
+		sprites[sprites.length-1].sprite = front_layer.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[sprites.length-1].name);
 		game.physics.enable(sprites[sprites.length-1].sprite, Phaser.Physics.ARCADE);
 		//set it so that the sprites rotate on hte center axis
 		sprites[sprites.length-1].sprite.anchor.setTo(0.5, 0.5);
@@ -1544,7 +1551,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	onLoaded2 = function(){
 		loader_current_sprite++;
 		//console.log('image loaded');
-		sprites[loader_current_sprite].sprite = game.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[loader_current_sprite].name);
+		sprites[loader_current_sprite].sprite = front_layer.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[loader_current_sprite].name);
 		game.physics.enable(sprites[loader_current_sprite].sprite, Phaser.Physics.ARCADE);
 		//set it so that the sprites rotate on hte center axis
 		sprites[loader_current_sprite].sprite.anchor.setTo(0.5, 0.5);
