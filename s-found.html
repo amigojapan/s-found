@@ -1521,7 +1521,8 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	onLoadedBackground = function(){
 		//console.log('image loaded');
 		bg=game.add.sprite(0,0, "backgroud");
-		bg.scale.setTo(game.world.bounds.bottomRight.x,game.world.bounds.bottomRight.x);
+		bg.width =game.world.bounds.bottomRight.x;
+		bg.height =game.world.bounds.bottomRight.y;
 		background_.add(bg);
 		//set it so that the sprites rotate on hte center axis
 		//background_.anchor.setTo(0, 0);
