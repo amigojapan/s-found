@@ -299,7 +299,7 @@
 		clone.sprite = game.add.sprite(game_object.sprite.x, game_object.sprite.y, game_object.sprite.key, game_object.sprite.frame);
 		sprite_ = front_layer.add(clone.sprite);
 		//scale sprite down
-		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
+		sprite_.scale.setTo(x_scaling_factor_percent, x_scaling_factor_percent);
 		clone.sprite.angle=game_object.sprite.angle;
 		game.physics.enable(clone.sprite, Phaser.Physics.ARCADE);
 		//set it so that the sprites rotate on hte center axis
@@ -1514,7 +1514,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		sprites[sprites.length-1].sprite = game.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[sprites.length-1].name);
 		sprite_ = front_layer.add(sprites[sprites.length-1].sprite);
 		//scale sprite down
-		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
+		sprite_.scale.setTo(x_scaling_factor_percent, x_scaling_factor_percent);
 		game.physics.enable(sprites[sprites.length-1].sprite, Phaser.Physics.ARCADE);
 		//set it so that the sprites rotate on hte center axis
 		sprites[sprites.length-1].sprite.anchor.setTo(0.5, 0.5);
@@ -1533,8 +1533,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		sprites[loader_current_sprite].sprite = game.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[loader_current_sprite].name);
 		sprite_ = front_layer.add(sprites[loader_current_sprite].sprite);
 		//scale sprite down
-		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
-	
+		sprite_.scale.setTo(x_scaling_factor_percent, x_scaling_factor_percent);	
 		game.physics.enable(sprites[loader_current_sprite].sprite, Phaser.Physics.ARCADE);
 		//set it so that the sprites rotate on hte center axis
 		sprites[loader_current_sprite].sprite.anchor.setTo(0.5, 0.5);
