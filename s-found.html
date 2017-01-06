@@ -1554,10 +1554,10 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		//calculate scaling factors
 		//nerdshark: divide the new width by the old width
 		//http://www.wikihow.com/Calculate-Percent-Change
-		var x_substracted=game.world.bounds.bottomRight.x - bg.width;
-		var y_substracted=game.world.bounds.bottomRight.y - bg.height;
-		var x_percentage=parseFloat(x_substracted)/bg.width;
-		var y_percentage=parseFloat(y_substracted)/bg.height;
+		var x_substracted= bg.width - game.world.bounds.bottomRight.x;
+		var y_substracted= bg.height - game.world.bounds.bottomRight.y;
+		var x_percentage=parseFloat(x_substracted)/game.world.bounds.bottomRight.x;
+		var y_percentage=parseFloat(y_substracted)/game.world.bounds.bottomRight.y;
 		
 		console.log("x_percentage"+x_percentage);
 		//multiply the raw number by 100 to get the percentage as a value between 0-100%
