@@ -1559,9 +1559,16 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		var y_percentage=parseFloat(y_substracted)/game.world.bounds.bottomRight.y;
 		
 		console.log("x_percentage"+x_percentage);
-		//multiply the raw number by 100 to get the percentage as a value between 0-100%
-		x_scaling_factor_percent=x_percentage;
-		y_scaling_factor_percent=y_percentage;
+			if (confirm('Do you want to scale the sprites to the size of the bakground(you will need to refresh and reload project to see the difference)?')) {
+				// sclae
+				x_scaling_factor_percent=x_percentage;
+				y_scaling_factor_percent=y_percentage;
+			} else {
+				// Do not scale
+				x_scaling_factor_percent=1.0;
+				y_scaling_factor_percent=1.0;
+			}				
+
 		//nerdshark: if you want to use the raw number directly, then just multiply each dimension of the sprite by it (raw_scaling_factor * sprite x), (raw_scaling_factor * sprite_y)
 		//scale backgroud
 		bg.width =game.world.bounds.bottomRight.x;
@@ -1623,13 +1630,6 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			loader.image("backgroud", e.target.result );
 			loader.onLoadComplete.addOnce(onLoadedBackground)
 			loader.start()
-			if (confirm('Do you want to scale the sprites to the size of the bakground(you will need to refresh and reload project to see the difference)?')) {
-				// sclae
-			} else {
-				// Do not scale
-				x_scaling_factor_percent=1.0;
-				y_scaling_factor_percent=1.0;
-			}				
 			project.background_ = document.getElementById("background").src;	
 	    };
 
@@ -1652,14 +1652,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				loader.image("backgroud", project.background_ );
 				loader.onLoadComplete.addOnce(onLoadedBackground);
 				loader.start();								
-				//onLoadedBackground();
-				if (confirm('Do you want to scale the sprites to the size of the bakground(you will need to refresh and reload project to see the difference)?')) {
-					// sclae
-				} else {
-					// Do not scale
-					x_scaling_factor_percent=1.0;
-					y_scaling_factor_percent=1.0;
-				}				
+						
 
 			}
 			
@@ -1704,15 +1697,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			loader = new Phaser.Loader(game);
 			loader.image("backgroud", project.background_ );
 			loader.onLoadComplete.addOnce(onLoadedBackground);
-			loader.start();								
-			//onLoadedBackground();
-			if (confirm('Do you want to scale the sprites to the size of the bakground(you will need to refresh and reload project to see the difference)?')) {
-				// sclae
-			} else {
-				// Do not scale
-				x_scaling_factor_percent=1.0;
-				y_scaling_factor_percent=1.0;
-			}				
+			loader.start();										
 			
 		}
 		
