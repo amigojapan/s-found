@@ -1557,8 +1557,8 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		var y_scaling_factor=game.world.bounds.bottomRight.y/bg.height;
 		console.log("x_scaling_factor"+x_scaling_factor);
 		//multiply the raw number by 100 to get the percentage as a value between 0-100%
-		x_scaling_factor_percent=x_scaling_factor_percent*100;
-		y_scaling_factor_percent=y_scaling_factor_percent*100;
+		x_scaling_factor_percent=x_scaling_factor_percent;
+		y_scaling_factor_percent=y_scaling_factor_percent;
 		//nerdshark: if you want to use the raw number directly, then just multiply each dimension of the sprite by it (raw_scaling_factor * sprite x), (raw_scaling_factor * sprite_y)
 		//scale backgroud
 		bg.width =game.world.bounds.bottomRight.x;
