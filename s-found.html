@@ -1553,8 +1553,8 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		bg=game.add.sprite(0,0, "backgroud");
 		//calculate scaling factors
 		//nerdshark: divide the new width by the old width
-		var x_scaling_factor=bg.width/game.world.bounds.bottomRight.x;
-		var y_scaling_factor=bg.height/game.world.bounds.bottomRight.y;
+		var x_scaling_factor=game.world.bounds.bottomRight.x - bg.width;
+		var y_scaling_factor=game.world.bounds.bottomRight.y - bg.height;
 		console.log("x_scaling_factor"+x_scaling_factor);
 		//multiply the raw number by 100 to get the percentage as a value between 0-100%
 		x_scaling_factor_percent=x_scaling_factor;
