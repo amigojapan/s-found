@@ -1615,25 +1615,24 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			alert("project_json:"+project_json);
 			
 			var project = JSON.parse(project_json);
+			if(typeof project.background_ != 'undefined' || project.background_!="not set") {
+				loader = new Phaser.Loader(game);
+				loader.image("backgroud", project.background_ );
+				loader.onLoadComplete.addOnce(onLoadedBackground);
+				loader.start();								
+				onLoadedBackground();
+			}
+			
+			
 			loader_current_sprite=-1;
 			for(image in project.images) {
 				sprites.push({})
 				sprites[sprites.length-1].name=project.images[image].name;
 				
-				loader = new Phaser.Loader(game)
+				loader = new Phaser.Loader(game);
 				loader.image("img"+project.images[image].name, project.images[image].data );
-				loader.onLoadComplete.addOnce(onLoaded2)
-				
-
-				if(background_!="not set") {
-					loader = new Phaser.Loader(game)
-					loader.image("backgroud", project.background_ );
-					loader.onLoadComplete.addOnce(onLoadedBackground)
-					loader.start()									
-					onLoadedBackground();
-				}
-			
-				loader.start()
+				loader.onLoadComplete.addOnce(onLoaded2);
+				loader.start();
 			}
 			
 			Blockly.mainWorkspace.clear();
