@@ -1706,6 +1706,14 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			loader.onLoadComplete.addOnce(onLoadedBackground);
 			loader.start();								
 			onLoadedBackground();
+			if (confirm('Do you want to scale the sprites to the size of the bakground(you will need to refresh and reload project to see the difference)?')) {
+				// sclae
+			} else {
+				// Do not scale
+				x_scaling_factor_percent=1.0;
+				y_scaling_factor_percent=1.0;
+			}				
+			
 		}
 		
 		
