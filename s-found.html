@@ -1556,8 +1556,8 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		//http://www.wikihow.com/Calculate-Percent-Change
 		var x_substracted=game.world.bounds.bottomRight.x - bg.width;
 		var y_substracted=game.world.bounds.bottomRight.y - bg.height;
-		var x_percentage=x_substracted/bg.width;
-		var y_percentage=y_substracted/bg.height;
+		var x_percentage=parseFloat(x_substracted)/bg.width;
+		var y_percentage=parseFloat(y_substracted)/bg.height;
 		
 		console.log("x_percentage"+x_percentage);
 		//multiply the raw number by 100 to get the percentage as a value between 0-100%
