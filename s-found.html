@@ -1494,9 +1494,9 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	workspace.addChangeListener(workspaceChanged);
 	
 	
-	var project={}
-	project.images=[]
-	project.background_="not set";
+	var project = {}
+	project.images = []
+	project.background_ = "not set";
 	
 	//toolbar code
 	function guid() {
@@ -1645,7 +1645,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	        var project_json = e.target.result;
 			alert("project_json:"+project_json);
 			
-			var project = JSON.parse(project_json);
+			project = JSON.parse(project_json);
 			if(typeof project.background_ != 'undefined' || project.background_!="not set") {
 				loader = new Phaser.Loader(game);
 				loader.image("backgroud", project.background_ );
