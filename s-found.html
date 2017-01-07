@@ -1250,7 +1250,8 @@
 		this.setHelpUrl('http://www.example.com/');
 	  }
 	};
-	timersObj={}
+	timersObj={};
+	timerIDs=[];
 	Blockly.JavaScript['set_timer'] = function(block) {
 		var text_timer_name = block.getFieldValue('timer_name');
 		var text_milliseconds = block.getFieldValue('milliseconds');
@@ -1259,12 +1260,13 @@
 		var code = 'timersObj["'+text_timer_name+'"] = function() {\n';
 		code=code+ statements_statement+'\n';
 		code=code+'}\n';
-		code=code+'setInterval(timersObj["'+text_timer_name+'"], '+text_milliseconds+');\n';
+		code=code+'var ID = setInterval(timersObj["'+text_timer_name+'"], '+text_milliseconds+');\n';
+		code=code+'timerIDs.push(ID);\n';
 		return code;
 	};
 	function clearTimers() {
-		for(timer in timersObj) {
-			clearInterval(timersObj[timer]);
+		for(timer in timerIDs) {
+			clearInterval(timer);
 		}
 	}
 	//https://blockly-demo.appspot.com/static/blocks/procedures.js
