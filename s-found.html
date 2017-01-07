@@ -1266,7 +1266,7 @@
 	};
 	function clearTimers() {
 		for(timer in timerIDs) {
-			clearInterval(timer);
+			clearInterval(timerIDs[timer]);
 		}
 	}
 	//https://blockly-demo.appspot.com/static/blocks/procedures.js
