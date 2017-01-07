@@ -647,6 +647,8 @@
 	  //Unless I am mistaken there isn't a way currently to call into the context created when running a program with the JSInterpreter. On workaround could be to have a setInterval going inside the interpreter context that is polling an exposed api which is watching for events on the page and responds by calling your users code. https://neil.fraser.name/software/JS-Interpreter/docs.html
 
 		finalCode = debuggerCode
+		//clear timers
+		clearTimers();
 	  	//cursor key events
 	  	evalRun=true;
 		finalCode+= "var pollEvent = function() {\n";
@@ -1260,6 +1262,11 @@
 		code=code+'setInterval(timersObj["'+text_timer_name+'"], '+text_milliseconds+');\n';
 		return code;
 	};
+	function clearTimers() {
+		for(timer in timersObj) {
+			clearInterval(timersObj[timer]);
+		}
+	}
 	//https://blockly-demo.appspot.com/static/blocks/procedures.js
 	Blockly.Blocks['procedures_defreturn_functional'] = {
   /**
