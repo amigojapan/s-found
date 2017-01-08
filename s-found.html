@@ -1654,7 +1654,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	    reader.onload = function (e) {
 	        // get loaded data and render thumbnail.
 	        var project_json = e.target.result;
-			alert("project_json:"+project_json);
+			//alert("project_json:"+project_json);
 			
 			project = JSON.parse(project_json);
 			if(typeof project.background_ != 'undefined' || project.background_!="not set") {
@@ -1697,7 +1697,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		}else{
 				alert("ERROR:"+req.status)
 		}
-		alert("project_json:"+project_json);
+		//alert("project_json:"+project_json);
 		
 		project = JSON.parse(project_json);
 		
