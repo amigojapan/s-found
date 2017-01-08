@@ -652,6 +652,9 @@
 	  	//cursor key events
 	  	evalRun=true;
 		finalCode+= "var pollEvent = function() {\n";
+		finalCode+= "	if (typeof EACH_FRAME !== 'undefined' && evalRun) {\n";//cehck to see if funtion is defined
+		finalCode+= "		EACH_FRAME();\n";
+		finalCode+= "	}\n";		
 		finalCode+= "	if (cursors.left.isDown) {\n"
 		finalCode+= "		if (typeof LEFT_KEY_PRESSED !== 'undefined') {\n";//cehck to see if funtion is defined
 		finalCode+= "			LEFT_KEY_PRESSED();\n";
@@ -671,9 +674,6 @@
 		finalCode+= "		if (typeof DOWN_KEY_PRESSED !== 'undefined') {\n";//cehck to see if funtion is defined
 		finalCode+= "			DOWN_KEY_PRESSED();\n";
 		finalCode+= "		}\n";
-		finalCode+= "	}\n";
-		finalCode+= "	if (typeof EACH_FRAME !== 'undefined' && evalRun) {\n";//cehck to see if funtion is defined
-		finalCode+= "		EACH_FRAME();\n";
 		finalCode+= "	}\n";
 		finalCode+= "}\n";
 	   	finalCode+= "if (typeof id_ !== 'undefined') window.clearInterval(id_);\n";
