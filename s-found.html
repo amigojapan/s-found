@@ -267,7 +267,20 @@
 	background_ = game.add.group();
 	mid_layer = game.add.group();
 	front_layer = game.add.group();
-	
+	/*
+	rich [12:39 AM] 
+you can use 'bringToTop' and 'sendToBack' or 'moveUp' or 'moveDown' to position stuff... or just fiddle with the Group.children array yourself and shift stuff about
+
+amigojapan [12:40 AM] 
+yes rich I understand that...   can I detect collision between sprites in different groups? if so I will make a group for clones that sits behind the top group
+
+drhayes [12:40 AM] 
+In arcade physics you can collide two groups, yes.
+
+rich [12:40 AM] 
+you can collide across groups, sure, or group vs. group, or sprite vs. group (even if sprite is in another group)
+eich electron wrapper and cordova wrapper for software that runs with no internet available
+	*/
 	// It doesn't matter what order you add things to these groups, the draw order will be back, mid, front (unless you change it...)back_layer.create(0, 0, "bg");front_layer.create(0, 0, "front");mid_layer.create(300, 200, "object1");mid_layer.create(500, 400, "object2"); icp likes this
 
 		 
