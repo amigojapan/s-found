@@ -49,6 +49,9 @@
 -->
 	<div id='main-window'>
 		<div id="toolbar">
+			Warning, do not use this program withought the permission of amigojapan, ask permission to usmpadow@gmail.com
+		</div>		
+		<div id="toolbar">
 			Click here to add a sprite:<input type="file" id="files" />
 			<img id="image" />
 		</div>
@@ -1154,6 +1157,8 @@ game_object.sprite.bringToTop()
 		//but this did
 		game_object=find_sprite_object_by_name("frog");
 		game_object.sprite.bringToTop()
+		
+		I am able to do game_object.sprite.bringToTop() and it works, but when I try game_object.sprite.sendToBack() I get TypeError: game_object.sprite.sendToBack is not a function , I am using Phaser v2.0.2 - Canvas - WebAudio     , any idea what could be wrong?
 		*/
 		var code = 	'var go=find_sprite_object_by_name(current_sprite_name);\n';
 		code = code + 'go.sprite.sendToBack();\n';
@@ -1880,10 +1885,10 @@ amigojapan: Sadale: I will try making a small game as-is,    I think it would be
 		//change the find sprite by name function, so that it works with a clone during the itteration of the for each clone block, also keep a copy of hte original sprite in a variable for debugging purposes, while the current sprite is a clone, perhaps add a field to the sprite called (current clone) which could work in hte find sprite function... all of this is so I dont need to remake the movement functions just for hte clones
 		
 	//(done2016-1-8)implement a way to save and load blcoks(for testing purposes)
-	//allow for backgrounds(cant these just be sprites set all the way back?)
-	//allow for setting the depth of a sprite
-	//implement say, and maybe say _ wait _ secs, also think should be very simillar , for the meantime it shoudl be good enough with the print block, eventually implement this
-	//implement ask _ hmmm, I think this is already good enough with the prompt block
+	//(done)allow for backgrounds(cant these just be sprites set all the way back?)
+	//(partly done)allow for setting the depth of a sprite
+	//(instead of this I will have both alert() and prompt(), and also the posibility of using a terminal)implement say, and maybe say _ wait _ secs, also think should be very simillar , for the meantime it shoudl be good enough with the print block, eventually implement this
+	//(instead of this I will have both alert() and prompt(), and also the posibility of using a terminal)implement ask _ hmmm, I think this is already good enough with the prompt block
 	//implement costumes next costume , and switch to costume _
 	//(done)implement hide show sprite blocks
 	//make a block that returns the current angle, call it direction like in scratch?
@@ -1898,6 +1903,7 @@ amigojapan: Sadale: I will try making a small game as-is,    I think it would be
 	//clear all the sprites when new project is loaded
 	//(fixed)bug, there seems to be more events of hte same kind fired every time eval is clicked
 	//(changed to adjust to teh fps)can i reduce the eventloop timer to 0 ms, and if so will it still run? what is the optimal event polling time setting?
+	//stop timmers when script is stopped
 	//I think I will make a free version that needs to be connected online, and a pay version for offline if I see many people download it
 	
 	//make some way of implenting timers, maybe like in scratch (this should be easy for me), or maybe, if possible(not sure if I can do it cause it is functional) make it in the way Javascript does times with set_interval
