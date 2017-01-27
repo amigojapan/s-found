@@ -103,6 +103,8 @@
 			  <block type="sprites_is_colliding_with_target"></block>
 			  <block type="sprites_create_clone_of_current_sprite"></block>
 			  <block type="sprites_destroy_current_sprite"></block>
+			  <block type="sprites_current_sprite_bring_to_front"></block>
+			  <block type="sprites_current_sprite_send_to_back"></block>
 			  <block type="sprites_for_each_clone_of_current_sprite"></block>
 			  <block type="sprites_value_of_x"></block>
 			  <block type="sprites_value_of_y"></block>
@@ -280,6 +282,14 @@ In arcade physics you can collide two groups, yes.
 rich [12:40 AM] 
 you can collide across groups, sure, or group vs. group, or sprite vs. group (even if sprite is in another group)
 eich electron wrapper and cordova wrapper for software that runs with no internet available
+
+//for some reason this did not work
+set_current_sprite_name("frog");
+game_object=find_sprite_object_by_name(current_sprite_name);
+
+//but this did
+game_object=find_sprite_object_by_name("frog");
+game_object.sprite.bringToTop()
 	*/
 	// It doesn't matter what order you add things to these groups, the draw order will be back, mid, front (unless you change it...)back_layer.create(0, 0, "bg");front_layer.create(0, 0, "front");mid_layer.create(300, 200, "object1");mid_layer.create(500, 400, "object2"); icp likes this
 
@@ -1097,6 +1107,59 @@ eich electron wrapper and cordova wrapper for software that runs with no interne
 	  var code = 'clone_sprite();\n';
 	  return code;
 	};
+	//made from previous block
+	Blockly.Blocks['sprites_current_sprite_bring_to_front'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("current sprite bring to front");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_current_sprite_bring_to_front'] = function(block) {
+		// TODO: Assemble JavaScript into code variable.
+		/*
+		set_current_sprite_name("frog");
+		game_object=find_sprite_object_by_name(current_sprite_name);
+
+		//but this did
+		game_object=find_sprite_object_by_name("frog");
+		game_object.sprite.bringToTop()
+		*/
+		var code = 	'game_object=find_sprite_object_by_name(current_sprite_name);\n';
+		code = code + 'game_object.sprite.bringToTop();\n';
+		return code;
+	};
+	//made from previous block
+	Blockly.Blocks['sprites_current_sprite_send_to_back'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("current sprite bring to front");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_current_sprite_send_to_back'] = function(block) {
+		// TODO: Assemble JavaScript into code variable.
+		/*
+		set_current_sprite_name("frog");
+		game_object=find_sprite_object_by_name(current_sprite_name);
+
+		//but this did
+		game_object=find_sprite_object_by_name("frog");
+		game_object.sprite.bringToTop()
+		*/
+		var code = 	'game_object=find_sprite_object_by_name(current_sprite_name);\n';
+		code = code + 'game_object.sprite.sendToBack();\n';
+		return code;
+	};
+	
 	Blockly.Blocks['sprites_destroy_current_sprite'] = {
 	  init: function() {
 	    this.appendDummyInput()
