@@ -1129,8 +1129,8 @@ game_object.sprite.bringToTop()
 		game_object=find_sprite_object_by_name("frog");
 		game_object.sprite.bringToTop()
 		*/
-		var code = 	'game_object=find_sprite_object_by_name(current_sprite_name);\n';
-		code = code + 'game_object.sprite.bringToTop();\n';
+		var code = 	'var go=find_sprite_object_by_name(current_sprite_name);\n';
+		code = code + 'go.sprite.bringToTop();\n';
 		return code;
 	};
 	//made from previous block
@@ -1155,8 +1155,8 @@ game_object.sprite.bringToTop()
 		game_object=find_sprite_object_by_name("frog");
 		game_object.sprite.bringToTop()
 		*/
-		var code = 	'game_object=find_sprite_object_by_name(current_sprite_name);\n';
-		code = code + 'game_object.sprite.sendToBack();\n';
+		var code = 	'var go=find_sprite_object_by_name(current_sprite_name);\n';
+		code = code + 'go.sprite.sendToBack();\n';
 		return code;
 	};
 	
