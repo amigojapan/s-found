@@ -1831,7 +1831,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				project.game_objects[project.game_objects.length-1].name=name;
 				project.game_objects[project.game_objects.length-1].number_of_frames=game_object.number_of_frames;
 				//project.game_objects[project.game_objects.length-1].frames=game_object.frames;
-				project.game_objects[project.game_objects.length-1].sprite=game_object.sprite;
+				//project.game_objects[project.game_objects.length-1].sprite=game_object.sprite;
 				project.game_objects[project.game_objects.length-1].current_frame=game_object.current_frame;
 			} else {
 				game_object.number_of_frames++;
@@ -1890,6 +1890,15 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 						game_object.frames=project.game_objects[index].frames;
 						game_object.sprite=project.game_objects[index].sprite;
 						game_object.current_frame=project.game_objects[index].current_frame;
+						var image_name=project.game_objects[index].frame_image_name=image_name;
+						loader = new Phaser.Loader(game)
+						loader.image(image_name, e.target.result );
+						loader.onLoadComplete.addOnce(onLoadedFrame)
+						loader.start()
+						image={}
+						image.name=image_name;
+						image.data=e.target.result
+
 					}
 				}
 			//var image_name="img"+name+"Frame"+game_object.number_of_frames;
