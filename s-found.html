@@ -1629,6 +1629,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	onLoadedFrame = function(){
 		//console.log('image loaded');
 		var local_game_object=find_sprite_object_by_name(current_sprite_name);
+		local_game_object.frames[local_game_object.number_of_frames]={};//need to have an object to hold the sprite
 		local_game_object.frames[local_game_object.number_of_frames].sprite = game.add.sprite(local_game_object.sprite.x,local_game_object.sprite.y, "img"+sprites[sprites.length-1].name+"Frame"+local_game_object.number_of_frames);
 		sprite_ = front_layer.add(local_game_object.frames[local_game_object.number_of_frames].sprite);
 		//scale sprite down
