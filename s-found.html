@@ -488,7 +488,22 @@ game_object.sprite.bringToTop()
 		}
 		return game.physics.arcade.overlap(game_objectA.sprite, game_objectB.sprite);//this returns true//it seems overlap is pixel perfect after all!//no, I tested it and this is bouding box after all//apparently phaser does not have pixel perfect collision detection at all, they say it would be too expensive
 	} 
-	
+	function next_fame(game_Object) {
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		if (typeof game_object.number_of_frames == 'undefined') {
+			//eventually change this to trow an exception
+			alert("runtime Error, sprite "+ game_object.name + " contains no frames, but 'next frame' block used");		
+			return
+		}
+		game_object.frames[game_object.current_farame]sprite.visible=false;
+		if(game_object.number_of_frames==game_object.current_farame) {//if at last frame loop back to first frame
+			game_object.current_farame=1;
+		} else {
+			game_object.current_farame++;
+		}
+		game_object.frames[game_object.current_farame]sprite.visible=false;
+	}
 	
 	/*	
 	function move_right() {
@@ -1787,6 +1802,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				game_object.number_of_frames=1;
 				game_object.frames=[];
 				game_object.sprite.visible=false;
+				game_object.current_farame=1;
 			} else {
 				game_object.number_of_frames++;
 			}			
