@@ -1776,7 +1776,6 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 					alert("Sprite "+ name + "does not exist");
 					return;								
 			}
-			}
 			set_current_sprite_name(name);
 			var game_object;
 			game_object=find_sprite_object_by_name(current_sprite_name);
@@ -1796,8 +1795,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			image.name=image_name;
 			image.data=e.target.result
 			project.images.push(image);
-	    };
-
+	    }
 	    // read the image file as a data URL.
 	    reader.readAsDataURL(this.files[0]);
 	}
