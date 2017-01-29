@@ -1797,7 +1797,6 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	    // read the image file as a data URL.
 	    reader.readAsDataURL(this.files[0]);
 	}
-	project.game_objects=[];
 	document.getElementById("files3").onchange = function () {
 	    var reader = new FileReader();
 
@@ -1826,7 +1825,6 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				game_object.frames=[];
 				game_object.sprite.visible=false;
 				game_object.current_frame=1;
-				project.game_objects.push(game_object);
 			} else {
 				game_object.number_of_frames++;
 			}			
@@ -1880,7 +1878,6 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 					game_object.frames=[];
 					game_object.sprite.visible=false;
 					game_object.current_frame=1;
-					project.game_objects.push(game_object);
 				} else {
 					game_object.number_of_frames++;
 				}			
