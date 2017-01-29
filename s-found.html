@@ -1687,20 +1687,20 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	onLoadedFrame_ForProject = function(){
 		//console.log('image loaded');
 		var local_game_object=find_sprite_object_by_name(current_sprite_name);
-		local_game_object.frames[global_current_frame]={};//need to have an object to hold the sprite
-		local_game_object.frames[global_current_frame].sprite = game.add.sprite(local_game_object.sprite.x,local_game_object.sprite.y, project.game_objects[global_current_frame].frame_image_name);
-		sprite_ = front_layer.add(local_game_object.frames[local_game_object.number_of_frames].sprite);
+		local_game_object.frames[global_current_frame-1]={};//need to have an object to hold the sprite
+		local_game_object.frames[global_current_frame-1].sprite = game.add.sprite(local_game_object.sprite.x,local_game_object.sprite.y, project.game_objects[global_current_frame-1].frame_image_name);
+		sprite_ = front_layer.add(local_game_object.frames[global_current_frame-1].sprite);
 		//scale sprite down
 		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
 
-		game.physics.enable(local_game_object.frames[local_game_object.number_of_frames].sprite, Phaser.Physics.ARCADE);
+		game.physics.enable(local_game_object.frames[global_current_frame-1].sprite, Phaser.Physics.ARCADE);
 		//set it so that the sprites rotate on hte center axis
-		local_game_object.frames[local_game_object.number_of_frames].sprite.anchor.setTo(0.5, 0.5);
+		local_game_object.frames[global_current_frame-1].sprite.anchor.setTo(0.5, 0.5);
 		//need to create all frames for clones too :( sprites[sprites.length-1].clones=[];
 		if(global_current_frame==1) {
 			local_game_object.frames[1].sprite.visible=true;
 		} else {
-			local_game_object.frames[global_current_frame].sprite.visible=false;			
+			local_game_object.frames[global_current_frame-1].sprite.visible=false;			
 		}
 	}
 	
