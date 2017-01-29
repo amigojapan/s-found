@@ -1683,6 +1683,25 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			local_game_object.frames[local_game_object.number_of_frames].sprite.visible=false;			
 		}
 	}
+	onLoadedFrame_ForProject = function(){
+		//console.log('image loaded');
+		var local_game_object=find_sprite_object_by_name(current_sprite_name);
+		local_game_object.frames[local_game_object.number_of_frames]={};//need to have an object to hold the sprite
+		local_game_object.frames[local_game_object.number_of_frames].sprite = game.add.sprite(local_game_object.sprite.x,local_game_object.sprite.y, project.game_objects[local_game_object.frames.length].frame_image_name);
+		sprite_ = front_layer.add(local_game_object.frames[local_game_object.number_of_frames].sprite);
+		//scale sprite down
+		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
+
+		game.physics.enable(local_game_object.frames[local_game_object.number_of_frames].sprite, Phaser.Physics.ARCADE);
+		//set it so that the sprites rotate on hte center axis
+		local_game_object.frames[local_game_object.number_of_frames].sprite.anchor.setTo(0.5, 0.5);
+		//need to create all frames for clones too :( sprites[sprites.length-1].clones=[];
+		if(local_game_object.number_of_frames==1) {
+			local_game_object.frames[1].sprite.visible=true;
+		} else {
+			local_game_object.frames[local_game_object.number_of_frames].sprite.visible=false;			
+		}
+	}
 	
 	//i neededd to make a better loader for when I have many sprites from a project, cause the images seem to load not in real time, so I need to make sure the current sprite gets to be the right one.... by incrementing thed variable below I ensure that the right sprite is put in the right slot...maybe to clean up we can use this second loader for the first case too? try it later...I think it should work
 	//loadproject
@@ -1713,7 +1732,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				var image_name=project.game_objects[index].frame_image_name;
 				loader = new Phaser.Loader(game)
 				loader.image(image_name, project.game_objects[index].frame_image_data );
-				loader.onLoadComplete.addOnce(onLoadedFrame)
+				loader.onLoadComplete.addOnce(onLoadedFrame_ForProject)
 				loader.start()
 
 				set_current_sprite_name(sprites[loader_current_sprite].name);
