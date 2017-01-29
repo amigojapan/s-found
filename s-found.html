@@ -1700,9 +1700,27 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		sprites[loader_current_sprite].sprite.anchor.setTo(0.5, 0.5);
 		sprites[loader_current_sprite].clones=[];
 
-		//this does not work:sprites[sprites.length-1].sprite.scale.setTo(2,2);
-		//add sprite to blockly blocks
-		//load background
+		//load frames
+		var game_object;
+		set_current_sprite_name("img"+sprites[loader_current_sprite].name);
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		for(var index in project.game_objects) {
+			if(project.game_objects[index].name=="img"+sprites[loader_current_sprite].name) {
+				game_object.number_of_frames=project.game_objects[index].number_of_frames;
+				game_object.frames=[];
+				game_object.current_frame=project.game_objects[index].current_frame;
+				var image_name=project.game_objects[index].frame_image_name=image_name;
+				loader = new Phaser.Loader(game)
+				loader.image(image_name, e.target.result );
+				loader.onLoadComplete.addOnce(onLoadedFrame)
+				loader.start()
+
+				set_current_sprite_name("img"+sprites[loader_current_sprite].name);
+				game_object=find_sprite_object_by_name(current_sprite_name);
+				game_object.sprite.visible=false;
+				project.game_objects[index].sprite.visible;
+			}
+		}
 	}
 
 	var x_scaling_factor_percent;
@@ -1884,31 +1902,6 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				loader.image("img"+project.images[image].name, project.images[image].data );
 				loader.onLoadComplete.addOnce(onLoaded2);
 				loader.start();
-
-				//load frames
-				var game_object;
-				set_current_sprite_name(project.images[image].name);
-				game_object=find_sprite_object_by_name(current_sprite_name);
-				for(var index in project.game_objects) {
-					if(project.game_objects[index].name==project.images[image].name) {
-						game_object.number_of_frames=project.game_objects[index].number_of_frames;
-						game_object.frames=[];
-						game_object.current_frame=project.game_objects[index].current_frame;
-						var image_name=project.game_objects[index].frame_image_name=image_name;
-						loader = new Phaser.Loader(game)
-						loader.image(image_name, e.target.result );
-						loader.onLoadComplete.addOnce(onLoadedFrame)
-						loader.start()
-						//image={}
-						//image.name=image_name;
-						//image.data=e.target.result
-						set_current_sprite_name(project.images[image].name);
-						game_object=find_sprite_object_by_name(current_sprite_name);
-						game_object.sprite.visible=false;
-						project.game_objects[index].sprite.visible;
-					}
-				}
-
 			}
 			
 			Blockly.mainWorkspace.clear();
