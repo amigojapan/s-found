@@ -1640,9 +1640,9 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		local_game_object.frames[local_game_object.number_of_frames].sprite.anchor.setTo(0.5, 0.5);
 		//need to create all frames for clones too :( sprites[sprites.length-1].clones=[];
 		if(local_game_object.number_of_frames==1) {
-			local_game_object.frames[0].sprite.visible=true;
+			local_game_object.frames[1].sprite.visible=true;
 		} else {
-			local_game_object.frames[local_game_object.number_of_frames-1].sprite.visible=false;			
+			local_game_object.frames[local_game_object.number_of_frames].sprite.visible=false;			
 		}
 	}
 	
