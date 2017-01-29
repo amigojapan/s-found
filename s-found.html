@@ -1642,7 +1642,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		if(local_game_object.number_of_frames==1) {
 			local_game_object.frames[0].sprite.visible=true;
 		} else {
-			local_game_object.frames[local_game_object.number_of_frames].sprite.visible=true;			
+			local_game_object.frames[local_game_object.number_of_frames-1].sprite.visible=false;			
 		}
 	}
 	
