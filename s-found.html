@@ -1735,7 +1735,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				loader.image(image_name, project.game_objects[index].frame_image_data );
 				loader.onLoadComplete.addOnce(onLoadedFrame_ForProject)
 				loader.start()
-				global_current_frame=1;
+				global_current_frame++;
 				set_current_sprite_name(sprites[loader_current_sprite].name);
 				game_object=find_sprite_object_by_name(current_sprite_name);
 				game_object.sprite.visible=false;
