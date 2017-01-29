@@ -1879,6 +1879,12 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				sprites.push({})
 				sprites[sprites.length-1].name=project.images[image].name;
 				
+				
+				loader = new Phaser.Loader(game);
+				loader.image("img"+project.images[image].name, project.images[image].data );
+				loader.onLoadComplete.addOnce(onLoaded2);
+				loader.start();
+
 				//load frames
 				set_current_sprite_name(project.images[image].name);
 				var game_object;
@@ -1897,7 +1903,8 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 						image={}
 						image.name=image_name;
 						image.data=e.target.result
-						game_object.sprite.visible=project.game_objects[index].sprite.visible;
+						game_object.sprite.visible=false;
+						project.game_objects[index].sprite.visible;
 					}
 				}
 			//var image_name="img"+name+"Frame"+game_object.number_of_frames;
@@ -1912,11 +1919,8 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 					game_object.number_of_frames++;
 				}			
 */
-				
-				loader = new Phaser.Loader(game);
-				loader.image("img"+project.images[image].name, project.images[image].data );
-				loader.onLoadComplete.addOnce(onLoaded2);
-				loader.start();
+
+
 			}
 			
 			Blockly.mainWorkspace.clear();
