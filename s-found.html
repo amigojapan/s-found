@@ -1888,7 +1888,6 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 					if(project.game_objects[index].name==name) {
 						game_object.number_of_frames=project.game_objects[index].number_of_frames;
 						game_object.frames=[];
-						game_object.sprite.visible=project.game_objects[index].sprite.visible;
 						game_object.current_frame=project.game_objects[index].current_frame;
 						var image_name=project.game_objects[index].frame_image_name=image_name;
 						loader = new Phaser.Loader(game)
@@ -1898,6 +1897,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 						image={}
 						image.name=image_name;
 						image.data=e.target.result
+						game_object.sprite.visible=project.game_objects[index].sprite.visible;
 
 					}
 				}
