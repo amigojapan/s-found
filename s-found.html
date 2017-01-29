@@ -1688,7 +1688,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		//console.log('image loaded');
 		var local_game_object=find_sprite_object_by_name(current_sprite_name);
 		local_game_object.frames[global_current_frame-1]={};//need to have an object to hold the sprite
-		local_game_object.frames[global_current_frame-1].sprite = game.add.sprite(local_game_object.sprite.x,local_game_object.sprite.y, project.game_objects[global_current_frame-1].frame_image_name);
+		local_game_object.frames[global_current_frame-1].sprite = game.add.sprite(local_game_object.sprite.x,local_game_object.sprite.y, project.game_objects[sprites.length-1].frame_image_names[global_current_frame-1]);
 		sprite_ = front_layer.add(local_game_object.frames[global_current_frame-1].sprite);
 		//scale sprite down
 		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
@@ -1877,7 +1877,8 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				project.game_objects[project.game_objects.length-1].number_of_frames=game_object.number_of_frames;
 			}			
 			var image_name="img"+name+"Frame"+game_object.number_of_frames;
-			project.game_objects[project.game_objects.length-1].frame_image_name=image_name;
+			project.game_objects[project.game_objects.length-1].frame_image_name=image_names=[];
+			project.game_objects[project.game_objects.length-1].frame_image_name=image_names.push(image_name);
 			project.game_objects[project.game_objects.length-1].frame_image_data=e.target.result;
 			loader = new Phaser.Loader(game)
 			loader.image(image_name, e.target.result );
