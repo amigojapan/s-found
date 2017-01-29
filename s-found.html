@@ -1797,7 +1797,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	    // read the image file as a data URL.
 	    reader.readAsDataURL(this.files[0]);
 	}
-
+	project.game_objects=[];
 	document.getElementById("files3").onchange = function () {
 	    var reader = new FileReader();
 
@@ -1826,6 +1826,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				game_object.frames=[];
 				game_object.sprite.visible=false;
 				game_object.current_frame=1;
+				project.game_objects.push(game_object);
 			} else {
 				game_object.number_of_frames++;
 			}			
@@ -1838,6 +1839,8 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			image.name=image_name;
 			image.data=e.target.result
 			project.images.push(image);
+			
+			
 	    }
 	    // read the image file as a data URL.
 	    reader.readAsDataURL(this.files[0]);
@@ -1867,6 +1870,21 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			for(image in project.images) {
 				sprites.push({})
 				sprites[sprites.length-1].name=project.images[image].name;
+				
+				//load frames
+				set_current_sprite_name(name);
+				var game_object;
+				game_object=find_sprite_object_by_name(current_sprite_name);
+				if (typeof game_object.number_of_frames == 'undefined') {
+					game_object.number_of_frames=1;
+					game_object.frames=[];
+					game_object.sprite.visible=false;
+					game_object.current_frame=1;
+					project.game_objects.push(game_object);
+				} else {
+					game_object.number_of_frames++;
+				}			
+
 				
 				loader = new Phaser.Loader(game);
 				loader.image("img"+project.images[image].name, project.images[image].data );
