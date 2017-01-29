@@ -1883,7 +1883,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			var frame={};
 			frame.frame_image_data=e.target.result
 			frame.image_name=image_name;
-			project.game_objects[project.game_objects.length-1].push(frame);
+			project.game_objects[name].push(frame);
 			loader = new Phaser.Loader(game)
 			loader.image(image_name, e.target.result );
 			loader.onLoadComplete.addOnce(onLoadedFrame)
