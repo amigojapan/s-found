@@ -1835,7 +1835,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				project.game_objects[project.game_objects.length-1].current_frame=game_object.current_frame;
 			} else {
 				game_object.number_of_frames++;
-				project.game_objects[project.game_objects.length-1].name=game_object.number_of_frames;
+				project.game_objects[project.game_objects.length-1].number_of_frames=game_object.number_of_frames;
 			}			
 			var image_name="img"+name+"Frame"+game_object.number_of_frames;
 			project.game_objects[project.game_objects.length-1].frame_image_name=image_name;
