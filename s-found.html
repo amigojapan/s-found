@@ -1797,6 +1797,8 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	    // read the image file as a data URL.
 	    reader.readAsDataURL(this.files[0]);
 	}
+	
+	project.game_objects=[];
 	document.getElementById("files3").onchange = function () {
 	    var reader = new FileReader();
 
@@ -1825,10 +1827,18 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				game_object.frames=[];
 				game_object.sprite.visible=false;
 				game_object.current_frame=1;
+				project.game_objects.push({});//object to contain frame info
+				project.game_objects[project.game_objects.length-1].name=name;
+				project.game_objects[project.game_objects.length-1].number_of_frames=game_object.number_of_frames;
+				project.game_objects[project.game_objects.length-1].frames=game_object.frames;
+				project.game_objects[project.game_objects.length-1].sprite=game_object.sprite;
+				project.game_objects[project.game_objects.length-1].current_frame=game_object.current_frame;
 			} else {
 				game_object.number_of_frames++;
+				project.game_objects[project.game_objects.length-1].name=game_object.number_of_frames;
 			}			
 			var image_name="img"+name+"Frame"+game_object.number_of_frames;
+			project.game_objects[project.game_objects.length-1].frame_image_name=image_name;
 			loader = new Phaser.Loader(game)
 			loader.image(image_name, e.target.result );
 			loader.onLoadComplete.addOnce(onLoadedFrame)
@@ -1872,7 +1882,19 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				//load frames
 				set_current_sprite_name(project.images[image].name);
 				var game_object;
+				
 				game_object=find_sprite_object_by_name(current_sprite_name);
+				for(var index in project.game_objects) {
+					if(project.game_objects[proj[index].name==name) {
+						game_object.number_of_frames=project.game_objects[index].number_of_frames
+						game_object.frames=project.game_objects[index].frames;
+						game_object.sprite=project.game_objects[index].sprite;
+						game_object.current_frame=project.game_objects[index].current_frame;
+					}
+				}
+			//var image_name="img"+name+"Frame"+game_object.number_of_frames;
+			//project.game_objects[project.game_objects.length-1].frame_image_name=image_name;
+			
 				if (typeof game_object.number_of_frames == 'undefined') {
 					game_object.number_of_frames=1;
 					game_object.frames=[];
