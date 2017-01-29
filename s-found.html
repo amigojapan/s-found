@@ -55,6 +55,11 @@
 			Click here to add a sprite:<input type="file" id="files" />
 			<img id="image" />
 		</div>
+				<div id="toolbar">
+			Click here to add a frame to a sprite:<input type="file" id="files3" />
+			<img id="frame" />
+		</div>
+
 		<div id="toolbar">
 			Click here to add a backgroud:<input type="file" id="files2" />
 			<img id="background" />
@@ -1616,6 +1621,24 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		//add sprite to blockly blocks
 		//Blockly.Blocks['motion_point_in_direction'].init()
 	}
+
+	onLoadedFrame = function(){
+		//console.log('image loaded');
+		var game_object=find_sprite_object_by_name(current_sprite_name);
+		game_object.frames[game_object.number_of_frames].sprite = game.add.sprite(game_object.sprite.x,game_object.sprite.y, "img"+sprites[sprites.length-1].name+"Frame"+game_object.number_of_frames);
+		sprite_ = front_layer.add(game_object.frames[game_object.number_of_frames].sprite);
+		//scale sprite down
+		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
+
+		game.physics.enable(game_object.frames[game_object.number_of_frames].sprite, Phaser.Physics.ARCADE);
+		//set it so that the sprites rotate on hte center axis
+		game_object.frames[game_object.number_of_frames].sprite.anchor.setTo(0.5, 0.5);
+		//need to create all frames for clones too :( sprites[sprites.length-1].clones=[];
+		if(game_object.number_of_frames==1) {
+			game_object.frames[0].sprite.visible=true;
+		}
+	}
+	
 	//i neededd to make a better loader for when I have many sprites from a project, cause the images seem to load not in real time, so I need to make sure the current sprite gets to be the right one.... by incrementing thed variable below I ensure that the right sprite is put in the right slot...maybe to clean up we can use this second loader for the first case too? try it later...I think it should work
 	//loadproject
 	var loader_current_sprite=-1;
@@ -1724,6 +1747,52 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			loader.onLoadComplete.addOnce(onLoadedBackground)
 			loader.start()
 			project.background_ = document.getElementById("background").src;	
+	    };
+
+	    // read the image file as a data URL.
+	    reader.readAsDataURL(this.files[0]);
+	};
+
+	document.getElementById("files3").onchange = function () {
+	    var reader = new FileReader();
+
+	    reader.onload = function (e) {
+	        // get loaded data and render thumbnail.
+	        document.getElementById("frame").src = e.target.result;
+			//game.load.image('userSprite1', 'assets/firstaid.png');
+
+			//prompt for sprite name
+			var name=prompt("Enter Sprite ID","Sprite-ID");
+			var sprite_found=false;
+			for(var obj in sprites){
+				if(sprites[obj].name==name) {
+					sprite_found=true;
+				}
+			}
+			if(!sprite_found) {
+					alert("Sprite "+ name + "does not exist");
+					return;								
+			}
+			}
+			set_current_sprite_name(name);
+			var game_object;
+			game_object=find_sprite_object_by_name(current_sprite_name);
+			if (typeof game_object.number_of_frames == 'undefined') {
+				game_object.number_of_frames=1;
+				game_object.frames=[];
+				game_object.sprite.visible=false;
+			} else {
+				game_object.number_of_frames++;
+			}			
+			var image_name="img"+name+"Frame"+game_object.number_of_frames;
+			loader = new Phaser.Loader(game)
+			loader.image(image_name, e.target.result );
+			loader.onLoadComplete.addOnce(onLoadedFrame)
+			loader.start()
+			image={}
+			image.name=image_name;
+			image.data=e.target.result
+			project.images.push(image);
 	    };
 
 	    // read the image file as a data URL.
@@ -1919,6 +1988,51 @@ amigojapan: Sadale: I will try making a small game as-is,    I think it would be
 	   by changing the original sptire into a series of hidden sprites, and changign their texture when the user puts the “change sprite to next frame of animation” block on the main loop of hteir program
 	KaffeeJunky123: amigojapan: wouldn't it be easier to use separate sprites for the different frames of the animation and just hide the sprites that are not the current animation frame?
 	amigojapan:that and I would need to update their X Y and Angle axis to be the same as the original sprite whenever those are changed…. but yeah, it is possible,d effinitly
+	
+	
+	each sprte should contain:
+	-current_fame_number(need to expose this in block)
+	-number_of_frames(need to expose this in block)
+	-a frames array
+		-sprite
+	
+	add_frame(game_Object){
+		if (typeof game_object.number_of_frames == 'undefined') {
+			game_object.number_of_frames=1;
+			game_object.frames=[];
+		} else {
+			game_object.number_of_frames++;
+		}
+		frameImage=loadFrame();
+		game_object.frames.push(frameImage);
+	}
+	
+	//add this function call to any code that changes the position of a sprite
+	function update_position_of_frames(game_Object) {
+		loop thru all frames {
+			frame.sprite.x=game_Object.sprite.x;
+			frame.sprite.y=game_Object.sprite.y;
+			frame.sprite.angle=game_Object.sprite.angle;
+		}
+	}
+	
+	function next_fame(game_Object) {
+		loop thru all frames {
+			if(frame.number==game_object.current_fame_number) {
+				frame.sprite.visible = false;
+				if(game_object.current_fame_number==game_object.number_of_frames) {
+					game_object.current_fame_number=0;
+				} else {
+					game_object.current_fame_number++;
+				}
+			}
+		}
+		loop thru all frames {
+			if(frame.number==game_object.current_fame_number) {
+				frame.sprite.visible = true;
+		}
+	}
+		
 	/*
 	//(done)implement hide show sprite blocks
 	//make a block that returns the current angle, call it direction like in scratch?
