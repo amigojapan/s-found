@@ -496,13 +496,13 @@ game_object.sprite.bringToTop()
 			alert("runtime Error, sprite "+ game_object.name + " contains no frames, but 'next frame' block used");		
 			return
 		}
-		game_object.frames[game_object.current_farame]sprite.visible=false;
+		game_object.frames[game_object.current_farame].sprite.visible=false;
 		if(game_object.number_of_frames==game_object.current_farame) {//if at last frame loop back to first frame
 			game_object.current_farame=1;
 		} else {
 			game_object.current_farame++;
 		}
-		game_object.frames[game_object.current_farame]sprite.visible=false;
+		game_object.frames[game_object.current_farame].sprite.visible=false;
 	}
 	
 	/*	
