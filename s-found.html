@@ -1633,8 +1633,8 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	workspace.addChangeListener(workspaceChanged);
 	
 	
-	var project = {}
-	project.images = []
+	var project = {};
+	project.images = [];
 	project.background_ = "not set";
 	
 	//toolbar code
@@ -1812,8 +1812,12 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			image.name=name;
 			image.data=e.target.result
 			project.images.push(image);
+			//new game object
+			var game_object={};
+			game_object.name=name;
 			project.game_objects[name]=[];
-	
+			project.game_objects[name].push(game_object);
+			project.game_objects[name].frames=[];
 	    };
 
 	    // read the image file as a data URL.
@@ -1838,7 +1842,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	    reader.readAsDataURL(this.files[0]);
 	}
 	
-	project.game_objects=[];
+		project.game_objects=[];
 	
 	document.getElementById("files3").onchange = function () {
 	    var reader = new FileReader();
@@ -1863,6 +1867,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			set_current_sprite_name(name);
 			var game_object;
 			game_object=find_sprite_object_by_name(current_sprite_name);
+
 			if (typeof game_object.number_of_frames == 'undefined') {
 				game_object.number_of_frames=1;
 				game_object.sprite.visible=false;
@@ -1878,11 +1883,11 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				project.game_objects[name].number_of_frames=game_object.number_of_frames;
 			}			
 			var image_name="img"+name+"Frame"+game_object.number_of_frames;
-			//project.game_objects[name].frames=;
+			//new frame
 			var frame={};
 			frame.frame_image_data=e.target.result
 			frame.image_name=image_name;
-			project.game_objects[name].push(frame);
+			project.game_objects[name].frames.push(frame);
 			loader = new Phaser.Loader(game)
 			loader.image(image_name, e.target.result );
 			loader.onLoadComplete.addOnce(onLoadedFrame)
@@ -2132,7 +2137,54 @@ amigojapan: Sadale: I will try making a small game as-is,    I think it would be
 				frame.sprite.visible = true;
 		}
 	}
-		
+	
+	//save project structure
+	//new project
+	var project = {};
+	project.game_objects=[];
+	//new game object
+	var game_object={};
+    game_object.info="data1";
+	project.game_objects["id0"]=[];
+	project.game_objects["id0"].push(game_object);
+	project.game_objects["id0"].frames=[];
+    project.game_objects["id0"].info="test0"
+	//new game object
+	var game_object={};
+    game_object.info="data2";
+	project.game_objects["id1"]=[];
+	project.game_objects["id1"].push(game_object);
+	project.game_objects["id1"].frames=[];
+    project.game_objects["id1"].info="test1"
+	//new frame
+	var frame={};
+	frame.test="hi1";
+	frame.bye="bye1";
+	project.game_objects["id0"].frames.push(frame);
+	//new frame
+	var frame={};
+	frame.test="hi2";
+	frame.bye="bye2";
+	project.game_objects["id0"].frames.push(frame);
+	var frame={};
+	frame.test="hi3";
+	frame.bye="bye3";
+	project.game_objects["id1"].frames.push(frame);
+	var frame={};
+	frame.test="hi4";
+	frame.bye="bye4";
+	project.game_objects["id1"].frames.push(frame);
+
+	//parsing data structure
+	for(var obj in project.game_objects) {
+          print(project.game_objects[obj].info);
+	  for(var frame in project.game_objects[obj].frames) {
+		print(project.game_objects[obj].frames[frame].test);
+	  }
+	}
+"end"
+
+
 	/*
 	//(done)implement hide show sprite blocks
 	//make a block that returns the current angle, call it direction like in scratch?
