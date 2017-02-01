@@ -1736,7 +1736,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 					game_object.number_of_frames++;
 				}			
 				loader = new Phaser.Loader(game)
-				loader.image(project.game_objects[sprites.length-1].frames[game_object.number_of_frames].image_name, project.game_objects[index].frame_image_data );
+				loader.image(project.game_objects[sprites.length-1].frames[game_object.number_of_frames].image_name, project.game_objects[sprites.length-1].frames[game_object.number_of_frames].frame_image_data);
 				loader.onLoadComplete.addOnce(onLoadedFrame_ForProject)
 				loader.start()
 				/*
