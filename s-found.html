@@ -1869,6 +1869,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			for(obj in 	project.game_objects) {
 				if(project.game_objects[obj].name==name) {
 					if (typeof game_object.number_of_frames == 'undefined') {
+						game_object.frames=[];
 						game_object.number_of_frames=1;
 						game_object.sprite.visible=false;
 						game_object.current_frame=1;
