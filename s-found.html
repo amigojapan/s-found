@@ -1968,8 +1968,35 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		
 		project = JSON.parse(project_json);
 		
+		if(typeof project.background_ != 'undefined' || project.background_!="not set") {
+			loader = new Phaser.Loader(game);
+			loader.image("backgroud", project.background_ );
+			loader.onLoadComplete.addOnce(onLoadedBackground);
+			loader.start();								
+					
+
+		}
 		
 		
+		loader_current_sprite=-1;
+		for(image in project.images) {
+			sprites.push({})
+			sprites[sprites.length-1].name=project.images[image].name;
+			
+			
+			loader = new Phaser.Loader(game);
+			loader.image("img"+project.images[image].name, project.images[image].data );
+			loader.onLoadComplete.addOnce(onLoaded2);
+			loader.start();
+		}
+		
+		Blockly.mainWorkspace.clear();
+		var xml = Blockly.Xml.textToDom(project.block_xml);
+		Blockly.Xml.domToWorkspace(workspace, xml);
+	    // read the image file as a data URL.
+	    reader.readAsText(this.files[0]);
+		
+/*		
 		if(typeof project.background_ != 'undefined' || project.background_!="not set") {
 			loader = new Phaser.Loader(game);
 			loader.image("backgroud", project.background_ );
@@ -1993,7 +2020,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		Blockly.mainWorkspace.clear();
 		var xml = Blockly.Xml.textToDom(project.block_xml);
 		Blockly.Xml.domToWorkspace(workspace, xml);
-		
+*/		
 	}
 	//sprite object model
 	/*
