@@ -1815,6 +1815,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			//new game object
 			var game_object={};
 			game_object.frames=[];
+			project.game_objects[obj].name==name
 			project.game_objects.push(game_object);
 	    };
 
@@ -1865,31 +1866,30 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			set_current_sprite_name(name);
 			var game_object;
 			game_object=find_sprite_object_by_name(current_sprite_name);
-			for(obj in project.game_objects) {
-				if(project.game_objects[obj].name==name) {
-					if (typeof game_object.number_of_frames == 'undefined') {
-						game_object.number_of_frames=1;
-						game_object.sprite.visible=false;
-						game_object.current_frame=1;
-						//project.game_objects.push({});//object to contain frame info
-						project.game_objects[name].name=name;
-						project.game_objects[name].number_of_frames=game_object.number_of_frames;
-						//project.game_objects[project.game_objects.length-1].frames=game_object.frames;
-						project.game_objects[name].visible=game_object.sprite.visible;
-						project.game_objects[name].current_frame=game_object.current_frame;
-					} else {
-						game_object.number_of_frames++;
-						project.game_objects[name].number_of_frames=game_object.number_of_frames;
-					}			
-					var image_name="img"+name+"Frame"+game_object.number_of_frames;
-					
-					//new frame
-					var frame={};
-					frame.frame_image_data=e.target.result
-					frame.image_name=image_name;
-
-					project.game_objects[obj].frames.push(frame);
-					return
+				for(obj in 	project.game_objects) {
+					if(project.game_objects[obj].name==name) {
+						if (typeof game_object.number_of_frames == 'undefined') {
+							game_object.number_of_frames=1;
+							game_object.sprite.visible=false;
+							game_object.current_frame=1;
+							//project.game_objects.push({});//object to contain frame info
+							project.game_objects[obj].name=name;
+							project.game_objects[obj].number_of_frames=game_object.number_of_frames;
+							//project.game_objects[project.game_objects.length-1].frames=game_object.frames;
+							project.game_objects[obj].visible=game_object.sprite.visible;
+							project.game_objects[obj].current_frame=game_object.current_frame;
+						} else {
+							game_object.number_of_frames++;
+							project.game_objects[obj].number_of_frames=game_object.number_of_frames;
+						}			
+						var image_name="img"+name+"Frame"+game_object.number_of_frames;
+						
+						//new frame
+						var frame={};
+						frame.frame_image_data=e.target.result
+						frame.image_name=image_name;
+						project.game_objects[obj].frames.push(frame);
+					}
 				}
 			}			
 			//project.game_objects[name].frames.push(frame);
