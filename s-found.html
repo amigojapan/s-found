@@ -1726,34 +1726,21 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		set_current_sprite_name(sprites[loader_current_sprite].name);
 		game_object=find_sprite_object_by_name(current_sprite_name);
 		for(var index in project.game_objects) {
-			if(project.game_objects[index].name==sprites[loader_current_sprite].name) {
-				if (typeof game_object.number_of_frames == 'undefined') {
-					game_object.frames=[];
-					game_object.number_of_frames=1;
-					game_object.sprite.visible=false;
-					game_object.current_frame=1;
-				} else {
-					game_object.number_of_frames++;
-				}			
-				loader = new Phaser.Loader(game)
-				loader.image(project.game_objects[sprites.length-1].frames[game_object.number_of_frames].image_name, project.game_objects[sprites.length-1].frames[game_object.number_of_frames].frame_image_data);
-				loader.onLoadComplete.addOnce(onLoadedFrame_ForProject)
-				loader.start()
-				/*
-				game_object.number_of_frames=project.game_objects[index].number_of_frames;
-				game_object.frames=[];
-				game_object.current_frame=project.game_objects[index].current_frame;
-				var image_name=project.game_objects[index].frame_image_name;
-				loader = new Phaser.Loader(game)
-				loader.image(image_name, project.game_objects[index].frame_image_data );
-				loader.onLoadComplete.addOnce(onLoadedFrame_ForProject)
-				loader.start()
-				current_frame++;
-				set_current_sprite_name(sprites[loader_current_sprite].name);
-				game_object=find_sprite_object_by_name(current_sprite_name);
-				game_object.sprite.visible=false;
-				//project.game_objects[index].sprite.visible;
-				*/
+			for(frame in project.game_objects[sprites.length-1].frames) {
+				if(project.game_objects[index].name==sprites[loader_current_sprite].name) {
+					if (typeof game_object.number_of_frames == 'undefined') {
+						game_object.frames=[];
+						game_object.number_of_frames=1;
+						game_object.sprite.visible=false;
+						game_object.current_frame=1;
+					} else {
+						game_object.number_of_frames++;
+					}			
+					loader = new Phaser.Loader(game)
+					loader.image(project.game_objects[sprites.length-1].frames[game_object.number_of_frames].image_name, project.game_objects[sprites.length-1].frames[game_object.number_of_frames].frame_image_data);
+					loader.onLoadComplete.addOnce(onLoadedFrame_ForProject)
+					loader.start()
+				}
 			}
 		}
 	}
