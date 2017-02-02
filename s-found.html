@@ -116,11 +116,13 @@ ver 0.1
 			  <block type="sprites_create_clone_of_current_sprite"></block>
 			  <block type="sprites_destroy_current_sprite"></block>
 			  <block type="sprites_next_frame"></block>
+			  <block type="sprites_set_frame_to_frame_number"></block>
 			  <block type="sprites_current_sprite_bring_to_front"></block>
 			  <!-- <block type="sprites_current_sprite_send_to_back"></block> this block does not seem to work so I am hiding it for now-->
 			  <block type="sprites_for_each_clone_of_current_sprite"></block>
 			  <block type="sprites_value_of_x"></block>
 			  <block type="sprites_value_of_y"></block>
+			  <block type="sprites_current_frame_number"></block>
 			  <block type="sprites_hide_current_sprite"></block>
 			  <block type="sprites_show_current_sprite"></block>			  
 		    </category>
@@ -510,7 +512,7 @@ game_object.sprite.bringToTop()
 		}
 		game_object.frames[game_object.current_frame].sprite.visible=true;
 	}
-	function set_frame_to_frame_nuber(frame_number) {
+	function set_frame_to_frame_number(frame_number) {
 		var game_object;
 		game_object=find_sprite_object_by_name(current_sprite_name);
 		if (typeof game_object.number_of_frames == 'undefined') {
@@ -1014,11 +1016,11 @@ game_object.sprite.bringToTop()
 	  return code;
 	};
 	
-	Blockly.Blocks['sprites_set_frame_to_frame_nuber'] = {
+	Blockly.Blocks['sprites_set_frame_to_frame_number'] = {
 	  init: function() {
 	    this.appendValueInput("FRAME_NUMBER")
 	        .setCheck("Number")
-	        .appendField("foward");
+	        .appendField("set frame to frame");
 	    this.setPreviousStatement(true);
 	    this.setNextStatement(true);
 	    this.setColour(260);
@@ -1026,12 +1028,12 @@ game_object.sprite.bringToTop()
 	    this.setHelpUrl('http://www.example.com/');
 	  }
 	};
-	Blockly.JavaScript['sprites_set_frame_to_frame_nuber'] = function(block) {
+	Blockly.JavaScript['sprites_set_frame_to_frame_number'] = function(block) {
 	  var value_FRAME_NUMBER = Blockly.JavaScript.valueToCode(block, 'FRAME_NUMBER', Blockly.JavaScript.ORDER_ATOMIC);
 	  // TODO: Assemble JavaScript into code variable.
 	  var argument0 = Blockly.JavaScript.valueToCode(block, 'FRAME_NUMBER',
       Blockly.JavaScript.ORDER_NONE) || '\'\'';
-	  var code = 'set_frame_to_frame_nuber('+argument0+');\n';
+	  var code = 'set_frame_to_frame_number('+argument0+');\n';
 	  return code;
 	};
 
@@ -1159,7 +1161,7 @@ game_object.sprite.bringToTop()
 	Blockly.Blocks['sprites_current_frame_number'] = {
 	  init: function() {
 	    this.appendDummyInput()
-	        .appendField("value of y");
+	        .appendField("get current frame number");
 	    this.setOutput(true, "Number");
 	    this.setColour(210);
 	    this.setTooltip('');
