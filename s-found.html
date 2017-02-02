@@ -1775,10 +1775,10 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		//set it so that the sprites rotate on hte center axis
 		local_game_object.frames[local_game_object.number_of_frames].sprite.anchor.setTo(0.5, 0.5);
 		//need to create all frames for clones too :( sprites[sprites.length-1].clones=[];
-		if(local_game_object.current_frame==1) {
+		if(local_game_object.number_of_frames==1) {
 			local_game_object.frames[1].sprite.visible=true;
 		} else {
-			local_game_object.frames[local_game_object.current_frame].sprite.visible=false;			
+			local_game_object.frames[local_game_object.number_of_frames].sprite.visible=false;			
 		}
 		if(project.game_objects[sprites.length-1].number_of_frames!=local_game_object.number_of_frames) {
 			local_game_object.number_of_frames++
