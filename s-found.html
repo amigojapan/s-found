@@ -448,30 +448,35 @@ game_object.sprite.bringToTop()
     	var newy=game_object.sprite.y-distance*Math.sin(angle_radians);
 		game_object.sprite.x=newx;
 		game_object.sprite.y=newy;		
+		update_position_of_frames(game_object);
 	}
 	function set_x_to(X) {
 		var game_object;
 		game_object=find_sprite_object_by_name(current_sprite_name);
 		
-		game_object.sprite.x=X;		
+		game_object.sprite.x=X;
+		update_position_of_frames(game_object);		
 	}
 	function set_y_to(Y) {
 		var game_object;
 		game_object=find_sprite_object_by_name(current_sprite_name);
 		
 		game_object.sprite.y=Y;		
+		update_position_of_frames(game_object);
 	}
 	function turn_right(degrees) {
 		var game_object;
 		game_object=find_sprite_object_by_name(current_sprite_name);
 		
 	    game_object.sprite.angle=game_object.sprite.angle+degrees;
+	    update_position_of_frames(game_object);
 	}
 	function turn_left(degrees) {
 		var game_object;
 		game_object=find_sprite_object_by_name(current_sprite_name);
 		
 	    game_object.sprite.angle=game_object.sprite.angle-degrees;
+	    update_position_of_frames(game_object);
 	}
 	function get_x_value() {
 		return find_sprite_object_by_name(current_sprite_name).sprite.x;
@@ -506,12 +511,13 @@ game_object.sprite.bringToTop()
 		game_object.frames[game_object.current_frame].sprite.visible=true;
 	}
 	function update_position_of_frames(game_Object) {
-		 {
+		for(frame in game_Object.frames) {
 			frame.sprite.x=game_Object.sprite.x;
 			frame.sprite.y=game_Object.sprite.y;
 			frame.sprite.angle=game_Object.sprite.angle;
 		}
 	}
+
 	/*	
 	function move_right() {
 		sprite.x+=100;
@@ -1688,8 +1694,8 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		//console.log('image loaded');
 		var local_game_object=find_sprite_object_by_name(current_sprite_name);
 		local_game_object.frames[local_game_object.number_of_frames]={};//need to have an object to hold the sprite
-		//local_game_object.frames[local_game_object.number_of_frames].sprite = game.add.sprite(local_game_object.sprite.x,local_game_object.sprite.y, project.game_objects[sprites.length-1].frames[local_game_object.number_of_frames-1].image_name);
-		local_game_object.frames[local_game_object.number_of_frames].sprite = local_game_object.sprite.addChild(game.make.sprite(local_game_object.sprite.x,local_game_object.sprite.y, project.game_objects[sprites.length-1].frames[local_game_object.number_of_frames-1].image_name));
+		local_game_object.frames[local_game_object.number_of_frames].sprite = game.add.sprite(local_game_object.sprite.x,local_game_object.sprite.y, project.game_objects[sprites.length-1].frames[local_game_object.number_of_frames-1].image_name);
+		//did not follow parent local_game_object.frames[local_game_object.number_of_frames].sprite = local_game_object.sprite.addChild(game.make.sprite(local_game_object.sprite.x,local_game_object.sprite.y, project.game_objects[sprites.length-1].frames[local_game_object.number_of_frames-1].image_name));
 		
 		sprite_ = front_layer.add(local_game_object.frames[local_game_object.number_of_frames].sprite);
 		//scale sprite down
@@ -2153,7 +2159,7 @@ amigojapan: Sadale: I will try making a small game as-is,    I think it would be
 	
 	//add this function call to any code that changes the position of a sprite
 	function update_position_of_frames(game_Object) {
-		loop thru all frames {
+		for(frame in game_Object.frames) {
 			frame.sprite.x=game_Object.sprite.x;
 			frame.sprite.y=game_Object.sprite.y;
 			frame.sprite.angle=game_Object.sprite.angle;
