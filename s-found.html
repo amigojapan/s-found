@@ -512,9 +512,9 @@ game_object.sprite.bringToTop()
 	}
 	function update_position_of_frames(game_Object) {
 		for(frame in game_Object.frames) {
-			frame.sprite.x=game_Object.sprite.x;
-			frame.sprite.y=game_Object.sprite.y;
-			frame.sprite.angle=game_Object.sprite.angle;
+			game_Object.frames[frame].sprite.x=game_Object.sprite.x;
+			game_Object.frames[frame].sprite.y=game_Object.sprite.y;
+			game_Object.frames[frame].sprite.angle=game_Object.sprite.angle;
 		}
 	}
 
