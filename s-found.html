@@ -1688,7 +1688,9 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		//console.log('image loaded');
 		var local_game_object=find_sprite_object_by_name(current_sprite_name);
 		local_game_object.frames[local_game_object.number_of_frames]={};//need to have an object to hold the sprite
-		local_game_object.frames[local_game_object.number_of_frames].sprite = game.add.sprite(local_game_object.sprite.x,local_game_object.sprite.y, project.game_objects[sprites.length-1].frames[local_game_object.number_of_frames-1].image_name);
+		//local_game_object.frames[local_game_object.number_of_frames].sprite = game.add.sprite(local_game_object.sprite.x,local_game_object.sprite.y, project.game_objects[sprites.length-1].frames[local_game_object.number_of_frames-1].image_name);
+		local_game_object.frames[local_game_object.number_of_frames].sprite = parent.addChild(game.make.sprite(local_game_object.sprite.x,local_game_object.sprite.y, project.game_objects[sprites.length-1].frames[local_game_object.number_of_frames-1].image_name));
+		
 		sprite_ = front_layer.add(local_game_object.frames[local_game_object.number_of_frames].sprite);
 		//scale sprite down
 		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
@@ -2157,6 +2159,11 @@ amigojapan: Sadale: I will try making a small game as-is,    I think it would be
 			frame.sprite.angle=game_Object.sprite.angle;
 		}
 	}
+	
+	amigojapan: KaffeeJunky123: hmm, interesting there is somethig called “chidl sprites” in phaser, I may be able to make the
+	 animated sprites follow the main sprite just by setting them to be children… isntead of making a complicated fucntion to do
+	  it and needing ot add it to other stuff
+	https://phaser.io/examples/v2/sprites/child-sprites
 	
 	function next_fame(game_Object) {
 		loop thru all frames {
