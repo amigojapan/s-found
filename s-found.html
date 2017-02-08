@@ -94,7 +94,7 @@ ver 0.1
 			 <button onclick="loadURLproject()">Load project from URL</button>
   		  </p>
 
-  		<div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+  		<div id="blocklyDiv" style="height: 600px; width: 100%;"></div>
 
 		  <xml id="toolbox" style="display: none">
 		    <category name="Events">    
@@ -2313,6 +2313,11 @@ deltab: amigojapan: hmm, you have an array with a frames property?
 [6:49pm] duderonomy left the chat room. (Ping timeout: 276 seconds)
 [6:49pm] deltab: JSON doesn't have a way to represent that
 
+		//modules
+		amigojapan: darkf: I think the other hard part will be braking up the projects into “modules” or “Pages”    
+		to be able to break up a project into smalled pices, becuase blockly does not have such a functionality….
+		I want my users to be able to develop in smaller pages, cause making a huge block program in only one workspace
+		would be hell
 	/*
 	//(done)implement hide show sprite blocks
 	//make a block that returns the current angle, call it direction like in scratch?
@@ -2332,7 +2337,8 @@ deltab: amigojapan: hmm, you have an array with a frames property?
 	
 	//make some way of implenting timers, maybe like in scratch (this should be easy for me), or maybe, if possible(not sure if I can do it cause it is functional) make it in the way Javascript does times with set_interval
 	//make frogger in s-found
-	
+	//make scrollable views, to be able to make RPG style games, I guess I just need to move the background and not scale it
+	//add a comment to the code that mentions what "page" the code is on
   </script>
 
 </body>
