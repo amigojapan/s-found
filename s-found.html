@@ -1719,6 +1719,53 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	var project = {};
 	project.images = [];
 	project.background_ = "not set";
+	project.pages=[];
+	var page={};
+	page.pagename="main";
+	project.pages.push(page);
+	updatePages();
+
+	function updatePages() {
+		document.getElementById("pages").innerHTML="Pages"
+	  //parsing data structure
+	  for(var pageindex in project.pages) {
+	  var finaltag=(project.pages[pageindex].pagename=="main")?"":">(-)"
+	  document.getElementById("pages").innerHTML=document.getElementById("pages").innerHTML+" <a href=javascript:clikedLink('"+project.pages[pageindex].pagename+"')"+ " id="+project.pages[pageindex].pagename+">"+project.pages[pageindex].pagename+"</a>"+" <a href=javascript:clikedDeleteLink('"+project.pages[pageindex].pagename+"')"+ " id=del"+project.pages[pageindex].pagename+finaltag+"</a>";
+		}
+	}
+	function addPage() {
+		//new page
+		var page={};
+	  page.pagename=prompt("Enter new page name","page#");
+		page.xml="uninitialized xml";
+	 for(var pageindex in project.pages){
+		if(project.pages[pageindex].pagename==page.pagename) {
+			alert("Error, page name must be unique, '" + page.pagename + "' already exists.");
+			return;	
+		}	
+	 }
+	  
+		project.pages.push(page);
+	  updatePages();
+	}
+	function clikedLink(linkName) {
+		alert("s:"+linkName);
+	}
+	function clikedDeleteLink(linkName) {
+	  var answer = confirm("Delete page "+linkName+"? -- warning this cannot be undone, blocks in this page will be deleted!!")
+	  if (answer) {
+	 for(var pageindex in project.pages){
+					if(project.pages[pageindex].pagename==linkName) {
+						if(project.pages.length==0){
+							break;
+						}else{
+							project.pages.splice(pageindex, 1);	
+						}	
+					}//);
+				}
+	  updatePages();
+	  }
+	}
 	
 	//toolbar code
 	function guid() {
@@ -2325,57 +2372,12 @@ Json:{"game_objects":[{"name":"data1","frames":[{"test":"hi1","bye":"bye1"},{"te
 //pages stuff
 //add functionality to delete a page
 //enssure page names are unique
-https://jsfiddle.net/pnk7wtrf/24/
+https://jsfiddle.net/pnk7wtrf/36/
 <button onclick="addPage()">Add page</button>
 <div id="pages">
-No pages
+pages div uninitialized
 </div>
 
-	//save project structure
-	//new project
-	var project = {};
-	project.game_objects=[];
-  project.pages=[];
-function updatePages() {
-	document.getElementById("pages").innerHTML="Pages"
-  //parsing data structure
-  for(var pageindex in project.pages) {
-  document.getElementById("pages").innerHTML=document.getElementById("pages").innerHTML+" <a href=javascript:clikedLink('"+project.pages[pageindex].pagename+"')"+ " id="+project.pages[pageindex].pagename+">"+project.pages[pageindex].pagename+"</a>"+" <a href=javascript:clikedDeleteLink('"+project.pages[pageindex].pagename+"')"+ " id=del"+project.pages[pageindex].pagename+">(-)</a>";
-	}
-}
-function addPage() {
-	//new page
-	var page={};
-  page.pagename=prompt("Enter new page name","page#");
-	page.xml="<xml>";
- for(var pageindex in project.pages){
-				if(project.pages[pageindex].pagename==page.pagename) {
-        	alert("Error, page name must be unique, '" + page.pagename + "' already exists.")
-          return
-				}	
- }
-  
-	project.pages.push(page);
-  updatePages();
-}
-function clikedLink(linkName) {
-	alert("s:"+linkName);
-}
-function clikedDeleteLink(linkName) {
-  var answer = confirm("Delete page "+linkName+"? -- warning this cannot be undone, blocks in this page will be deleted!!")
-  if (answer) {
- for(var pageindex in project.pages){
-				if(project.pages[pageindex].pagename==linkName) {
-					if(project.pages.length==0){
-						break;
-					}else{
-						project.pages.splice(pageindex, 1);	
-					}	
-				}//);
-			}
-  updatePages();
-  }
-}
 //second try
 	//save project structure
 	//new project
@@ -2391,7 +2393,8 @@ function updatePages() {
 	document.getElementById("pages").innerHTML="Pages"
   //parsing data structure
   for(var pageindex in project.pages) {
-  document.getElementById("pages").innerHTML=document.getElementById("pages").innerHTML+" <a href=javascript:clikedLink('"+project.pages[pageindex].pagename+"')"+ " id="+project.pages[pageindex].pagename+">"+project.pages[pageindex].pagename+"</a>"+" <a href=javascript:clikedDeleteLink('"+project.pages[pageindex].pagename+"')"+ " id=del"+project.pages[pageindex].pagename+(project.pages[pageindex].pagename=="main")?"":">(-)"+"</a>";
+  var finaltag=(project.pages[pageindex].pagename=="main")?"":">(-)"
+  document.getElementById("pages").innerHTML=document.getElementById("pages").innerHTML+" <a href=javascript:clikedLink('"+project.pages[pageindex].pagename+"')"+ " id="+project.pages[pageindex].pagename+">"+project.pages[pageindex].pagename+"</a>"+" <a href=javascript:clikedDeleteLink('"+project.pages[pageindex].pagename+"')"+ " id=del"+project.pages[pageindex].pagename+finaltag+"</a>";
 	}
 }
 function addPage() {
