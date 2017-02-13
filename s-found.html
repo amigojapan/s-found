@@ -741,7 +741,7 @@ game_object.sprite.bringToTop()
 	//var generation_complete=false;
 	function generateJS() {
 		//if(!generation_complete){
-			debuggerCode="";
+			var Code="";
 			var xml = Blockly.Xml.workspaceToDom(workspace);
 			var xml_text = Blockly.Xml.domToPrettyText(xml);				
 			for(var pageindex in project.pages){
@@ -755,11 +755,11 @@ game_object.sprite.bringToTop()
 				Blockly.JavaScript.addReservedWords('highlightBlock');
 				Blockly.JavaScript.STATEMENT_PREFIX = '';
 				Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
-				debuggerCode = debuggerCode + Blockly.JavaScript.workspaceToCode(workspace_hidden);
+				Code = Code + Blockly.JavaScript.workspaceToCode(workspace_hidden);
 			}
 			
-			document.getElementById('funct').value = debuggerCode;
-			return debuggerCode;
+			document.getElementById('funct').value = Code;
+			return Code;
 			//generation_complete=true;
 		//}
 	}
