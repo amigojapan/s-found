@@ -740,23 +740,20 @@ game_object.sprite.bringToTop()
 		debuggerCode="";
 		var xml = Blockly.Xml.workspaceToDom(workspace);
 		var xml_text = Blockly.Xml.domToPrettyText(xml);				
-				for(var pageindex in project.pages){
-					if(project.pages[pageindex].pagename==linkName) {
-						Blockly.mainWorkspace.clear();
-						if(project.pages[pageindex].xml=="uninitialized xml") {
-							return;
-						}
-						var xml = Blockly.Xml.textToDom(project.pages[pageindex].xml);
-						Blockly.Xml.domToWorkspace(workspace, xml);	
-						//gegerate
-						Blockly.JavaScript.addReservedWords('highlightBlock');
-						Blockly.JavaScript.STATEMENT_PREFIX = '';
-						document.getElementById('funct').value = Blockly.JavaScript.workspaceToCode(workspace_hidden);
-						Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
-						debuggerCode = debuggerCode + Blockly.JavaScript.workspaceToCode(workspace);
-					}
+		for(var pageindex in project.pages){
+			if(project.pages[pageindex].pagename==linkName) {
+				Blockly.mainWorkspace.clear();
+				if(project.pages[pageindex].xml=="uninitialized xml") {
+					return;
 				}
-
+				var xml = Blockly.Xml.textToDom(project.pages[pageindex].xml);
+				Blockly.Xml.domToWorkspace(workspace, xml);	
+				//gegerate
+				Blockly.JavaScript.addReservedWords('highlightBlock');
+				Blockly.JavaScript.STATEMENT_PREFIX = '';
+				document.getElementById('funct').value = Blockly.JavaScript.workspaceToCode(workspace_hidden);
+				Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+				debuggerCode = debuggerCode + Blockly.JavaScript.workspaceToCode(workspace);
 			}
 		}
 		return debuggerCode;
