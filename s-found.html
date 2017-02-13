@@ -758,7 +758,7 @@ game_object.sprite.bringToTop()
 				Code = Code + Blockly.JavaScript.workspaceToCode(workspace_hidden);
 			}
 			
-			document.getElementById('funct').value = Code;
+			//document.getElementById('funct').value = Code;
 			return Code;
 			//generation_complete=true;
 		//}
@@ -1724,6 +1724,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				debuggerCode = Blockly.JavaScript.workspaceToCode(workspace);
 				*/
 				debuggerCode = generateJS()
+				document.getElementById('funct').value = debuggerCode;
 			  //var xml = Blockly.Xml.workspaceToDom(workspace);
 		  	  //var xml_text = Blockly.Xml.domToPrettyText(xml);
 
