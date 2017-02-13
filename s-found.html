@@ -92,7 +92,11 @@ ver 0.1
 			 <button onclick="saveCode()">Save</button>
 			 <button onclick="loadCode()">Load</button>
 			 <button onclick="loadURLproject()">Load project from URL</button>
+			 <button onclick="addPage()">Add page</button>
   		  </p>
+		<div id="pages">
+		pages div uninitialized
+		</div>
 
   		<div id="blocklyDiv" style="height: 600px; width: 100%;"></div>
 
@@ -727,14 +731,17 @@ game_object.sprite.bringToTop()
       workspace.highlightBlock(null);
     }
 	
-	var id;
-	var evalRun=false;
-    function evalCode() {
+	function generateJS() {
 		Blockly.JavaScript.addReservedWords('highlightBlock');
 		Blockly.JavaScript.STATEMENT_PREFIX = '';
         document.getElementById('funct').value = Blockly.JavaScript.workspaceToCode(workspace);
         Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
 		debuggerCode = Blockly.JavaScript.workspaceToCode(workspace);
+	}
+	var id;
+	var evalRun=false;
+    function evalCode() {
+		generateJS();
   	  
 	  //var xml = Blockly.Xml.workspaceToDom(workspace);
   	  //var xml_text = Blockly.Xml.domToPrettyText(xml);
@@ -2258,10 +2265,17 @@ amigojapan: Sadale: I will try making a small game as-is,    I think it would be
 		}
 	}
 	
+	
 	//save project structure
 	//new project
 	var project = {};
 	project.game_objects=[];
+        project.pages=[];
+	//new page
+	var page={};
+        page.pagename="page1";
+	page.xml="<xml>";
+	project.pages.push(page);
 	//new game object
 	var game_object={};
 	game_object.name="data1";
@@ -2299,7 +2313,6 @@ amigojapan: Sadale: I will try making a small game as-is,    I think it would be
 	  }
 	}
 "Json:"+JSON.stringify(project)
-
 output:
 data1
 hi1
@@ -2307,10 +2320,114 @@ hi2
 data2
 hi3
 hi4
-Json:{"game_objects":[{"name":"data1","frames":[{"test":"hi1","bye":"bye1"},{"test":"hi2","bye":"bye2"}]},{"name":"data2","frames":[{"test":"hi3","bye":"bye3"},{"test":"hi4","bye":"bye4"}]}]}
+Json:{"game_objects":[{"name":"data1","frames":[{"test":"hi1","bye":"bye1"},{"test":"hi2","bye":"bye2"}]},{"name":"data2","frames":[{"test":"hi3","bye":"bye3"},{"test":"hi4","bye":"bye4"}]}],"pages":[{"pagename":"page1","xml":"<xml>"}]}
+
+//pages stuff
+//add functionality to delete a page
+//enssure page names are unique
+https://jsfiddle.net/pnk7wtrf/24/
+<button onclick="addPage()">Add page</button>
+<div id="pages">
+No pages
+</div>
+
+	//save project structure
+	//new project
+	var project = {};
+	project.game_objects=[];
+  project.pages=[];
+function updatePages() {
+	document.getElementById("pages").innerHTML="Pages"
+  //parsing data structure
+  for(var pageindex in project.pages) {
+  document.getElementById("pages").innerHTML=document.getElementById("pages").innerHTML+" <a href=javascript:clikedLink('"+project.pages[pageindex].pagename+"')"+ " id="+project.pages[pageindex].pagename+">"+project.pages[pageindex].pagename+"</a>"+" <a href=javascript:clikedDeleteLink('"+project.pages[pageindex].pagename+"')"+ " id=del"+project.pages[pageindex].pagename+">(-)</a>";
+	}
+}
+function addPage() {
+	//new page
+	var page={};
+  page.pagename=prompt("Enter new page name","page#");
+	page.xml="<xml>";
+ for(var pageindex in project.pages){
+				if(project.pages[pageindex].pagename==page.pagename) {
+        	alert("Error, page name must be unique, '" + page.pagename + "' already exists.")
+          return
+				}	
+ }
+  
+	project.pages.push(page);
+  updatePages();
+}
+function clikedLink(linkName) {
+	alert("s:"+linkName);
+}
+function clikedDeleteLink(linkName) {
+  var answer = confirm("Delete page "+linkName+"? -- warning this cannot be undone, blocks in this page will be deleted!!")
+  if (answer) {
+ for(var pageindex in project.pages){
+				if(project.pages[pageindex].pagename==linkName) {
+					if(project.pages.length==0){
+						break;
+					}else{
+						project.pages.splice(pageindex, 1);	
+					}	
+				}//);
+			}
+  updatePages();
+  }
+}
+//second try
+	//save project structure
+	//new project
+	var project = {};
+	project.game_objects=[];
+  project.pages=[];
+	var page={};
+  page.pagename="main";
+	project.pages.push(page);
+  updatePages();
+
+function updatePages() {
+	document.getElementById("pages").innerHTML="Pages"
+  //parsing data structure
+  for(var pageindex in project.pages) {
+  document.getElementById("pages").innerHTML=document.getElementById("pages").innerHTML+" <a href=javascript:clikedLink('"+project.pages[pageindex].pagename+"')"+ " id="+project.pages[pageindex].pagename+">"+project.pages[pageindex].pagename+"</a>"+" <a href=javascript:clikedDeleteLink('"+project.pages[pageindex].pagename+"')"+ " id=del"+project.pages[pageindex].pagename+(project.pages[pageindex].pagename=="main")?"":">(-)"+"</a>";
+	}
+}
+function addPage() {
+	//new page
+	var page={};
+  page.pagename=prompt("Enter new page name","page#");
+	page.xml="<xml>";
+ for(var pageindex in project.pages){
+				if(project.pages[pageindex].pagename==page.pagename) {
+        	alert("Error, page name must be unique, '" + page.pagename + "' already exists.")
+          return
+				}	
+ }
+  
+	project.pages.push(page);
+  updatePages();
+}
+function clikedLink(linkName) {
+	alert("s:"+linkName);
+}
+function clikedDeleteLink(linkName) {
+  var answer = confirm("Delete page "+linkName+"? -- warning this cannot be undone, blocks in this page will be deleted!!")
+  if (answer) {
+ for(var pageindex in project.pages){
+				if(project.pages[pageindex].pagename==linkName) {
+					if(project.pages.length==0){
+						break;
+					}else{
+						project.pages.splice(pageindex, 1);	
+					}	
+				}//);
+			}
+  updatePages();
+  }
+}
 deltab: amigojapan: hmm, you have an array with a frames property?
-[6:49pm] banisterfiend joined the chat room.
-[6:49pm] duderonomy left the chat room. (Ping timeout: 276 seconds)
 [6:49pm] deltab: JSON doesn't have a way to represent that
 
 		//modules
