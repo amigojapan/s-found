@@ -1723,7 +1723,8 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		        Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
 				debuggerCode = Blockly.JavaScript.workspaceToCode(workspace);
 				*/
-				debuggerCode = generateJS()
+				debuggerCode = generateJS();
+				document.getElementById('funct').value = "";
 				document.getElementById('funct').value = debuggerCode;
 			  //var xml = Blockly.Xml.workspaceToDom(workspace);
 		  	  //var xml_text = Blockly.Xml.domToPrettyText(xml);
