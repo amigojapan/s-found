@@ -99,6 +99,7 @@ ver 0.1
 		</div>
 
   		<div id="blocklyDiv" style="height: 600px; width: 100%;"></div>
+  		<div id="blocklyDiv_hidden" style="height: 600px; width: 100%; display: none;"></div>
 
 		  <xml id="toolbox" style="display: none">
 		    <category name="Events">    
@@ -575,7 +576,7 @@ game_object.sprite.bringToTop()
     Blockly.Xml.domToWorkspace(workspace,
         document.getElementById('startBlocks'));
 
-    var workspace_hidden = Blockly.inject('blocklyDiv',
+    var workspace_hidden = Blockly.inject('blocklyDiv_hidden',
         {media: '../../media/',
          toolbox: document.getElementById('toolbox')});
     Blockly.Xml.domToWorkspace(workspace,
