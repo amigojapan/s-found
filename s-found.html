@@ -742,10 +742,12 @@ game_object.sprite.bringToTop()
 	function generateJS() {
 		//if(!generation_complete){
 			var Code="";
+			/*
 			var xml = Blockly.Xml.workspaceToDom(workspace_hidden);
-			var xml_text = Blockly.Xml.domToPrettyText(xml);				
+			var xml_text = Blockly.Xml.domToPrettyText(xml);
+			*/				
 			for(var pageindex in project.pages){
-				//Blockly.mainWorkspace.clear();
+				workspace_hidden.clear();
 				if(project.pages[pageindex].xml=="uninitialized xml") {
 					return;
 				}
