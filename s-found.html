@@ -805,12 +805,14 @@ game_object.sprite.bringToTop()
 
 	  document.body.removeChild(element);
 	}
-    function saveCode() {	
+    function saveCode() {
+		/*not nessesary anymore	
 	    var xml = Blockly.Xml.workspaceToDom(workspace);
 	    var xml_text = Blockly.Xml.domToPrettyText(xml);
 		document.getElementById('funct').value = xml_text;
 		//mock download
 		project.block_xml = xml_text;
+		*/
 		var project_json = JSON.stringify(project);
 		var project_name=prompt("Enter project name","GAME.s-found");
 		download(project_name,project_json);
@@ -1679,7 +1681,15 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 };
 	//On Startup
 	var workspaceChanged = function() {
-	            //console.log("changed");
+	            console.log("workspaceChanged");
+	            //update the xml of the current page
+           	    var xml = Blockly.Xml.workspaceToDom(workspace);
+				var xml_text = Blockly.Xml.domToPrettyText(xml);
+				for(var pageindex in project.pages) {
+					if(project.pages[pageindex].pagename==current_page) {
+						project.pages[pageindex].xml=xml_text;
+					}
+				}
 		        // Generate JavaScript code and parse it.
 				Blockly.JavaScript.addReservedWords('highlightBlock');
 				Blockly.JavaScript.STATEMENT_PREFIX = '';
@@ -1719,6 +1729,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	var project = {};
 	project.images = [];
 	project.background_ = "not set";
+	var current_page="main";
 	project.pages=[];
 	var page={};
 	page.pagename="main";
@@ -1749,7 +1760,17 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	  updatePages();
 	}
 	function clikedLink(linkName) {
-		alert("s:"+linkName);
+		//alert("s:"+linkName);
+		for(var pageindex in project.pages){
+			if(project.pages[pageindex].pagename==linkName) {
+				Blockly.mainWorkspace.clear();
+				if(project.pages[pageindex].xml=="uninitialized xml") {
+					return;
+				}
+				var xml = Blockly.Xml.textToDom(project.pages[pageindex].xml);
+				Blockly.Xml.domToWorkspace(workspace, xml);	
+			}
+		}
 	}
 	function clikedDeleteLink(linkName) {
 	  var answer = confirm("Delete page "+linkName+"? -- warning this cannot be undone, blocks in this page will be deleted!!")
