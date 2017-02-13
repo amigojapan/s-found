@@ -1705,12 +1705,14 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 					}
 				}
 		        // Generate JavaScript code and parse it.
+				/*
 				Blockly.JavaScript.addReservedWords('highlightBlock');
 				Blockly.JavaScript.STATEMENT_PREFIX = '';
 		        document.getElementById('funct').value = Blockly.JavaScript.workspaceToCode(workspace);
 		        Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
 				debuggerCode = Blockly.JavaScript.workspaceToCode(workspace);
-		  	  
+				*/
+				debuggerCode = generateJS()
 			  //var xml = Blockly.Xml.workspaceToDom(workspace);
 		  	  //var xml_text = Blockly.Xml.domToPrettyText(xml);
 
