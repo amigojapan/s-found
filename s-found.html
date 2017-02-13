@@ -1761,6 +1761,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	}
 	function clikedLink(linkName) {
 		//alert("s:"+linkName);
+		current_page=linkName;
 		for(var pageindex in project.pages){
 			if(project.pages[pageindex].pagename==linkName) {
 				Blockly.mainWorkspace.clear();
