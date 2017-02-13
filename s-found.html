@@ -574,11 +574,6 @@ game_object.sprite.bringToTop()
          toolbox: document.getElementById('toolbox')});
     Blockly.Xml.domToWorkspace(workspace,
         document.getElementById('startBlocks'));
-    var workspace_hidden = Blockly.inject('blocklyDiv',
-        {media: '../../media/',
-         toolbox: document.getElementById('toolbox')});
-    Blockly.Xml.domToWorkspace(workspace,
-        document.getElementById('startBlocks'));
 
     var myInterpreter = null;
 
@@ -751,7 +746,7 @@ game_object.sprite.bringToTop()
 				//gegerate
 				Blockly.JavaScript.addReservedWords('highlightBlock');
 				Blockly.JavaScript.STATEMENT_PREFIX = '';
-				document.getElementById('funct').value = Blockly.JavaScript.workspaceToCode(workspace_hidden);
+				document.getElementById('funct').value = Blockly.JavaScript.workspaceToCode(workspace);
 				Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
 				debuggerCode = debuggerCode + Blockly.JavaScript.workspaceToCode(workspace);
 			}
