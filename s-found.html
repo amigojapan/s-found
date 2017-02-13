@@ -575,6 +575,12 @@ game_object.sprite.bringToTop()
     Blockly.Xml.domToWorkspace(workspace,
         document.getElementById('startBlocks'));
 
+    var workspace_hidden = Blockly.inject('blocklyDiv',
+        {media: '../../media/',
+         toolbox: document.getElementById('toolbox')});
+    Blockly.Xml.domToWorkspace(workspace,
+        document.getElementById('startBlocks'));
+        
     var myInterpreter = null;
 
     function initApi(interpreter, scope) {
@@ -731,29 +737,29 @@ game_object.sprite.bringToTop()
       workspace.highlightBlock(null);
     }
 	
-	var generation_complete=false;
+	//var generation_complete=false;
 	function generateJS() {
-		if(!generation_complete){
+		//if(!generation_complete){
 			debuggerCode="";
 			var xml = Blockly.Xml.workspaceToDom(workspace);
 			var xml_text = Blockly.Xml.domToPrettyText(xml);				
 			for(var pageindex in project.pages){
-				Blockly.mainWorkspace.clear();
+				//Blockly.mainWorkspace.clear();
 				if(project.pages[pageindex].xml=="uninitialized xml") {
 					return;
 				}
 				var xml = Blockly.Xml.textToDom(project.pages[pageindex].xml);
-				Blockly.Xml.domToWorkspace(workspace, xml);	
+				Blockly.Xml.domToWorkspace(workspace_hidden, xml);	
 				//gegerate
 				Blockly.JavaScript.addReservedWords('highlightBlock');
 				Blockly.JavaScript.STATEMENT_PREFIX = '';
-				document.getElementById('funct').value = Blockly.JavaScript.workspaceToCode(workspace);
+				document.getElementById('funct').value = Blockly.JavaScript.workspaceToCode(workspace_hidden);
 				Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
-				debuggerCode = debuggerCode + Blockly.JavaScript.workspaceToCode(workspace);
+				debuggerCode = debuggerCode + Blockly.JavaScript.workspaceToCode(workspace_hidden);
 			}
 			return debuggerCode;
 			generation_complete=true;
-		}
+		//}
 	}
 	var id;
 	var evalRun=false;
