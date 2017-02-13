@@ -1699,7 +1699,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	var workspaceChanged = function() {
 	            console.log("workspaceChanged");
 	            //update the xml of the current page
-	            generation_complete=false;
+	            //generation_complete=false;
            	    var xml = Blockly.Xml.workspaceToDom(workspace);
 				var xml_text = Blockly.Xml.domToPrettyText(xml);
 				for(var pageindex in project.pages) {
