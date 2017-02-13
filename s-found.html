@@ -574,6 +574,11 @@ game_object.sprite.bringToTop()
          toolbox: document.getElementById('toolbox')});
     Blockly.Xml.domToWorkspace(workspace,
         document.getElementById('startBlocks'));
+    var workspace_hidden = Blockly.inject('blocklyDiv',
+        {media: '../../media/',
+         toolbox: document.getElementById('toolbox')});
+    Blockly.Xml.domToWorkspace(workspace,
+        document.getElementById('startBlocks'));
 
     var myInterpreter = null;
 
@@ -732,23 +737,40 @@ game_object.sprite.bringToTop()
     }
 	
 	function generateJS() {
-		Blockly.JavaScript.addReservedWords('highlightBlock');
-		Blockly.JavaScript.STATEMENT_PREFIX = '';
-        document.getElementById('funct').value = Blockly.JavaScript.workspaceToCode(workspace);
-        Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
-		debuggerCode = Blockly.JavaScript.workspaceToCode(workspace);
+		debuggerCode="";
+		var xml = Blockly.Xml.workspaceToDom(workspace);
+		var xml_text = Blockly.Xml.domToPrettyText(xml);				
+				for(var pageindex in project.pages){
+					if(project.pages[pageindex].pagename==linkName) {
+						Blockly.mainWorkspace.clear();
+						if(project.pages[pageindex].xml=="uninitialized xml") {
+							return;
+						}
+						var xml = Blockly.Xml.textToDom(project.pages[pageindex].xml);
+						Blockly.Xml.domToWorkspace(workspace, xml);	
+						//gegerate
+						Blockly.JavaScript.addReservedWords('highlightBlock');
+						Blockly.JavaScript.STATEMENT_PREFIX = '';
+						document.getElementById('funct').value = Blockly.JavaScript.workspaceToCode(workspace_hidden);
+						Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+						debuggerCode = debuggerCode + Blockly.JavaScript.workspaceToCode(workspace);
+					}
+				}
+
+			}
+		}
+		return debuggerCode;
 	}
 	var id;
 	var evalRun=false;
     function evalCode() {
-		generateJS();
   	  
 	  //var xml = Blockly.Xml.workspaceToDom(workspace);
   	  //var xml_text = Blockly.Xml.domToPrettyText(xml);
 
 	  //Unless I am mistaken there isn't a way currently to call into the context created when running a program with the JSInterpreter. On workaround could be to have a setInterval going inside the interpreter context that is polling an exposed api which is watching for events on the page and responds by calling your users code. https://neil.fraser.name/software/JS-Interpreter/docs.html
 
-		finalCode = debuggerCode
+		finalCode = generateJS();
 		//clear timers
 		clearTimers();
 	  	//cursor key events
