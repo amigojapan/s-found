@@ -731,25 +731,29 @@ game_object.sprite.bringToTop()
       workspace.highlightBlock(null);
     }
 	
+	var generation_complete=false;
 	function generateJS() {
-		debuggerCode="";
-		var xml = Blockly.Xml.workspaceToDom(workspace);
-		var xml_text = Blockly.Xml.domToPrettyText(xml);				
-		for(var pageindex in project.pages){
-			Blockly.mainWorkspace.clear();
-			if(project.pages[pageindex].xml=="uninitialized xml") {
-				return;
+		if(!generation_complete){
+			debuggerCode="";
+			var xml = Blockly.Xml.workspaceToDom(workspace);
+			var xml_text = Blockly.Xml.domToPrettyText(xml);				
+			for(var pageindex in project.pages){
+				Blockly.mainWorkspace.clear();
+				if(project.pages[pageindex].xml=="uninitialized xml") {
+					return;
+				}
+				var xml = Blockly.Xml.textToDom(project.pages[pageindex].xml);
+				Blockly.Xml.domToWorkspace(workspace, xml);	
+				//gegerate
+				Blockly.JavaScript.addReservedWords('highlightBlock');
+				Blockly.JavaScript.STATEMENT_PREFIX = '';
+				document.getElementById('funct').value = Blockly.JavaScript.workspaceToCode(workspace);
+				Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+				debuggerCode = debuggerCode + Blockly.JavaScript.workspaceToCode(workspace);
 			}
-			var xml = Blockly.Xml.textToDom(project.pages[pageindex].xml);
-			Blockly.Xml.domToWorkspace(workspace, xml);	
-			//gegerate
-			Blockly.JavaScript.addReservedWords('highlightBlock');
-			Blockly.JavaScript.STATEMENT_PREFIX = '';
-			document.getElementById('funct').value = Blockly.JavaScript.workspaceToCode(workspace);
-			Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
-			debuggerCode = debuggerCode + Blockly.JavaScript.workspaceToCode(workspace);
+			return debuggerCode;
+			generation_complete=true;
 		}
-		return debuggerCode;
 	}
 	var id;
 	var evalRun=false;
@@ -1695,6 +1699,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	var workspaceChanged = function() {
 	            console.log("workspaceChanged");
 	            //update the xml of the current page
+	            generation_complete=false;
            	    var xml = Blockly.Xml.workspaceToDom(workspace);
 				var xml_text = Blockly.Xml.domToPrettyText(xml);
 				for(var pageindex in project.pages) {
