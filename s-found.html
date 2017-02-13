@@ -754,12 +754,13 @@ game_object.sprite.bringToTop()
 				//gegerate
 				Blockly.JavaScript.addReservedWords('highlightBlock');
 				Blockly.JavaScript.STATEMENT_PREFIX = '';
-				document.getElementById('funct').value = Blockly.JavaScript.workspaceToCode(workspace_hidden);
 				Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
 				debuggerCode = debuggerCode + Blockly.JavaScript.workspaceToCode(workspace_hidden);
 			}
+			
+			document.getElementById('funct').value = debuggerCode;
 			return debuggerCode;
-			generation_complete=true;
+			//generation_complete=true;
 		//}
 	}
 	var id;
