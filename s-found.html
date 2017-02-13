@@ -747,7 +747,7 @@ game_object.sprite.bringToTop()
 			var xml_text = Blockly.Xml.domToPrettyText(xml);
 			*/				
 			for(var pageindex in project.pages){
-				Code=Code+"\n\n//"+project.pages[pageindex].pagename
+				Code=Code+"\n\n//"+project.pages[pageindex].pagename+"\n\n"
 				workspace_hidden.clear();
 				if(project.pages[pageindex].xml=="uninitialized xml") {
 					return;
