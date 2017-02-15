@@ -555,20 +555,6 @@ game_object.sprite.bringToTop()
 		}
 	}
 
-	/*	
-	function move_right() {
-		sprite.x+=100;
-	}
-	function move_left() {
-		sprite.x+=-100;
-	}
-	function move_up() {
-		sprite.y+=-100;
-	}
-	function move_down() {
-		sprite.y+=100;
-	}
-	*/
 	//end phaser
     var workspace = Blockly.inject('blocklyDiv',
         {media: '../../media/',
@@ -739,7 +725,7 @@ game_object.sprite.bringToTop()
     }
 	
 	//var generation_complete=false;
-	function generateJS() {
+	function generateJS(add_highlighting) {
 		//if(!generation_complete){
 			var Code="";
 			/*
@@ -755,9 +741,11 @@ game_object.sprite.bringToTop()
 				var xml = Blockly.Xml.textToDom(project.pages[pageindex].xml);
 				Blockly.Xml.domToWorkspace(workspace_hidden, xml);	
 				//gegerate
-				Blockly.JavaScript.addReservedWords('highlightBlock');
-				Blockly.JavaScript.STATEMENT_PREFIX = '';
-				Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+				if(add_highlighting) {
+					Blockly.JavaScript.addReservedWords('highlightBlock');
+					Blockly.JavaScript.STATEMENT_PREFIX = '';
+					Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+				}
 				Code = Code + Blockly.JavaScript.workspaceToCode(workspace_hidden);
 			}
 			
@@ -775,7 +763,7 @@ game_object.sprite.bringToTop()
 
 	  //Unless I am mistaken there isn't a way currently to call into the context created when running a program with the JSInterpreter. On workaround could be to have a setInterval going inside the interpreter context that is polling an exposed api which is watching for events on the page and responds by calling your users code. https://neil.fraser.name/software/JS-Interpreter/docs.html
 
-		finalCode = generateJS();
+		finalCode = generateJS(true);
 		//clear timers
 		clearTimers();
 	  	//cursor key events
@@ -1726,7 +1714,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		        Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
 				debuggerCode = Blockly.JavaScript.workspaceToCode(workspace);
 				*/
-				debuggerCode = generateJS();
+				debuggerCode = generateJS(false);
 				document.getElementById('funct').value = debuggerCode;
 			  //var xml = Blockly.Xml.workspaceToDom(workspace);
 		  	  //var xml_text = Blockly.Xml.domToPrettyText(xml);
@@ -1738,7 +1726,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				//var finalCode = debuggerCode+"while(true){var event=interalPollevent();if(event=='left'){alert('here');}}";
 				//alert(finalCode);
 				destory_all_clones();
-				var finalCode = debuggerCode;
+				var finalCode = generateJS();
 				finalCode+= "if (typeof ON_STARTUP !== 'undefined') {\n";//cehck to see if funtion is defined
 				finalCode+= "	ON_STARTUP();\n";
 				finalCode+= "}\n";
@@ -1778,24 +1766,25 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	function addPage() {
 		//new page
 		var page={};
-	  page.pagename=prompt("Enter new page name","page#");
+		page.pagename=prompt("Enter new page name","page#");
 		page.xml="uninitialized xml";
-	 for(var pageindex in project.pages){
-		if(project.pages[pageindex].pagename==page.pagename) {
-			alert("Error, page name must be unique, '" + page.pagename + "' already exists.");
-			return;	
-		}	
-	 }
-	  
+		for(var pageindex in project.pages){
+			if(project.pages[pageindex].pagename==page.pagename) {
+				alert("Error, page name must be unique, '" + page.pagename + "' already exists.");
+				return;	
+			}	
+		}
+
 		project.pages.push(page);
-	  updatePages();
+		updatePages();
 	}
 	function clikedLink(linkName) {
 		//alert("s:"+linkName);
 		current_page=linkName;
 		for(var pageindex in project.pages){
 			if(project.pages[pageindex].pagename==linkName) {
-				Blockly.mainWorkspace.clear();
+				//Blockly.mainWorkspace.clear();
+				workspace.clear();
 				if(project.pages[pageindex].xml=="uninitialized xml") {
 					return;
 				}
@@ -2108,13 +2097,21 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			//alert("project_json:"+project_json);
 			
 			project = JSON.parse(project_json);
-			if(typeof project.background_ != 'undefined' || project.background_!="not set") {
+			if(typeof project.pages == 'undefined') {//old version of s-found
+				project.pages=[];
+				//new page
+				var page={};
+				page.pagename="main";
+				page.xml=project.block_xml;
+				project.pages.push(page);
+			}
+			updatePages();
+
+			if(typeof project.background_ != 'undefined' && project.background_!="not set") {
 				loader = new Phaser.Loader(game);
 				loader.image("backgroud", project.background_ );
 				loader.onLoadComplete.addOnce(onLoadedBackground);
 				loader.start();								
-						
-
 			}
 			
 			
@@ -2131,7 +2128,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			}
 			
 			Blockly.mainWorkspace.clear();
-			var xml = Blockly.Xml.textToDom(project.block_xml);
+			var xml = Blockly.Xml.textToDom(project.pages[0].xml);
 			Blockly.Xml.domToWorkspace(workspace, xml);
 			
 	    };
@@ -2153,7 +2150,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		
 		project = JSON.parse(project_json);
 		
-		if(typeof project.background_ != 'undefined' || project.background_!="not set") {
+		if(typeof project.background_ != 'undefined' && project.background_!="not set") {
 			loader = new Phaser.Loader(game);
 			loader.image("backgroud", project.background_ );
 			loader.onLoadComplete.addOnce(onLoadedBackground);
@@ -2182,7 +2179,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	    reader.readAsText(this.files[0]);
 		
 /*		
-		if(typeof project.background_ != 'undefined' || project.background_!="not set") {
+		if(typeof project.background_ != 'undefined' && project.background_!="not set") {
 			loader = new Phaser.Loader(game);
 			loader.image("backgroud", project.background_ );
 			loader.onLoadComplete.addOnce(onLoadedBackground);
