@@ -1,0 +1,56 @@
+<HTML>
+<HEAD>
+<style>
+	#btnA, #btnUp, #btnB, #btnLeft, #btnDown, #btnRight {
+		font-size:25px;
+		height:25px; 
+		width: 25px; 
+		border:1px solid black; 
+		display: inline;
+	}
+</style>
+<script>
+	var onScreenKeyboard={};
+	onScreenKeyboard.btnAPressed=false;
+	function btnAmouseDown() {
+		onScreenKeyboard.btnAPressed=true;
+	}
+	function btnAmouseUp() {
+		onScreenKeyboard.btnAPressed=false;
+	}
+	onScreenKeyboard.btnBPressed=false;
+	function btnBmouseDown() {
+		onScreenKeyboard.btnBPressed=true;
+	}
+	function btnBmouseUp() {
+		onScreenKeyboard.btnBPressed=false;
+	}	
+	function logbuttons() {
+		if(onScreenKeyboard.btnAPressed) {
+			console.log("A");
+		}
+		if(onScreenKeyboard.btnBPressed) {
+			console.log("B");
+		}		
+	}
+	var kb_id;
+	function showScreenKeyboard() {
+		if (typeof kb_id !== 'undefined') window.clearInterval(kb_id);
+		kb_id = setInterval(logbuttons,100);
+		document.getElementById("on_screen_controls").style.display="block";
+	}
+	function start() {
+		
+	}
+	window.onload = function() {
+		start();
+	}
+</script>
+</HEAD>
+<body>
+	<a href="#" onclick="showScreenKeyboard()">Show Screen Controller</a>
+	<div id="on_screen_controls" style="height:69px; width: 84px; border:1px solid black; display: none;">
+		<div id="btnA" onmousedown="btnAmouseDown()" onmouseup="btnAmouseUp()"> Ａ </div><div id="btnUp" onmousedown="btnUpmouseDown()" onmouseup="btnUpmouseUp()"> ↑ </div><div id="btnB" onmousedown="btnBmouseDown()" onmouseup="btnBmouseUp()"> B </div><BR>
+		<div id="btnLeft" onmousedown="btnLeftmouseDown()" onmouseup="btnLeftmouseUp()"> ← </div><div id="btnDown" onmousedown="btnDownmouseDown()" onmouseup="btnDownmouseUp()"> ↓ </div><div id="btnRight" onmousedown="btnRightmouseDown()" onmouseup="btnRightmouseUp()"> → </div><BR>
+	</div>
+</body>
