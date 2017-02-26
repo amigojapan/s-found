@@ -35,7 +35,6 @@ ver 0.1
 
   }
  
- 
   </style>
 </head>
 <body>
@@ -56,20 +55,21 @@ ver 0.1
 			Warning, do not use this program withought the permission of amigojapan, ask permission to usmpadow@gmail.com
 		</div>		
 		<div id="toolbar">
-			Click here to add a sprite:<input type="file" id="files" />
-			<img id="image" />
-		</div>
-				<div id="toolbar">
-			Click here to add a frame to a sprite:<input type="file" id="files3" />
-			<img id="frame" />
-		</div>
+			<input type="file" id="files" style="display:none;"/>
+			<img id="image" style="display:none;"/>
+			<a href="#" onclick='document.getElementById("files").click();'>Add Strite</a>
 
-		<div id="toolbar">
-			Click here to add a backgroud:<input type="file" id="files2" />
-			<img id="background" />
-		</div>		
-		<div id="toolbar">
-			Click here to open a project:<input type="file" id="files_project_upload" />
+			<input type="file" id="files3" style="display:none;"/>
+			<img id="frame" style="display:none;"/>
+			<a href="#" onclick='document.getElementById("files3").click();//add some variable to pass which sprite we are going to add to'>Add Frame</a>
+			
+			<input type="file" id="files2" style="display:none;"/>
+			<img id="background" style="display:none;"/>
+			<a href="#" onclick='document.getElementById("files2").click();'>Add Background</a>
+			
+			<input type="file" id="files_project_upload" style="display:none;"/>
+			<a href="#" onclick='document.getElementById("files_project_upload").click();'>Open Project</a>
+
 		</div>
 		<div id="phaser-example"></div>
 		<div id="blockly">
@@ -98,8 +98,8 @@ ver 0.1
 		pages div uninitialized
 		</div>
 
-  		<div id="blocklyDiv" style="height: 600px; width: 100%;"></div>
-  		<div id="blocklyDiv_hidden" style="height: 600px; width: 100%; display: none;"></div>
+  		<div id="blocklyDiv" style="height: 600px; width: 95%;"></div>
+  		<div id="blocklyDiv_hidden" style="height: 600px; width: 95%; display: none;"></div>
 
 		  <xml id="toolbox" style="display: none">
 		    <category name="Events">    
@@ -117,6 +117,7 @@ ver 0.1
 		    <category name="Sprites">    
 			  <block type="sprites_set_current_sprite"></block>
 			  <block type="sprites_set_target_sprite"></block>
+			  <block type="sprites_set_current_sprite_to_target_sprite"></block>
 			  <block type="sprites_is_colliding_with_target"></block>
 			  <block type="sprites_create_clone_of_current_sprite"></block>
 			  <block type="sprites_destroy_current_sprite"></block>
@@ -125,6 +126,8 @@ ver 0.1
 			  <block type="sprites_current_sprite_bring_to_front"></block>
 			  <!-- <block type="sprites_current_sprite_send_to_back"></block> this block does not seem to work so I am hiding it for now-->
 			  <block type="sprites_for_each_clone_of_current_sprite"></block>
+			  <block type="sprites_for_each_clone_of_current_sprite_new"></block>
+			  <block type="sprites_nested_for_each_clone_of_current_target_sprite"></block>
 			  <block type="sprites_value_of_x"></block>
 			  <block type="sprites_value_of_y"></block>
 			  <block type="sprites_current_frame_number"></block>
@@ -286,10 +289,16 @@ ver 0.1
 		
 	// Groups for drawing layers
 	
+	
 	background_ = game.add.group();
 	mid_layer = game.add.group();
 	front_layer = game.add.group();
 	/*
+	background_ = game.add.group(null, "group0",true);
+	mid_layer = game.add.group(null, "group1",true);
+	front_layer = game.add.group(null, "group2",true);
+	*/
+		/*
 	rich [12:39 AM] 
 you can use 'bringToTop' and 'sendToBack' or 'moveUp' or 'moveDown' to position stuff... or just fiddle with the Group.children array yourself and shift stuff about
 
@@ -339,13 +348,16 @@ game_object.sprite.bringToTop()
 		//sprites[sprites.length-1].sprite = game.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[sprites.length-1].name);
 		var clone={};
 		clone.sprite = game.add.sprite(game_object.sprite.x, game_object.sprite.y, game_object.sprite.key, game_object.sprite.frame);
-		sprite_ = front_layer.add(clone.sprite);
+		sprite_ = front_layer.create(clone.sprite);
 		//scale sprite down
 		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
 		clone.sprite.angle=game_object.sprite.angle;
 		game.physics.enable(clone.sprite, Phaser.Physics.ARCADE);
 		//set it so that the sprites rotate on hte center axis
 		clone.sprite.anchor.setTo(0.5, 0.5);
+		if(typeof game_object.clones == 'undefined') {
+			game_object.clones=[];
+		}
 		game_object.clones.push(clone);
 	}
 	
@@ -370,16 +382,25 @@ game_object.sprite.bringToTop()
 	function hide_current_sprite(){
 		var game_object;
 		game_object=find_sprite_object_by_name(current_sprite_name);
-		
+		if (typeof game_object.number_of_frames == 'undefined') {
+			//eventually change this to trow an exception
+			game_object.sprite.visible = false;
+			return
+		}
 		game_object.sprite.visible = false;
+		game_object.frames[game_object.current_frame].sprite.visible = false;		
 	}
 	function show_current_sprite(){
 		var game_object;
 		game_object=find_sprite_object_by_name(current_sprite_name);
-		
-		game_object.sprite.visible = true;
+		if (typeof game_object.number_of_frames == 'undefined') {
+			//eventually change this to trow an exception
+			game_object.sprite.visible = true;
+			return
+		}
+		game_object.frames[game_object.current_frame].sprite.visible = true;		
 	}	
-	function find_sprite_object_by_name(sprite_name){
+	function find_sprite_object_by_name(sprite_name,original_sprite){		
 		//remember to show an error if no sprite name is given
 		if(sprite_name=="") {
 			//bug, this error does not go away cause we cant get rid of the block unless we reload the page, need to domehow get rid of just the previous block, some kind of undo or some other way to only show this message once, then set a timer for a time to not constantly nag the user
@@ -390,6 +411,64 @@ game_object.sprite.bringToTop()
 		for(var obj in sprites){
 			if(sprites[obj].name==sprite_name) {
 				if(current_clone!=null) {
+					//quickfix for when a clone is set but we are really looking for another sprite which has no clones,
+					//in sprite collision detection
+					//not this wont work well if we are actually looking for hte clones of the target, but that is not what I
+					//think we have in mind, at least in space invaders
+					//it should work if the target has clones, so may work anyway
+					//a sideeffect of this is that the bullet gets hidden when I am just trying to hide the alines.
+					if(sprites[obj].clones.length==0){
+						return sprites[obj];
+					}
+					//end quickfix
+					return sprites[obj].clones[current_clone];
+					//return sprites[obj];
+				}else{
+					return sprites[obj];
+				}				
+			}
+		}
+	}
+	function find_sprite_object_by_name_new(sprite_name){		
+		//remember to show an error if no sprite name is given
+		if(sprite_name=="") {
+			//bug, this error does not go away cause we cant get rid of the block unless we reload the page, need to domehow get rid of just the previous block, some kind of undo or some other way to only show this message once, then set a timer for a time to not constantly nag the user
+			return null;
+			//try adding if(evalrun) here 
+			//alert("Error, no sprite name given, you probably need to select a current sprite using the Sprites->set current sprite block");
+		}
+		for(var obj in sprites){
+			if(sprites[obj].name==sprite_name) {
+				if(current_clone!=null) {
+					//quickfix for when a clone is set but we are really looking for another sprite which has no clones,
+					//in sprite collision detection
+					//not this wont work well if we are actually looking for hte clones of the target, but that is not what I
+					//think we have in mind, at least in space invaders
+					//it should work if the target has clones, so may work anyway
+					//a sideeffect of this is that the bullet gets hidden when I am just trying to hide the alines.
+					if(sprites[obj].clones.length==0){
+						return sprites[obj];
+					}
+					//end quickfix
+					return sprites[obj].clones[current_clone];
+					//return sprites[obj];
+				}else{
+					return sprites[obj];
+				}				
+			}
+		}
+	}	
+	function find_target_sprite_with_clones_object_by_name(sprite_name){
+		//remember to show an error if no sprite name is given
+		if(sprite_name=="") {
+			//bug, this error does not go away cause we cant get rid of the block unless we reload the page, need to domehow get rid of just the previous block, some kind of undo or some other way to only show this message once, then set a timer for a time to not constantly nag the user
+			return null;
+			//try adding if(evalrun) here 
+			//alert("Error, no sprite name given, you probably need to select a current sprite using the Sprites->set current sprite block");
+		}
+		for(var obj in sprites){
+			if(sprites[obj].name==sprite_name) {
+				if(current_target_clone!=null) {
 					//quickfix for when a clone is set but we are really looking for another sprite which has no clones, in sprite collision detection
 					//not this wont work well if we are actually looking for hte clones of the target, but that is not what I think we have in mind, at least in space invaders
 					//it should work if the target has clones, so may work anyway
@@ -398,13 +477,15 @@ game_object.sprite.bringToTop()
 						return sprites[obj]
 					}
 					//end quickfix
-					return sprites[obj].clones[current_clone];
+					return sprites[obj].clones[current_target_clone];
+					//return sprites[obj]
 				}else{
 					return sprites[obj];
 				}				
 			}
 		}
 	}
+	
 	function set_current_sprite_name(sprite_name) {
 		//current_sprite_name=sprite_name.data;
 		current_sprite_name=sprite_name;
@@ -491,16 +572,49 @@ game_object.sprite.bringToTop()
 	function get_y_value() {
 		return find_sprite_object_by_name(current_sprite_name).sprite.y;
 	}
-	function is_colliding_with_target() {
-		var game_object;
-		game_objectA=find_sprite_object_by_name(current_sprite_name);
-		var game_object;
-		game_objectB=find_sprite_object_by_name(target_sprite_name);
-		if(game_objectA.sprite.visible!=true||game_objectB.sprite.visible!=true){//quick fix to avoid collision with invisible things which where hidden, I dont think we ever need to collide with hidden objects
+    function intersectRect(s1, s2) {
+        var r1={};
+        var r2={};
+        r1.top =  s1.y;
+        r1.left = s1.x;
+        r1.right = s1.x+s1.width;
+        r1.bottom = s1.y+s1.height;
+        r2.top =  s2.y;
+        r2.left = s2.x;
+        r2.right = s2.x+s2.width;
+        r2.bottom = s2.y+s2.height;		
+        return !(	r2.left > r1.right || 
+                    r2.right < r1.left || 
+                    r2.top > r1.bottom ||
+                    r2.bottom < r1.top);
+    }
+	function current_sprite_clones_are_colliding_with_target_sprite_clones() {
+		var game_objectA;
+		game_objectA=find_sprite_object_by_name_new(current_sprite_name);
+		var game_objectB;
+		game_objectB=find_target_sprite_with_clones_object_by_name(target_sprite_name);
+		/*
+		if(game_objectA.sprite.visible!=true||game_objectB.sprite.visible!=true){//quick fix to avoid collision with invisible things which where hidden, I dont think we ever need to collide with hidden objects(changed my mind after adding frames!), //***TODO:maybe add my own solid property later
 			return false;
 		}
-		return game.physics.arcade.overlap(game_objectA.sprite, game_objectB.sprite);//this returns true//it seems overlap is pixel perfect after all!//no, I tested it and this is bouding box after all//apparently phaser does not have pixel perfect collision detection at all, they say it would be too expensive
+		*/
+		//seems this and testboudns are buggy writing my own overlap, hope it is not slow return game.physics.arcade.overlap(game_objectA.sprite, game_objectB.sprite);//this returns true//it seems overlap is pixel perfect after all!//no, I tested it and this is bouding box after all//apparently phaser does not have pixel perfect collision detection at all, they say it would be too expensive
+		return intersectRect(game_objectA.sprite, game_objectB.sprite)
 	} 
+	function is_colliding_with_target() {
+		var game_objectA;
+		game_objectA=find_sprite_object_by_name(current_sprite_name);
+		var game_objectB;
+		game_objectB=find_sprite_object_by_name(target_sprite_name);
+		/*
+		if(game_objectA.sprite.visible!=true||game_objectB.sprite.visible!=true){//quick fix to avoid collision with invisible things which where hidden, I dont think we ever need to collide with hidden objects(changed my mind after adding frames!), //***TODO:maybe add my own solid property later
+			return false;
+		}
+		*/
+		//seems this and testboudns are buggy writing my own overlap, hope it is not slow return game.physics.arcade.overlap(game_objectA.sprite, game_objectB.sprite);//this returns true//it seems overlap is pixel perfect after all!//no, I tested it and this is bouding box after all//apparently phaser does not have pixel perfect collision detection at all, they say it would be too expensive
+		return intersectRect(game_objectA.sprite, game_objectB.sprite)
+	} 
+	
 	function next_fame() {
 		var game_object;
 		game_object=find_sprite_object_by_name(current_sprite_name);
@@ -709,7 +823,7 @@ game_object.sprite.bringToTop()
 
     function parseCode() {
       // Generate JavaScript code and parse it.
-      Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+      //Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
       Blockly.JavaScript.addReservedWords('highlightBlock');
       var code = Blockly.JavaScript.workspaceToCode(workspace);
 	  var xml = Blockly.Xml.workspaceToDom(workspace);
@@ -743,8 +857,8 @@ game_object.sprite.bringToTop()
 				//gegerate
 				if(add_highlighting) {
 					Blockly.JavaScript.addReservedWords('highlightBlock');
-					Blockly.JavaScript.STATEMENT_PREFIX = '';
-					Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+					//Blockly.JavaScript.STATEMENT_PREFIX = '';
+					//Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
 				}
 				Code = Code + Blockly.JavaScript.workspaceToCode(workspace_hidden);
 			}
@@ -848,7 +962,7 @@ game_object.sprite.bringToTop()
 		  if(id) {
 			  window.clearInterval(id);
 		  }
-	      Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+	      //Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
 	      Blockly.JavaScript.addReservedWords('highlightBlock');
 	      var code = Blockly.JavaScript.workspaceToCode(workspace);
 	      myInterpreter = new Interpreter(code, initApi);
@@ -1241,6 +1355,26 @@ game_object.sprite.bringToTop()
 	  var code = 'clone_sprite();\n';
 	  return code;
 	};
+	function set_current_sprite_to_target_sprite() {
+			current_sprite_name=target_sprite_name;
+			current_clone=current_target_clone;
+	}
+	Blockly.Blocks['sprites_set_current_sprite_to_target_sprite'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("set current sprite to target sprite");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_set_current_sprite_to_target_sprite'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'set_current_sprite_to_target_sprite();\n';
+	  return code;
+	};
 	//made from previous block
 	Blockly.Blocks['sprites_current_sprite_bring_to_front'] = {
 	  init: function() {
@@ -1379,15 +1513,76 @@ game_object.sprite.bringToTop()
 	  var statements_statement_code = Blockly.JavaScript.statementToCode(block, 'STATEMENT_CODE');
 	  // TODO: Assemble JavaScript into code variable.
 	  code=	'var game_object;\n';
-	  code+=	'game_object=find_sprite_object_by_name(current_sprite_name);\n';
-	  code+=	'for(var clone in game_object.clones){\n';
-	  code+='	debug_current_sprite_name=current_sprite_name;\n';
+	  code+='game_object=find_sprite_object_by_name(current_sprite_name);\n';
+	  code+='for(var clone in game_object.clones){\n';
+	  //code+='	debug_current_sprite_name=current_sprite_name;\n';
 	  code+='	current_clone=clone;\n';
 	  code+=statements_statement_code+'\n';
 	  code+='}\n';
 	  code+='current_clone=null;\n';
 	  return code;
 	};
+	Blockly.Blocks['sprites_for_each_clone_of_current_sprite_new'] = {
+	  init: function() {
+	    this.appendStatementInput("STATEMENT_CODE")
+	        .setCheck(null)
+	        .appendField("do when clones collides");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(120);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_for_each_clone_of_current_sprite_new'] = function(block) {
+	  var statements_statement_code = Blockly.JavaScript.statementToCode(block, 'STATEMENT_CODE');
+	  
+	  code=	'var game_object;\n';
+	  code+='game_object=find_sprite_object_by_name_new(current_sprite_name);\n';
+	  code+='for(var clone in game_object.clones) {\n';
+	  code+='  current_clone=clone;\n';
+	  code+='  var game_object_target;\n';
+	  code+='  game_object_target=find_target_sprite_with_clones_object_by_name(target_sprite_name);\n';
+	  code+='  for(var clone_target in game_object_target.clones) {\n';
+	  code+='    current_target_clone=clone_target;\n';
+	  code+='    if(current_sprite_clones_are_colliding_with_target_sprite_clones()) {\n';
+	  code+='      //do when current sprite clone collides with target clone\n';
+	  code+=statements_statement_code+'\n';
+	  code+='      //end\n';
+	  code+='    }\n';
+	  code+='  }\n';
+	  code+='  current_target_clone=null;\n';
+	  code+='}\n';
+	  code+='current_clone=null;\n';
+	  return code;
+	};	
+	Blockly.Blocks['sprites_nested_for_each_clone_of_current_target_sprite'] = {
+	  init: function() {
+	    this.appendStatementInput("STATEMENT_CODE")
+	        .setCheck(null)
+	        .appendField("nested for each clone of current target sprite");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(120);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	var current_target_clone=null;
+	Blockly.JavaScript['sprites_nested_for_each_clone_of_current_target_sprite'] = function(block) {
+	  var statements_statement_code = Blockly.JavaScript.statementToCode(block, 'STATEMENT_CODE');
+	  // TODO: Assemble JavaScript into code variable.
+	  code=	'var game_object_target;\n';
+	  code+='game_object_target=find_target_sprite_with_clones_object_by_name(target_sprite_name);\n';
+	  code+='for(var clone_target in game_object_target.clones){\n';
+	  //code+='	debug_current_sprite_name=current_sprite_name;\n';
+	  code+='	current_target_clone=clone_target;\n';
+	  code+=statements_statement_code+'\n';
+	  code+='}\n';
+	  code+='current_target_clone=null;\n';
+	  return code;
+	};	
+	//[set target sprite to current sprite] block    this will be useful for actually doing something with the target sprite
 	Blockly.Blocks['sprites_is_colliding_with_target'] = {
 	  init: function() {
 	    this.appendDummyInput()
@@ -1726,7 +1921,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				//var finalCode = debuggerCode+"while(true){var event=interalPollevent();if(event=='left'){alert('here');}}";
 				//alert(finalCode);
 				destory_all_clones();
-				var finalCode = generateJS();
+				var finalCode = generateJS(false);
 				finalCode+= "if (typeof ON_STARTUP !== 'undefined') {\n";//cehck to see if funtion is defined
 				finalCode+= "	ON_STARTUP();\n";
 				finalCode+= "}\n";
@@ -1822,7 +2017,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	onLoaded = function(){
 		//console.log('image loaded');
 		sprites[sprites.length-1].sprite = game.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[sprites.length-1].name);
-		sprite_ = front_layer.add(sprites[sprites.length-1].sprite);
+		sprite_ = front_layer.create(sprites[sprites.length-1].sprite);
 		//scale sprite down
 		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
 
@@ -1841,7 +2036,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		var local_game_object=find_sprite_object_by_name(current_sprite_name);
 		local_game_object.frames[local_game_object.number_of_frames]={};//need to have an object to hold the sprite
 		local_game_object.frames[local_game_object.number_of_frames].sprite = game.add.sprite(local_game_object.sprite.x,local_game_object.sprite.y, "img"+sprites[sprites.length-1].name+"Frame"+local_game_object.number_of_frames);
-		sprite_ = front_layer.add(local_game_object.frames[local_game_object.number_of_frames].sprite);
+		sprite_ = front_layer.create(local_game_object.frames[local_game_object.number_of_frames].sprite);
 		//scale sprite down
 		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
 
@@ -1863,7 +2058,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		local_game_object.frames[local_game_object.number_of_frames].sprite = game.add.sprite(local_game_object.sprite.x,local_game_object.sprite.y, project.game_objects[sprites.length-1].frames[local_game_object.number_of_frames-1].image_name);
 		//did not follow parent local_game_object.frames[local_game_object.number_of_frames].sprite = local_game_object.sprite.addChild(game.make.sprite(local_game_object.sprite.x,local_game_object.sprite.y, project.game_objects[sprites.length-1].frames[local_game_object.number_of_frames-1].image_name));
 		
-		sprite_ = front_layer.add(local_game_object.frames[local_game_object.number_of_frames].sprite);
+		sprite_ = front_layer.create(local_game_object.frames[local_game_object.number_of_frames].sprite);
 		//scale sprite down
 		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
 
@@ -1889,7 +2084,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		loader_current_sprite++;
 		//console.log('image loaded');
 		sprites[loader_current_sprite].sprite = game.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[loader_current_sprite].name);
-		sprite_ = front_layer.add(sprites[loader_current_sprite].sprite);
+		sprite_ = front_layer.create(sprites[loader_current_sprite].sprite);
 		//scale sprite down
 		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
 	
@@ -2480,35 +2675,88 @@ function clikedDeleteLink(linkName) {
   updatePages();
   }
 }
+
+//adding a sprite adding dialogue box
+https://jsfiddle.net/fmzumvv3/18/
+//submit by link
+https://jsfiddle.net/rdc3ej40/
 deltab: amigojapan: hmm, you have an array with a frames property?
 [6:49pm] deltab: JSON doesn't have a way to represent that
 
-		//modules
+	/*
+	-(done: decided on paged)modules
 		amigojapan: darkf: I think the other hard part will be braking up the projects into “modules” or “Pages”    
 		to be able to break up a project into smalled pices, becuase blockly does not have such a functionality….
 		I want my users to be able to develop in smaller pages, cause making a huge block program in only one workspace
 		would be hell
-	/*
-	//(done)implement hide show sprite blocks
-	//make a block that returns the current angle, call it direction like in scratch?
-	//(done)load and save xml for blocks in text mode
-		//(done2016-2-4)implement it in a mock download upload style
-		/*
+
+	-(done)implement hide show sprite blocks
+	-(done)load and save xml for blocks in text mode
+	-(done2016-2-4)implement it in a mock download upload style
 		Meowmers: amigojapan_: Wait, each element of that array is of type File (https://developer.mozilla.org/en-US/docs/Web/API/File)
 		[3:48pm] Meowmers: amigojapan_: After you get your file object, you use https://developer.mozilla.org/en-US/docs/Web/API/FileReader to read the content of that file.
 		[3:48pm] Meowmers: amigojapan_: Then after you use the file reader constructor to create a file reader, you use .readAsText() on that.
 		[3:49pm] Meowmers: amigojapan_: That is going to give you a string with the contents of the file.
-		*/
-	//clear all the sprites when new project is loaded
-	//(fixed)bug, there seems to be more events of hte same kind fired every time eval is clicked
-	//(changed to adjust to teh fps)can i reduce the eventloop timer to 0 ms, and if so will it still run? what is the optimal event polling time setting?
-	//stop timmers when script is stopped
-	//I think I will make a free version that needs to be connected online, and a pay version for offline if I see many people download it
+	-(fixed)bug, there seems to be more events of hte same kind fired every time eval is clicked
+	-(changed to adjust to teh fps)can i reduce the eventloop timer to 0 ms, and if so will it still run? what is the optimal event polling time setting?
+	-(I think this is done, check later)stop timmers when script is stopped
+	-I think I will make a free version that needs to be connected online, and a pay version for offline if I see many people download it
 	
-	//make some way of implenting timers, maybe like in scratch (this should be easy for me), or maybe, if possible(not sure if I can do it cause it is functional) make it in the way Javascript does times with set_interval
-	//make frogger in s-found
-	//make scrollable views, to be able to make RPG style games, I guess I just need to move the background and not scale it
-	//add a comment to the code that mentions what "page" the code is on
+	-(done)make some way of implenting timers, maybe like in scratch (this should be easy for me), or maybe, if possible(not sure if I can do it cause it is functional) make it in the way Javascript does times with set_interval
+	-(done)make frogger in s-found
+	-(done)add a comment to the code that mentions what "page" the code is on
+	-(done)make the programming div 95% width so that the vertical scrollbar is usable on mac
+	-(done)make a way  to detect a colission between two clones of a sprite
+		greg suggested making a second kind of block which would be put under the normal [for each clone of sprite] but
+		one that works for the clones of the target and can be nested inside the other block, use different variable names than the other block too
+		what should I call such a block? [nested loop on target sprite]? man , this is getting hard for noobs to understand
+	-modify timer block to accept an ID thru a variable too (to make bomberman enemy explode in a certain time)
+	-add block to clear timer(put intide timer function itself(is this possible?) (should also accept a variable as input)
+		amigojapan wonders if it is possible to set a clearTimeour() inside a setTimeout()’s callback function  /me googles
+		[5:43pm] amigojapan: yes, seems it is possible to fo it :)
+	-add A and B button to put bomb down
+		try to make a general function so it is easy to add any button
+		https://phaser.io/examples/v2/input/key
+		Phaser.Keyboard.A
+	-(partially done, need to interage with the main project) make dialog box for managing sprites and frames
+		-fix problem of adding a frame to second object adds the frame to first object
+	-make aliases for frame names
+	-add a block to switch to an aliased frame
+	-for some other game modify collision block or make other block od "clone colide with clone" how to know which clone colised 
+		with which clone? maybe have a way to return both IDs as strings? does not seem ideal.
+	-(partially done, elminated highlights from code displayed to user)fix highlight problem appearing in code
+	-make terminal window
+	-bomberman (use for each clone of bombs colide with bomberman, use foreach baddy collide with bomberman)
+		how will I deal with baddy colides with bomb,try nested forwach, but probably wont work cause of shared object counter?
+		if it does not work make the counter a member of each game_object
+	-vewis (make example that follows a character)
+		I think I will just move everything together with the backround except the main character... naybe make
+		a (for everything except currect sprite block) to do this... use that block then move everything in the direction pointed
+		also need to specify if we want the background scaled of now, this should probably show anothed dialogbox with a checkmark
+		coudl also put some values and add a "scale all sprites by this" also with a checkmark.
+	-(partly done, need to apply all buttons and then integrate with main project)make screen controls(how can I make them repeat while they are pressed like keys do? (maybe a timer for each button huh...))
+		maybe make a function that encapsuled the definition of a key to make it eaasy to add any new keys
+		maybe make a timer which calls the function of a key repeatedly to simulate key pressing until ti is released
+	-add blocks for sprite width and sprite height(should I bother to make it of the current frame? maybe later)
+	-prevent highlighting from causing problems when there is only another view(cause only highllights for this page to appear)
+	-make an export to standalone feature
+	-make particle system
+	-make a block that returns the current angle, call it direction like in scratch?
+	-clear all the sprites when new project is loaded, also make a new project loadable even if user does not refresh window
+	-clear workspace when deleted page
+
+	priorities: make possible collision detection between 2 sprite cclones(done), fix problem with sprite manager
+	
+	Sadale: that is good, I still have many things I want to add to my langauge before i participate, like a proper GUI, and make 
+	it easy to add and remove assets like sprites frames sounds(which it still does not have) and backrounds, I want to have views(
+	 following hte main character while the background and other obejcts scroll, I also want to have aliases for frames(today I spent 
+	 a logn time ifguring out which fame number is which frame) and maybe a particle system (so I can display the stinkyness at GGJ)
+	[8:26pm] amigojapan: so one year is good, lots of time to do that, ah I forgot, mouse support, and terminal too,    I also want to 
+	implement many games in my lanaguge so I am not stuck debugging hte language at GGJ
+	
+	Sadale: I am looking at “programming problems for kids”  and I want something even easier than this, https://marekrychlik.com/node/417    , basically I want it to start with simple thinsg like “make a variable, set it to something and print it”, “make a for look that prints from 5 to 32” , “make a function that takes 2 parameter strings and concatenates them, then print the return value”, I think I may need to write them myself,  cause I want many many of these, all the internte problems are too hard
+
+	*/
   </script>
 
 </body>
