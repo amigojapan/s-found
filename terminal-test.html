@@ -1,6 +1,13 @@
 <HTML>
 <HEAD>
 <script>
+	function input_trigger(varname,prompt) {//call this from block to trigger input
+		document.getElementById("txtPrompt").value= varname +' = input("' + prompt + '");'
+		p=document.getElementById("txtPrompt");
+		e=new CustomEvent("keyup");
+		e.keyCode=13;
+		p.dispatchEvent(e);
+	}
 	function echo(output) {
 		document.getElementById("term").value = document.getElementById("term").value +output + "\n";
 		return "";//avoid showing undefined
@@ -72,12 +79,30 @@
 	var commands=[];
 	var command_index;
 	var command
+	var input=null;
+	var parsed;
 	window.onload = function() {
 		document.getElementById("txtPrompt").addEventListener("keyup", function(event) {
 			event.preventDefault();
 			if (event.keyCode == 13) {
 				command=document.getElementById("txtPrompt").value
 				commands.push(command);
+				//https://regex101.com/r/YFbwIa/1
+				if(input=="waiting for new input") {
+					var expretion = parsed[1]+" = '" + document.getElementById("txtPrompt").value+"';"
+					eval(expretion);
+					document.getElementById("txtPrompt").value="";
+					input=null;
+					return;
+				}
+				const regex = /(.*).*=.*input\("(.*)"\);/g;
+				parsed = regex.exec(command)
+				if(parsed!=null) {//store input from user
+					echo(parsed[2]);
+					input="waiting for new input";
+					document.getElementById("txtPrompt").value="";
+					return;
+				}
 				try {
 					output= eval(command);
 				}
@@ -120,7 +145,6 @@
 	//-(done)I will make it just display the thrown exception when an error happens….
 	//-hide the terminal by default, make a "toggle terminal" button
 	//-show the terminal automatically when an echo() command is used
-	//-rename the echo block to alert and use the echo block for the termina
 </script>
 </HEAD>
 <body>
