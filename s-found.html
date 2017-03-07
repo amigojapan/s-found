@@ -1033,18 +1033,23 @@ game_object.sprite.bringToTop()
 		}
 		if(typeof frame_number_or_alias == "string") {
 			var frame_alias=frame_number_or_alias;
+			var found=false;
 			for(obj in project.game_objects) {
 				if(project.game_objects[obj].name==game_object.name) {
 					for(frame_index in project.game_objects[obj].frames) {
 						if(project.game_objects[obj].frames[frame_index].alias==frame_alias) {
 							//return project.game_objects[obj].frames[frame].frame_image_data;
 							var frame_number=parseInt(frame_index)+1;
-						} else {
-							alert("Error: the frame alias " + frame_alias +" does not exist, but it was used in [set frame to frame] block");
+							found=true;
 						}
 					}
 				}
 			}
+			if(!found) {
+				alert("Error: the frame alias " + frame_alias +" does not exist, but it was used in [set frame to frame] block");
+				return;
+			}
+
 			/*
 			for(var frame_index in game_object.frames) {
 				if(game_object.frames[frame_index].alias==frame_alias) {
