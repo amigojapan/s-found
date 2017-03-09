@@ -1,5 +1,6 @@
 <HTML>
 <HEAD>
+	<!--
 <style>
 	#btnA, #btnUp, #btnB, #btnLeft, #btnDown, #btnRight {
 		font-size:25px;
@@ -9,6 +10,7 @@
 		display: inline;
 	}
 </style>
+-->
 <script>
 	var onScreenKeyboard={};
 	onScreenKeyboard.btnAPressed=false;
@@ -18,39 +20,107 @@
 	function btnAmouseUp() {
 		onScreenKeyboard.btnAPressed=false;
 	}
+	
 	onScreenKeyboard.btnBPressed=false;
 	function btnBmouseDown() {
 		onScreenKeyboard.btnBPressed=true;
 	}
 	function btnBmouseUp() {
 		onScreenKeyboard.btnBPressed=false;
-	}	
-	function logbuttons() {
-		if(onScreenKeyboard.btnAPressed) {
-			console.log("A");
-		}
-		if(onScreenKeyboard.btnBPressed) {
-			console.log("B");
-		}		
 	}
+	
+	onScreenKeyboard.btnUpPressed=false;
+	function btnUpmouseDown() {
+		onScreenKeyboard.btnUpPressed=true;
+	}
+	function btnUpmouseUp() {
+		onScreenKeyboard.btnUpPressed=false;
+	}
+		
+	onScreenKeyboard.btnDownPressed=false;
+	function btnDownmouseDown() {
+		onScreenKeyboard.btnDownPressed=true;
+	}
+	function btnDownmouseUp() {
+		onScreenKeyboard.btnDownPressed=false;
+	}
+		
+	onScreenKeyboard.btnLeftPressed=false;
+	function btnLeftmouseDown() {
+		onScreenKeyboard.btnLeftPressed=true;
+	}
+	function btnLeftmouseUp() {
+		onScreenKeyboard.btnLeftPressed=false;
+	}
+		
+	onScreenKeyboard.btnRightPressed=false;
+	function btnRightmouseDown() {
+		onScreenKeyboard.btnRightPressed=true;
+	}
+	function btnRightmouseUp() {
+		onScreenKeyboard.btnRightPressed=false;
+	}	
+		
 	var kb_id;
 	function showScreenKeyboard() {
 		if (typeof kb_id !== 'undefined') window.clearInterval(kb_id);
 		kb_id = setInterval(logbuttons,100);
-		document.getElementById("on_screen_controls").style.display="block";
+		document.getElementById("on_screen_controls").style.display="inline-block";
 	}
+	
+	function logbuttons() {
+		document.getElementById("buttons_output").innerHTML = "";
+		var nothing_pressed=true;
+		if(onScreenKeyboard.btnAPressed) {
+			console.log("A");
+			document.getElementById("buttons_output").innerHTML += "A button pressed\n";
+			nothing_pressed=false;
+		}
+		if(onScreenKeyboard.btnBPressed) {
+			console.log("B");
+			nothing_pressed=false;
+			document.getElementById("buttons_output").innerHTML += "B button pressed\n";
+		}		
+		if(onScreenKeyboard.btnUpPressed) {
+			console.log("Up");
+			nothing_pressed=false;
+			document.getElementById("buttons_output").innerHTML += "Up button pressed\n";
+		}		
+		if(onScreenKeyboard.btnDownPressed) {
+			console.log("Down");
+			nothing_pressed=false;
+			document.getElementById("buttons_output").innerHTML += "Down button pressed\n";
+		}		
+		if(onScreenKeyboard.btnLeftPressed) {
+			console.log("Left");
+			nothing_pressed=false;
+			document.getElementById("buttons_output").innerHTML += "Left button pressed\n";
+		}		
+		if(onScreenKeyboard.btnRightPressed) {
+			console.log("Right");
+			nothing_pressed=false;
+			document.getElementById("buttons_output").innerHTML += "Right button pressed\n";
+		}				
+		if(nothing_pressed==true) {
+			document.getElementById("buttons_output").innerHTML = "no button pressed";	
+		}
+	}
+	/*	
 	function start() {
 		
 	}
 	window.onload = function() {
 		start();
 	}
+	*/
 </script>
 </HEAD>
 <body>
 	<a href="#" onclick="showScreenKeyboard()">Show Screen Controller</a>
-	<div id="on_screen_controls" style="height:69px; width: 84px; border:1px solid black; display: none;">
-		<div id="btnA" onmousedown="btnAmouseDown()" onmouseup="btnAmouseUp()"> Ａ </div><div id="btnUp" onmousedown="btnUpmouseDown()" onmouseup="btnUpmouseUp()"> ↑ </div><div id="btnB" onmousedown="btnBmouseDown()" onmouseup="btnBmouseUp()"> B </div><BR>
-		<div id="btnLeft" onmousedown="btnLeftmouseDown()" onmouseup="btnLeftmouseUp()"> ← </div><div id="btnDown" onmousedown="btnDownmouseDown()" onmouseup="btnDownmouseUp()"> ↓ </div><div id="btnRight" onmousedown="btnRightmouseDown()" onmouseup="btnRightmouseUp()"> → </div><BR>
+	<div id="on_screen_controls" style="border:1px solid black; display: none;">
+		<div id="btnA" onmousedown="btnAmouseDown()" onmouseup="btnAmouseUp()" style="display: inline;"><img src="images/A.png"></div><div id="btnUp" onmousedown="btnUpmouseDown()" onmouseup="btnUpmouseUp()"style="display: inline;"><img src="images/arrow_up.png"></div><div id="btnB" onmousedown="btnBmouseDown()" onmouseup="btnBmouseUp()"style="display: inline;"><img src="images/B.png"></div><BR>
+		<div id="btnLeft" onmousedown="btnLeftmouseDown()" onmouseup="btnLeftmouseUp()" style="display: inline;"><img src="images/arrow_left.png"></div><div id="btnDown" onmousedown="btnDownmouseDown()" onmouseup="btnDownmouseUp()" style="display: inline;"><img src="images/arrow_down.png"></div><div id="btnRight" onmousedown="btnRightmouseDown()" onmouseup="btnRightmouseUp()" style="display: inline;"><img src="images/arrow_right.png"></div><BR>
 	</div>
+		<div id="buttons_output">
+
 </body>
