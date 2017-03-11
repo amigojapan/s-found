@@ -3276,7 +3276,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	function loadURLproject() {
 		var URL=prompt("Enter URL to project:");
 		var req = new XMLHttpRequest();  
-		req.open('GET', URL, false);   
+		req.open('GET', URL, true);   
 		req.send(null);  
 		if(req.status == 200) {  
 		   project_json=req.responseText;
