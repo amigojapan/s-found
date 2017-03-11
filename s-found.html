@@ -3275,8 +3275,9 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	
 	function loadURLproject() {
 		var URL=prompt("Enter URL to project:");
+		/*
 		var req = new XMLHttpRequest();  
-		req.open('GET', URL, true);   
+		req.open('GET', URL, false);   
 		req.send(null);  
 		if(req.status == 200) {  
 		   project_json=req.responseText;
@@ -3284,7 +3285,23 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				alert("ERROR:"+req.status)
 				return;
 		}
-		loadHelperFunction(project_json);
+		*/
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", URL, true);
+		xhr.onload = function (e) {
+			if (xhr.readyState === 4) {
+				if (xhr.status === 200) {
+					project_json=xhr.responseText;
+					loadHelperFunction(project_json);
+				} else {
+					alert("ERROR:"+xhr.statusText);
+				}
+			}
+		};
+		xhr.onerror = function (e) {
+			alert("ERROR:"+xhr.statusText);
+		};
+		xhr.send(null);
 		//alert("project_json:"+project_json);
 		/*
 		project = JSON.parse(project_json);
