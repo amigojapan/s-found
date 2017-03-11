@@ -289,6 +289,12 @@ ver 0.1
 	<BR>
 </div>
   <script>
+	function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
 	window.addEventListener('load', function(){//there is another onload further down, I think maybe I should merge it into this in hte future. I think maybe this one is the newer kind, I think just make the second one into a normal function and call it from here
 		//binding screen controller events
 		var box1 = document.getElementById('btnA')
@@ -356,10 +362,19 @@ ver 0.1
 			var touchobj = e.changedTouches[0] // reference first touch point for this event
 			btnRightmouseUp();
 			e.preventDefault()
-		}, false)	 			 		 
+		}, false)
+		//load example if anyis given by URL
+		var URL = getParameterByName("LoadFromUrl");
+		if(typeof URL != 'undefined') {
+			loadURLproject(URL,false);
+		} 
+		var URL = getParameterByName("LoadFromUrlAndRun");
+		if(typeof URL != 'undefined') {
+			loadURLproject(URL,true);
+		} 			 		 
 	}, false)
 	//screen controller
-		var onScreenKeyboard={};
+	var onScreenKeyboard={};
 	onScreenKeyboard.btnAPressed=false;
 	function btnAmouseDown() {
 		onScreenKeyboard.btnAPressed=true;
@@ -3273,8 +3288,10 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	    reader.readAsText(this.files[0]);
 	};
 	
-	function loadURLproject() {
-		var URL=prompt("Enter URL to project:");
+	function loadURLproject(URL,RunCode) {
+		if(typeof URL =='undefined'){
+			var URL=prompt("Enter URL to project:");
+		}
 		/*
 		var req = new XMLHttpRequest();  
 		req.open('GET', URL, false);   
@@ -3293,6 +3310,9 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				if (xhr.status === 200) {
 					project_json=xhr.responseText;
 					loadHelperFunction(project_json);
+					if(RunCode) {
+						evalCode();
+					}
 				} else {
 					alert("ERROR:"+xhr.statusText);
 				}
