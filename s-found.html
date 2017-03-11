@@ -196,7 +196,6 @@ ver 0.1
 		    <category name="Text">
 		      <block type="text"></block>
 		      <block type="text_length"></block>
-		      <block type="text_alert"></block>
 		      <block type="text_echo"></block>
 		      <block type="text_input_term"></block>
 		      
@@ -206,7 +205,8 @@ ver 0.1
 		      
 			  <block type="text_print"></block>
 			  -->
-			  <block type="text_prompt"></block>
+			  <block type="text_alert"></block>
+			  <block type="text_prompt"></block>			  
 			  <block type="user_answer"></block>
 			  <block type="label"></block>
 			  <block type="text_join"></block>
@@ -289,6 +289,75 @@ ver 0.1
 	<BR>
 </div>
   <script>
+	window.addEventListener('load', function(){//there is another onload further down, I think maybe I should merge it into this in hte future. I think maybe this one is the newer kind, I think just make the second one into a normal function and call it from here
+		//binding screen controller events
+		var box1 = document.getElementById('btnA')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnAmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnAmouseUp();
+			e.preventDefault()
+		}, false)
+		var box1 = document.getElementById('btnB')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnBmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnBmouseUp();
+			e.preventDefault()
+		}, false)
+		var box1 = document.getElementById('btnUp')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnUpmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnUpmouseUp();
+			e.preventDefault()
+		}, false)
+		var box1 = document.getElementById('btnDown')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnDownmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnDownmouseUp();
+			e.preventDefault()
+		}, false)	
+		var box1 = document.getElementById('btnLeft')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnLeftmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnLeftmouseUp();
+			e.preventDefault()
+		}, false)
+		var box1 = document.getElementById('btnRight')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnRightmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnRightmouseUp();
+			e.preventDefault()
+		}, false)	 			 		 
+	}, false)
 	//screen controller
 		var onScreenKeyboard={};
 	onScreenKeyboard.btnAPressed=false;
@@ -495,7 +564,7 @@ ver 0.1
 	var command
 	var input=null;
 	var parsed;
-	window.onload = function() {
+	window.onload = function() {//have 2 load functions, maybe merge them in the future...
 		document.getElementById("txtPrompt").addEventListener("keyup", function(event) {
 			event.preventDefault();
 			if (event.keyCode == 13) {
@@ -2735,7 +2804,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		this.appendDummyInput()
 			.appendField("user answer");
 		this.setOutput(true, "String");
-		this.setColour(230);
+		this.setColour(120);
 		this.setTooltip('');
 		this.setHelpUrl('');
 	  }
@@ -2752,7 +2821,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		this.appendDummyInput()
 			.appendField("label");
 		this.setOutput(true, "String");
-		this.setColour(230);
+		this.setColour(120);
 		this.setTooltip('');
 		this.setHelpUrl('');
 	  }
@@ -3156,15 +3225,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 	    reader.readAsDataURL(this.files[0]);
 	}
 
-	
-	document.getElementById("files_project_upload").onchange = function () {
-	    var reader = new FileReader();
-
-	    reader.onload = function (e) {
-	        // get loaded data and render thumbnail.
-	        var project_json = e.target.result;
-			//alert("project_json:"+project_json);
-			
+	function loadHelperFunction(project_json) {
 			project = JSON.parse(project_json);
 			if(typeof project.pages == 'undefined') {//old version of s-found
 				project.pages=[];
@@ -3199,7 +3260,14 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			Blockly.mainWorkspace.clear();
 			var xml = Blockly.Xml.textToDom(project.pages[0].xml);
 			Blockly.Xml.domToWorkspace(workspace, xml);
-			
+	}
+	document.getElementById("files_project_upload").onchange = function () {
+	    var reader = new FileReader();
+
+	    reader.onload = function (e) {
+				// get loaded data and render thumbnail.
+				var project_json = e.target.result;
+				loadHelperFunction(project_json);
 	    };
 	    // read the image file as a data URL.
 	    reader.readAsText(this.files[0]);
@@ -3214,9 +3282,11 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		   project_json=req.responseText;
 		}else{
 				alert("ERROR:"+req.status)
+				return;
 		}
+		loadHelperFunction(project_json);
 		//alert("project_json:"+project_json);
-		
+		/*
 		project = JSON.parse(project_json);
 		
 		if(typeof project.background_ != 'undefined' && project.background_!="not set") {
@@ -3246,7 +3316,8 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		Blockly.Xml.domToWorkspace(workspace, xml);
 	    // read the image file as a data URL.
 	    reader.readAsText(this.files[0]);
-		
+		*/
+	}		
 /*		
 		if(typeof project.background_ != 'undefined' && project.background_!="not set") {
 			loader = new Phaser.Loader(game);
@@ -3272,7 +3343,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 		var xml = Blockly.Xml.textToDom(project.block_xml);
 		Blockly.Xml.domToWorkspace(workspace, xml);
 */		
-	}
+
 	//sprite object model
 	/*
 	spritea.push({})
@@ -3606,16 +3677,23 @@ deltab: amigojapan: hmm, you have an array with a frames property?
 		(done)otherwise just eval anything.
 	-(done)rename the echo block to alert and use the echo block for the terminal output
 	-(done)make input block for terminal input
-	-add all the array blocks from blockly playground for keeping track of the cells of bomberman(do I really need this? ah yes, to create the explotions and put the bombs in hte center of the array)
+	-(later)add all the array blocks from blockly playground for keeping track of the cells of bomberman(do I really need this? ah yes, to create the explotions and put the bombs in hte center of the array)
+	-merge the parts of upload_load_project and url_open_project that are the same into some functions that can be shared
 	-bomberman (use for each clone of bombs colide with bomberman, use foreach baddy collide with bomberman)
 		how will I deal with baddy colides with bomb,try nested forwach, but probably wont work cause of shared object counter?
 		if it does not work make the counter a member of each game_object
+		-(later)testing how to use a 2D array in blocklyplayground
+		-make the game using integer round of hte x and y instead of arrays, this should be easier
+	-mouse event suport
+	-ABS block
+	-print of GUI block
+	-poop game
 	-vewis (make example that follows a character)
 		I think I will just move everything together with the backround except the main character... naybe make
 		a (for everything except currect sprite block) to do this... use that block then move everything in the direction pointed
 		also need to specify if we want the background scaled of now, this should probably show anothed dialogbox with a checkmark
 		coudl also put some values and add a "scale all sprites by this" also with a checkmark.
-	-(partly done, need to apply all buttons and then integrate with main project)make screen controls(how can I make them repeat while they are pressed like keys do? (maybe a timer for each button huh...))
+	-(sone,but I need to fix loadproject from URL to test it on smartphones)make screen controls(how can I make them repeat while they are pressed like keys do? (maybe a timer for each button huh...))
 		maybe make a function that encapsuled the definition of a key to make it eaasy to add any new keys
 		maybe make a timer which calls the function of a key repeatedly to simulate key pressing until ti is released
 	-add blocks for sprite width and sprite height(should I bother to make it of the current frame? maybe later)
@@ -3625,8 +3703,9 @@ deltab: amigojapan: hmm, you have an array with a frames property?
 	-make a block that returns the current angle, call it direction like in scratch?
 	-clear all the sprites when new project is loaded, also make a new project loadable even if user does not refresh window
 	-clear workspace when deleted page
-
-	priorities: merge sprite manager with main project
+	-make a place to open examples directly by clicking on urls with screenshot thumbnails
+		
+	priorities:everythiing before bomberman	
 	
 	Sadale: that is good, I still have many things I want to add to my langauge before i participate, like a proper GUI, and make 
 	it easy to add and remove assets like sprites frames sounds(which it still does not have) and backrounds, I want to have views(
