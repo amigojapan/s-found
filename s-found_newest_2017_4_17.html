@@ -1,0 +1,4137 @@
+<!DOCTYPE html>
+<html>
+<!--
+Copyright Usmar A. Padow (amigojapan) usmpadow@gmail.com
+do not use this sourcode at all before consulting with the author first and getting written per
+ver 0.1
+-->
+<head>
+  <meta charset="utf-8">
+  <title>s-found - A solid foundation for programming beginners.</title>
+  <script src="https://amigojapan.github.io/s-found/NeilFraser-JS-Interpreter-9c09d45/acorn_interpreter.js"></script>
+  <script src="https://amigojapan.github.io/s-found/google-blockly-f7a206a/blockly_compressed.js"></script>
+  <script src="https://amigojapan.github.io/s-found/google-blockly-f7a206a/blocks_compressed.js"></script>
+  <script src="https://amigojapan.github.io/s-found/google-blockly-f7a206a/javascript_compressed.js"></script>
+  <script src="https://amigojapan.github.io/s-found/google-blockly-f7a206a/msg/js/en.js"></script>
+  
+  <script src="https://amigojapan.github.io/s-found/google-blockly-f7a206a/generators/javascript/math.js"></script>
+  <script src="https://amigojapan.github.io/s-found/google-blockly-f7a206a/generators/javascript/text.js"></script>
+	<script src="https://amigojapan.github.io/s-found/google-blockly-f7a206a/generators/javascript/loops.js"></script>
+	
+  <!--
+  <style>
+    body {
+      background-color: #fff;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+    }
+  </style>
+  -->
+  <script type="text/javascript" src="js/2017_2_2/phaser.js"></script>
+
+  <style type="text/css">
+
+  body {
+
+  margin: 0;
+
+  }
+ 
+  </style>
+</head>
+<body>
+<!-- seems this is not nessesay for the mock downloads
+  form * {
+    display: block;
+    margin: 10px;
+  }
+
+	<form onsubmit="download(this['name'].value, this['text'].value)" visible=false>
+	  <input type="text" name="name" value="test.txt">
+	  <textarea name="text"></textarea>
+	  <input type="submit" value="Download">
+	</form>
+-->
+	<div id='main-window'>
+		<div id="toolbar">
+			Warning, do not use this program withought the permission of amigojapan, ask permission to usmpadow@gmail.com
+		</div>		
+		<div id="toolbar">
+			<input type="file" id="files" style="display:none;"/>
+			<img id="image" style="display:none;"/>
+			<a href="#" onclick='show_sprite_manager_dialogbox();updateDialogBox();'>Sprite Manager</a>
+			<!--
+			<a href="#" onclick='document.getElementById("files").click();'>Add Strite</a>
+			-->
+			<input type="file" id="files3" style="display:none;"/>
+			<img id="frame" style="display:none;"/>
+			<!--
+			<a href="#" onclick='document.getElementById("files3").click();//add some variable to pass which sprite we are going to add to'>Add Frame</a>
+			-->
+			
+			<input type="file" id="files2" style="display:none;"/>
+			<img id="background" style="display:none;"/>
+			<a href="#" onclick='document.getElementById("files2").click();'>Add Background</a>
+			
+			<a href="#" onclick="toggleShowTerminal()">Toggle Show Terminal</a>
+			
+			<a href="#" onclick="showScreenKeyboard()">Show Screen Controller</a>
+			
+			<input type="file" id="files_project_upload" style="display:none;"/>
+			<a href="#" onclick='document.getElementById("files_project_upload").click();'>Open Project</a>
+		</div>
+		<div id="sprite_manager_dialogbox" style="overflow-y: auto; height: 300px; border:1px solid black;display: none;"></div>
+		<div id="phaser-example"></div>
+
+		<div id="on_screen_controls" style="border:1px solid black; display: none;">
+			<div id="btnA" onmousedown="btnAmouseDown()" onmouseup="btnAmouseUp()" style="display: inline;"><img src="images/A.png"></div><div id="btnUp" onmousedown="btnUpmouseDown()" onmouseup="btnUpmouseUp()"style="display: inline;"><img src="images/arrow_up.png"></div><div id="btnB" onmousedown="btnBmouseDown()" onmouseup="btnBmouseUp()"style="display: inline;"><img src="images/B.png"></div><BR>
+			<div id="btnLeft" onmousedown="btnLeftmouseDown()" onmouseup="btnLeftmouseUp()" style="display: inline;"><img src="images/arrow_left.png"></div><div id="btnDown" onmousedown="btnDownmouseDown()" onmouseup="btnDownmouseUp()" style="display: inline;"><img src="images/arrow_down.png"></div><div id="btnRight" onmousedown="btnRightmouseDown()" onmouseup="btnRightmouseUp()" style="display: inline;"><img src="images/arrow_right.png"></div><BR>
+		</div>
+
+		
+		<div id="termDiv" style="color: yellow; background-color: black;overflow-y: auto; border:1px solid black; width: 600px; display: none;">
+			<textarea rows="15" cols="50" id="term" style="color: yellow; background-color: black;resize: none; height: 80px; max-height: 150px; width: 600px; font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;"></textarea>
+			<div><BR><input type="text" id="txtPrompt" style="color: yellow; background-color: black;width: 400px" onfocus="termOnGetFocus();" onblur="termOnLoseFocus();"/><span id="tell_to_user_input_now" style="display: none; color: red; background-color: black"><--waiting for input</span></div>
+		</div>
+	
+		<div id="blockly">
+		<!--
+		<h1><a href="https://developers.google.com/blockly/">Blockly</a> &gt;
+    	<a href="../index.html">Demos</a> &gt; JS Interpreter</h1>
+		<p>This is a simple demo of executing code with a sandboxed JavaScript interpreter.</p>
+		<p>&rarr; More info on <a href="https://developers.google.com/blockly/installation/js-interpreter">JSInterpreter</a>...</p>
+		-->
+  	  	<p>
+			<!--
+    		<button onclick="parseCode()">Parse JavaScript</button>
+			-->
+			<!--
+    		<button onclick="stepCode()" id="stepButton" disabled="disabled">Step</button>
+			<button onclick="runCode()">Run</button>
+			-->
+			<button onclick="wsToXML()">WS->XML</button>
+			<button onclick="xmlToWS()">XML->WS</button>
+			 Speed <input type="text" value="250" ID="execution_speed">ms
+			 <!--
+			 <button onclick="pauseCode()">Pause</button>
+			 -->
+			 <button onclick="stopCode()">Stop</button>
+			 <button onclick="evalCode()">Run</button>
+			 <button onclick="saveCode()">Save project</button>
+			 <!--
+			 <button onclick="loadCode()">Load</button>
+			 -->
+			 <button onclick="loadURLproject()">Load project from URL</button>
+			 <button onclick="addPage()">Add page</button>
+  		  </p>
+		<div id="pages">
+		pages div failed to uninitialize
+		</div>
+
+  		<div id="blocklyDiv" style="height: 600px; width: 95%;"></div>
+  		<div id="blocklyDiv_hidden" style="height: 600px; width: 95%; display: none;"></div>
+
+		  <xml id="toolbox" style="display: none">
+		    <category name="Events">    
+			  <block type="events_when_event_happens"></block>
+			  <block type="block_change_stage"></block>
+		    </category>
+		    <category name="Motion">    
+			  <block type="motion_foward"></block>
+		      <block type="motion_turn_right"></block>
+		      <block type="motion_turn_left"></block>
+			  <block type="motion_point_in_direction"></block>
+			  <block type="motion_point_in_direction_of_target"></block>
+			  <block type="motion_set_x_to"></block>
+			  <block type="motion_set_y_to"></block>
+		    </category>
+		    <category name="Sprites">    
+			  <block type="sprites_set_current_sprite"></block>
+			  <block type="sprites_set_target_sprite"></block>
+			  <block type="sprites_set_current_sprite_to_target_sprite"></block>
+			  <block type="sprites_is_colliding_with_target"></block>
+			  <block type="sprites_create_clone_of_current_sprite"></block>
+			  <block type="sprites_destroy_current_sprite"></block>
+			  <block type="sprites_next_frame"></block>
+			  <block type="sprites_set_frame_to_frame_number"></block>
+			  <block type="sprites_current_sprite_bring_to_front"></block>
+			  <!-- <block type="sprites_current_sprite_send_to_back"></block> this block does not seem to work so I am hiding it for now-->
+			  <block type="sprites_for_each_clone_of_current_sprite"></block>
+			  <block type="sprites_for_each_clone_of_current_sprite_new"></block>
+			  <block type="sprites_nested_for_each_clone_of_current_target_sprite"></block>
+			  <block type="sprites_value_of_x"></block>
+			  <block type="sprites_value_of_y"></block>
+			  <block type="sprites_current_frame_number"></block>
+			  <block type="sprites_hide_current_sprite"></block>
+			  <block type="sprites_show_current_sprite"></block>			  
+		    </category>
+		    <category name="Logic">
+		      <block type="controls_if"></block>
+		      <block type="logic_compare"></block>
+		      <block type="logic_operation"></block>
+		      <block type="logic_negate"></block>
+		      <block type="logic_boolean"></block>
+		    </category>
+				<category name="Loops" colour="120">
+					<block type="controls_repeat_ext">
+						<value name="TIMES">
+							<shadow type="math_number">
+								<field name="NUM">10</field>
+							</shadow>
+						</value>
+					</block>
+					<block type="controls_repeat" disabled="true"></block>
+					<block type="controls_whileUntil"></block>
+					<block type="controls_for">
+						<value name="FROM">
+							<shadow type="math_number">
+								<field name="NUM">1</field>
+							</shadow>
+						</value>
+						<value name="TO">
+							<shadow type="math_number">
+								<field name="NUM">10</field>
+							</shadow>
+						</value>
+						<value name="BY">
+							<shadow type="math_number">
+								<field name="NUM">1</field>
+							</shadow>
+						</value>
+					</block>
+					<block type="controls_forEach"></block>
+					<block type="controls_flow_statements"></block>
+				</category>
+		    <category name="Math">
+		      <block type="math_number"></block>
+		      <block type="math_arithmetic"></block>
+		      <block type="math_single"></block>
+		      <block type="math_random_int"></block>
+		      <block type="to_number"></block>
+		      <block type="math_modulo">
+		        <value name="DIVIDEND">
+		          <shadow type="math_number">
+		            <field name="NUM">64</field>
+		          </shadow>
+		        </value>
+		        <value name="DIVISOR">
+		          <shadow type="math_number">
+		            <field name="NUM">10</field>
+		          </shadow>
+		        </value>
+		      </block>
+		    </category>
+		    <category name="Text">
+		      <block type="text"></block>
+		      <block type="text_length"></block>
+		      <block type="text_echo"></block>
+		      <block type="text_input_term"></block>
+		      
+		      <!--
+		      
+		      
+		      
+			  <block type="text_print"></block>
+			  -->
+			  <block type="text_alert"></block>
+			  <block type="text_prompt"></block>			  
+			  <block type="user_answer"></block>
+			  <block type="label"></block>
+			  <block type="text_join"></block>
+		      <!--
+		      <block type="text_prompt_ext">
+		        <value name="TEXT">
+		          <block type="text"></block>
+		        </value>
+		      </block>
+		      -->
+		    </category>
+
+				<category name="Lists" colour="260">
+					<block type="lists_create_with">
+						<mutation items="0"></mutation>
+					</block>
+					<block type="lists_create_with"></block>
+					<block type="lists_repeat">
+						<value name="NUM">
+							<shadow type="math_number">
+								<field name="NUM">5</field>
+							</shadow>
+						</value>
+					</block>
+					<block type="lists_length"></block>
+					<block type="lists_isEmpty"></block>
+					<block type="lists_indexOf">
+						<value name="VALUE">
+							<block type="variables_get">
+								<field name="VAR">list</field>
+							</block>
+						</value>
+					</block>
+					<block type="lists_getIndex">
+						<value name="VALUE">
+							<block type="variables_get">
+								<field name="VAR">list</field>
+							</block>
+						</value>
+					</block>
+					<block type="lists_setIndex">
+						<value name="LIST">
+							<block type="variables_get">
+								<field name="VAR">list</field>
+							</block>
+						</value>
+					</block>
+					<block type="lists_getSublist">
+						<value name="LIST">
+							<block type="variables_get">
+								<field name="VAR">list</field>
+							</block>
+						</value>
+					</block>
+					<block type="lists_split">
+						<value name="DELIM">
+							<shadow type="text">
+								<field name="TEXT">,</field>
+							</shadow>
+						</value>
+					</block>
+					<block type="lists_sort"></block>
+					<block type="lists_reverse"></block>
+				</category>
+		   <category name="Variables" colour="330" custom="VARIABLE"></category>
+		    <category name="Functions" custom="PROCEDURE"></category>
+		    <category name="Advanced">
+		      <block type="procedures_defreturn_functional"></block>
+		      <block type="call_first_class_function"></block>
+		      <block type="set_timer"></block>
+		      <block type="set_one_time_timer"></block>
+					<block type="clear_timer"></block>
+					<block type="set_break_point_here"></block>
+		    </category>
+			
+			
+		  </xml>
+		  
+		  <xml id="startBlocks" style="display: none">
+			<!--  
+		    <block type="variables_set" inline="true" x="20" y="20">
+		      <field name="VAR">n</field>
+		      <value name="VALUE">
+		        <block type="math_number">
+		          <field name="NUM">1</field>
+		        </block>
+		      </value>
+		      <next>
+		        <block type="controls_repeat_ext" inline="true">
+		          <value name="TIMES">
+		            <block type="math_number">
+		              <field name="NUM">4</field>
+		            </block>
+		          </value>
+		          <statement name="DO">
+		            <block type="variables_set" inline="true">
+		              <field name="VAR">n</field>
+		              <value name="VALUE">
+		                <block type="math_arithmetic" inline="true">
+		                  <field name="OP">MULTIPLY</field>
+		                  <value name="A">
+		                    <block type="variables_get">
+		                      <field name="VAR">n</field>
+		                    </block>
+		                  </value>
+		                  <value name="B">
+		                    <block type="math_number">
+		                      <field name="NUM">2</field>
+		                    </block>
+		                  </value>
+		                </block>
+		              </value>
+		            </block>
+		          </statement>
+		          <next>
+		            <block type="text_print" inline="false">
+		              <value name="TEXT">
+		                <block type="variables_get">
+		                  <field name="VAR">n</field>
+		                </block>
+		              </value>
+		            </block>
+		          </next>
+		        </block>
+		      </next>
+		    </block>
+		  -->
+		  </xml>
+		  
+
+	</div>
+		<textarea rows="60" cols="80" ID="funct">
+			Start dropping blocks to produce Javascript
+		</textarea>
+		<BR>
+	</div>
+  <script>
+	var URLRunLoading=false;
+	function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+	window.addEventListener('load', function(){//there is another onload further down, I think maybe I should merge it into this in hte future. I think maybe this one is the newer kind, I think just make the second one into a normal function and call it from here
+		//binding screen controller events
+		var box1 = document.getElementById('btnA')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnAmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnAmouseUp();
+			e.preventDefault()
+		}, false)
+		var box1 = document.getElementById('btnB')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnBmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnBmouseUp();
+			e.preventDefault()
+		}, false)
+		var box1 = document.getElementById('btnUp')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnUpmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnUpmouseUp();
+			e.preventDefault()
+		}, false)
+		var box1 = document.getElementById('btnDown')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnDownmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnDownmouseUp();
+			e.preventDefault()
+		}, false)	
+		var box1 = document.getElementById('btnLeft')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnLeftmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnLeftmouseUp();
+			e.preventDefault()
+		}, false)
+		var box1 = document.getElementById('btnRight')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnRightmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnRightmouseUp();
+			e.preventDefault()
+		}, false)
+		//load example if anyis given by URL
+		var URL = getParameterByName("LoadFromUrl");
+		if(URL != "") {
+			loadURLproject(URL,false);
+		} 
+		var URL = getParameterByName("RunAndLoadFromUrl");
+		if(URL != "") {
+			URLRunLoading=true;
+			loadURLproject(URL,true);
+		} 			 		 
+	}, false)
+	//screen controller
+	var onScreenKeyboard={};
+	onScreenKeyboard.btnAPressed=false;
+	function btnAmouseDown() {
+		onScreenKeyboard.btnAPressed=true;
+	}
+	function btnAmouseUp() {
+		onScreenKeyboard.btnAPressed=false;
+	}
+	
+	onScreenKeyboard.btnBPressed=false;
+	function btnBmouseDown() {
+		onScreenKeyboard.btnBPressed=true;
+	}
+	function btnBmouseUp() {
+		onScreenKeyboard.btnBPressed=false;
+	}
+	
+	onScreenKeyboard.btnUpPressed=false;
+	function btnUpmouseDown() {
+		onScreenKeyboard.btnUpPressed=true;
+	}
+	function btnUpmouseUp() {
+		onScreenKeyboard.btnUpPressed=false;
+	}
+		
+	onScreenKeyboard.btnDownPressed=false;
+	function btnDownmouseDown() {
+		onScreenKeyboard.btnDownPressed=true;
+	}
+	function btnDownmouseUp() {
+		onScreenKeyboard.btnDownPressed=false;
+	}
+		
+	onScreenKeyboard.btnLeftPressed=false;
+	function btnLeftmouseDown() {
+		onScreenKeyboard.btnLeftPressed=true;
+	}
+	function btnLeftmouseUp() {
+		onScreenKeyboard.btnLeftPressed=false;
+	}
+		
+	onScreenKeyboard.btnRightPressed=false;
+	function btnRightmouseDown() {
+		onScreenKeyboard.btnRightPressed=true;
+	}
+	function btnRightmouseUp() {
+		onScreenKeyboard.btnRightPressed=false;
+	}	
+		
+	//var kb_id;
+	function showScreenKeyboard() {
+		//if (typeof kb_id !== 'undefined') window.clearInterval(kb_id);
+		//kb_id = setInterval(logbuttons,100);
+		document.getElementById("on_screen_controls").style.display="inline-block";
+	}
+	//terminal
+	function termOnGetFocus() {
+		unblockKeys();
+	}
+	function termOnLoseFocus() {
+		lockKeysForGame();
+	}
+	function clear() {
+		document.getElementById("term").value = "";
+		return "";
+	}
+	function cb(varname){
+		alert(varname+" welcome!");
+	}//input_trigger(n,"what is your name?,cb);
+	var user_answer;
+	var label;
+	function input_trigger_label(label_,prompt,callback) {//call this from block to trigger input
+		//this seems to show how to do non blocking waiting, which I will need for the s-found block
+		//http://stackoverflow.com/questions/5551378/javascript-pausing-execution-of-function-to-wait-for-user-input
+		//how about adding an extra parameter that has a callback for then the input is over and caling it then? 
+		//maybe generate it with a unique function name...too bad there is no goto in JS
+		document.getElementById("txtPrompt").value= 'user_answer = input("' + prompt + '");'
+		p=document.getElementById("txtPrompt");
+		e=new CustomEvent("keyup");
+		e.keyCode=13;
+		p.dispatchEvent(e);
+		//wait for input withought making hte browser hang
+		function loop() {
+			if (input!=null) {
+				setTimeout(loop, 0);
+			} else {
+				document.getElementById("tell_to_user_input_now").style.display="none";
+				label=label_;
+				ON_INPUT();
+			}
+		}
+		loop();
+		/*
+		document.getElementById("txtPrompt").value= varname +' = input("' + prompt + '");'
+		p=document.getElementById("txtPrompt");
+		e=new CustomEvent("keyup");
+		e.keyCode=13;
+		p.dispatchEvent(e);
+		*/
+	}
+
+	function input_trigger(varname,prompt,callback) {//call this from block to trigger input
+		//this seems to show how to do non blocking waiting, which I will need for the s-found block
+		//http://stackoverflow.com/questions/5551378/javascript-pausing-execution-of-function-to-wait-for-user-input
+		//how about adding an extra parameter that has a callback for then the input is over and caling it then? 
+		//maybe generate it with a unique function name...too bad there is no goto in JS
+		document.getElementById("txtPrompt").value= varname +' = input("' + prompt + '");'
+		p=document.getElementById("txtPrompt");
+		e=new CustomEvent("keyup");
+		e.keyCode=13;
+		p.dispatchEvent(e);
+		//wait for input withought making hte browser hang
+		function loop() {
+			if (input!=null) {
+				setTimeout(loop, 0);
+			} else {
+				callback(eval(varname));
+			}
+		}
+		loop();
+		/*
+		document.getElementById("txtPrompt").value= varname +' = input("' + prompt + '");'
+		p=document.getElementById("txtPrompt");
+		e=new CustomEvent("keyup");
+		e.keyCode=13;
+		p.dispatchEvent(e);
+		*/
+	}
+	function echo(output) {
+		showTerm=true;
+		document.getElementById("termDiv").style.display="block";
+		document.getElementById("term").value = document.getElementById("term").value +output + "\n";
+		return "";//avoid showing undefined
+		//for(var a=0;a<100;a++) echo("hello"+a);
+	}
+	function maze(x,y) {
+		/*
+		var n=x*y-1;
+		if (n<0) {alert("illegal maze dimensions");return;}
+		var horiz =[]; for (var j= 0; j<x+1; j++) horiz[j]= [],
+			verti =[]; for (var j= 0; j<x+1; j++) verti[j]= [],
+			here = [Math.floor(Math.random()*x), Math.floor(Math.random()*y)],
+			path = [here],
+			unvisited = [];
+		for (var j = 0; j<x+2; j++) {
+			unvisited[j] = [];
+			for (var k= 0; k<y+1; k++)
+				unvisited[j].push(j>0 && j<x+1 && k>0 && (j != here[0]+1 || k != here[1]+1));
+		}
+		while (0<n) {
+			var potential = [[here[0]+1, here[1]], [here[0],here[1]+1],
+				[here[0]-1, here[1]], [here[0],here[1]-1]];
+			var neighbors = [];
+			for (var j = 0; j < 4; j++)
+				if (unvisited[potential[j][0]+1][potential[j][1]+1])
+					neighbors.push(potential[j]);
+			if (neighbors.length) {
+				n = n-1;
+				next= neighbors[Math.floor(Math.random()*neighbors.length)];
+				unvisited[next[0]+1][next[1]+1]= false;
+				if (next[0] == here[0]) {
+					horiz[next[0]][(next[1]+here[1]-1)/2]= true; 
+				} else { 
+					verti[(next[0]+here[0]-1)/2][next[1]]= true;
+				}
+				path.push(here = next);
+			} else  {
+				here = path.pop();
+		}
+		return {x: x, y: y, horiz: horiz, verti: verti};
+		*/
+	}
+	 
+	function display(m) {
+		/*
+		var text= [];
+		for (var j= 0; j<m.x*2+1; j++) {
+			var line= [];
+			if (0 == j%2)
+				for (var k=0; k<m.y*4+1; k++)
+					if (0 == k%4) 
+						line[k]= '+';
+					else
+						if (j>0 && m.verti[j/2-1][Math.floor(k/4)])
+							line[k]= ' ';
+						else
+							line[k]= '-';
+			else
+				for (var k=0; k<m.y*4+1; k++)
+					if (0 == k%4)
+						if (k>0 && m.horiz[(j-1)/2][k/4-1])
+							line[k]= ' ';
+						else
+							line[k]= '|';
+					else
+						line[k]= ' ';
+			if (0 == j) line[1]= line[2]= line[3]= ' ';
+			if (m.x*2-1 == j) line[4*m.y]= ' ';
+			text.push(line.join('')+'\r\n');
+		}
+		return text.join('');
+		*/
+	}//display(maze(10,14));
+	var commands=[];
+	var command_index;
+	var command
+	var input=null;
+	var parsed;
+	window.onload = function() {//have 2 load functions, maybe merge them in the future...
+		document.getElementById("txtPrompt").addEventListener("keyup", function(event) {
+			event.preventDefault();
+			if (event.keyCode == 13) {
+				//scroll to bottom
+				var textarea = document.getElementById("term");
+				textarea.scrollTop = textarea.scrollHeight;
+
+				command=document.getElementById("txtPrompt").value
+				commands.push(command);
+				//https://regex101.com/r/YFbwIa/1
+				if(input=="waiting for new input") {
+					var expretion = parsed[1]+" = '" + document.getElementById("txtPrompt").value+"';"
+					eval(expretion);
+					document.getElementById("txtPrompt").value="";
+					input=null;
+					return;
+				}
+				const regex = /(.*).*=.*input\("(.*)"\);/g;
+				parsed = regex.exec(command)
+				if(parsed!=null) {//store input from user
+					echo(parsed[2]);
+					input="waiting for new input";
+					document.getElementById("txtPrompt").value="";
+					document.getElementById("tell_to_user_input_now").style.display="inline";
+					return;
+				}
+				try {
+					output= eval(command);
+				}	catch (e) {
+				   echo(e);
+				   return;
+				}
+				//undefined is on next line
+				document.getElementById("term").value = document.getElementById("term").value + output;
+				if(command.substring(0, 5)!="echo(" && input!="waiting for new input") {//add a newlinee if the command is not echo
+					document.getElementById("term").value = document.getElementById("term").value  + "\n";
+				}
+				document.getElementById("txtPrompt").value="";
+				command_index=commands.lenght;
+			}
+			if (event.keyCode == 38) {//up arrow
+				if(typeof commands[command_index] == 'undefined') {
+					command_index=commands.length-1;
+				} else {
+					if(command_index>0) {
+						command_index--;
+					}
+				}
+				document.getElementById("txtPrompt").value = commands[command_index];
+			}
+			if (event.keyCode == 40) {//down arrow
+				if(typeof commands[command_index] == 'undefined') {
+					command_index=commands.length-1;
+				} else {
+					if(command_index<commands.length-1) {
+						command_index++;
+					}
+				}
+				document.getElementById("txtPrompt").value = commands[command_index];
+			}
+		});
+	};
+	var showTerm=false;
+	function toggleShowTerminal() {
+		showTerm=!showTerm;
+		document.getElementById("termDiv").style.display=showTerm?"block":"none";
+	}
+	//sprite manager dialog
+	function show_sprite_manager_dialogbox() {
+		document.getElementById("sprite_manager_dialogbox").style.display="block";
+	}
+	function hide_sprite_manager_dialogbox() {
+		document.getElementById("sprite_manager_dialogbox").style.display="none";
+	}
+	function updateDialogBox() {
+		document.getElementById("sprite_manager_dialogbox").innerHTML="";
+		document.getElementById("sprite_manager_dialogbox").innerHTML +=" <a href=\"#\" onclick='document.getElementById(\"files\").click();'>Add Sprite</a>"
+		document.getElementById("sprite_manager_dialogbox").innerHTML +=" <a href=http://www.piskelapp.com/ target=\"Sprite editor\">Open exrnal sprite editor in new tab</a> remember to save as PNG.";
+		document.getElementById("sprite_manager_dialogbox").innerHTML +=" <a href=\"#\" onclick='hide_sprite_manager_dialogbox();'>(X) Close sprite manager</a>"
+		for(var obj in project.game_objects) {
+			document.getElementById("sprite_manager_dialogbox").innerHTML += "<div>";
+			document.getElementById("sprite_manager_dialogbox").innerHTML +='<img src='+getSpriteData(project.game_objects[obj].name)+' />';
+			document.getElementById("sprite_manager_dialogbox").innerHTML += project.game_objects[obj].name; 
+			document.getElementById("sprite_manager_dialogbox").innerHTML += " <a href=javascript:clikedChangeImageLink('"+project.game_objects[obj].name+"')"+ " id=ChangeImg"+project.game_objects[obj].name+">Change image</a>";
+			document.getElementById("sprite_manager_dialogbox").innerHTML += " <a href=javascript:clikedRenameLink('"+project.game_objects[obj].name+"')"+ " id=Rename"+project.game_objects[obj].name+">Rename</a>";
+			document.getElementById("sprite_manager_dialogbox").innerHTML += " <a href=javascript:clikedDeleteSpriteLink('"+project.game_objects[obj].name+"')"+ " id=del"+project.game_objects[obj].name+">Delete</a>"
+			document.getElementById("sprite_manager_dialogbox").innerHTML += " <a href=javascript:clikedAddFrameLink('"+project.game_objects[obj].name+"')"+ " id=AddFrame"+project.game_objects[obj].name+">Add frame</a>"
+			document.getElementById("sprite_manager_dialogbox").innerHTML += "</div>";
+			for(var frame in project.game_objects[obj].frames) {
+				document.getElementById("sprite_manager_dialogbox").innerHTML += "<div>";
+				document.getElementById("sprite_manager_dialogbox").innerHTML += "frame"+(parseInt(frame)+1)+"->";
+				document.getElementById("sprite_manager_dialogbox").innerHTML +='<img src='+getFrameData(project.game_objects[obj].name,project.game_objects[obj].frames[frame].alias)+' />';
+				document.getElementById("sprite_manager_dialogbox").innerHTML += project.game_objects[obj].frames[frame].alias; 
+				document.getElementById("sprite_manager_dialogbox").innerHTML += " <a href=javascript:clikedChangeImageFrameLink('"+project.game_objects[obj].frames[frame].alias+"')"+ " id=ChangeImg"+project.game_objects[obj].frames[frame].alias+">Change image</a>";
+				document.getElementById("sprite_manager_dialogbox").innerHTML += " <a href=javascript:clikedRenameFrameLink("+obj+","+frame+")"+ " id=Rename"+project.game_objects[obj].frames[frame].alias+">Rename</a>";
+				document.getElementById("sprite_manager_dialogbox").innerHTML += " <a href=javascript:clikedDeleteFrameLink("+obj+","+frame+")"+ " id=del"+project.game_objects[obj].frames[frame].alias+">Delete</a>"
+				document.getElementById("sprite_manager_dialogbox").innerHTML += "</div>";		
+			}
+		} 
+	}
+	function getSpriteData(game_object_name) {
+		for(obj in project.images) {
+			if(project.images[obj].name==game_object_name) {
+				return project.images[obj].data;
+			}
+		}
+	}
+	function getFrameData(game_object_name,frame_alias) {
+		for(obj in project.game_objects) {
+			if(project.game_objects[obj].name==game_object_name) {
+				for(frame in project.game_objects[obj].frames) {
+					if(project.game_objects[obj].frames[frame].alias==frame_alias) {
+						return project.game_objects[obj].frames[frame].frame_image_data;//this frames is text which I should change later but it would brake the images in my projects so I will just change the loading from project to string
+					}
+				}
+			}
+		}
+	}
+	
+	
+	function clikedRenameFrameLink(obj,frame) {
+		var new_name = prompt("Give me a name for this sprite","Sprite-"+guid());
+		for(var frm in project.game_objects[obj].frames) {
+			if(project.game_objects[obj].frames[frm].alias==new_name) {
+				alert("Error:there is already a frame alias named:" + new_name + ", for this sprite, every frame name must be unique.");
+				return;
+			}
+		}
+		project.game_objects[obj].frames[frame].alias=new_name;
+		updateDialogBox();
+	}
+	function clikedDeleteFrameLink(obj,frame) {
+	  var answer = confirm("Delete frame "+project.game_objects[obj].frames[frame].alias+"? -- warning this cannot be undone!!")
+	  if (answer) {
+			project.game_objects[obj].frames.splice(frame, 1);
+			updateDialogBox();
+	  }
+	}
+	var name_of_current_object_in_sprite_manager="not set";
+	//var frame_new_name="not set";
+	function clikedAddFrameLink(game_object_name) {
+		for(var obj in project.game_objects) {
+			if(project.game_objects[obj].name==game_object_name) {
+				/*
+				for(var frame in project.game_objects[obj].frames) {
+					if(project.game_objects[obj].frames[frame].alias==new_name) {
+						alert("Error: sprite " + project.game_objects[obj].name + " already has a frame called " + new_name + " every frame alias must be unique.");
+						return;
+					}
+				}
+				*/
+				name_of_current_object_in_sprite_manager=game_object_name;
+				//frame_new_name=new_name;
+				document.getElementById("files3").click();//add some variable to pass which sprite we are going to add to'>Add Frame</a>
+				/*
+				var frame={};
+				frame.alias=new_name;	
+				project.game_objects[obj].frames.push(frame);
+				*/
+				updateDialogBox();
+				return;	
+			}							
+		}
+	}
+	function clikedRenameLink(game_object_name) {
+		var new_name = prompt("Give me a name for this sprite","Sprite-"+guid());
+		if(new_name == null){
+			return;
+		}
+		for(var obj in project.game_objects) {
+			if(project.game_objects[obj].name==new_name) {
+				alert("Error:there is already a sprite named:" + new_name + ", every sprite name must be unique.");
+				return;
+			}
+		}
+		//rename game object
+		go=find_sprite_object_by_name(game_object_name)
+		go.name=new_name;
+		//rename project objects
+		for(var obj in project.game_objects) {
+			if(project.game_objects[obj].name==game_object_name) {
+				project.game_objects[obj].name=new_name;
+				for(obj in project.images) {
+					if(project.images[obj].name==game_object_name) {
+						project.images[obj].name=new_name;
+					}
+				}
+				updateDialogBox(); 
+				return;
+			}
+		}
+	}
+	function clikedDeleteSpriteLink(game_object_name) {
+		var answer = confirm("Delete sprite "+game_object_name+"? -- warning this cannot be undone!!")
+		if (answer) {
+			for(sprite in sprites) {
+				if(sprites[sprite].name==game_object_name) {
+					delete sprites[sprite];
+				}
+			}
+			for(var obj in project.game_objects) {
+				if(project.game_objects[obj].name==game_object_name) {
+					var go = find_sprite_object_by_name(project.game_objects[obj].name);
+					//go.sprite.destroy();
+					project.game_objects.splice(obj, 1);
+					updateDialogBox(); 
+					return;
+				}
+			}
+		}
+	}
+
+	//phaser
+	var game = new Phaser.Game(600, 400, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update });
+
+	function preload() {
+		//game.load.image('star', 'assets/firstaid.png');
+	}
+
+	//globals
+	var current_sprite_name=""
+	var target_sprite_name=""
+	var sprites=[];
+    var debug_current_sprite_name="no sprite selected";
+  	var current_clone=null;
+	
+	//var spriteA;
+	//var SpriteC;
+	//var sprites=[];
+	var angle=0;
+/*
+	var aKey;
+	var bKey;
+	function create() {
+		//extra keys
+		aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+		bKey = game.input.keyboard.addKey(Phaser.Keyboard.B);
+		//sprites.push("Sprite1");
+		//sprites["Sprite1"].angle=0;
+		//add sprite
+		//spriteA = game.add.sprite(200, 100, 'star');
+		//spriteB = game.add.sprite(0, 0, 'star');
+	}
+*/
+	var cursors;
+	var background_;
+	var mid_layer;
+	var front_layer;
+	var aKey;
+	var bKey;
+
+	function create() {
+		game.stage.disableVisibilityChange = false;//pause the game when lost focus(seems to not be working)
+
+	    cursors = game.input.keyboard.createCursorKeys();  
+		game.time.advancedTiming=true; 
+
+		//game.input.keyboard.removeKey(Phaser.Keyboard.A);
+	// Groups for drawing layers
+	
+	
+	background_ = game.add.group();
+	mid_layer = game.add.group();
+	front_layer = game.add.group();
+	/*
+	background_ = game.add.group(null, "group0",true);
+	mid_layer = game.add.group(null, "group1",true);
+	front_layer = game.add.group(null, "group2",true);
+	*/
+		/*
+	rich [12:39 AM] 
+you can use 'bringToTop' and 'sendToBack' or 'moveUp' or 'moveDown' to position stuff... or just fiddle with the Group.children array yourself and shift stuff about
+
+amigojapan [12:40 AM] 
+yes rich I understand that...   can I detect collision between sprites in different groups? if so I will make a group for clones that sits behind the top group
+
+drhayes [12:40 AM] 
+In arcade physics you can collide two groups, yes.
+
+rich [12:40 AM] 
+you can collide across groups, sure, or group vs. group, or sprite vs. group (even if sprite is in another group)
+eich electron wrapper and cordova wrapper for software that runs with no internet available
+
+//for some reason this did not work
+set_current_sprite_name("frog");
+game_object=find_sprite_object_by_name(current_sprite_name);
+
+//but this did
+game_object=find_sprite_object_by_name("frog");
+game_object.sprite.bringToTop()
+	*/
+	// It doesn't matter what order you add things to these groups, the draw order will be back, mid, front (unless you change it...)back_layer.create(0, 0, "bg");front_layer.create(0, 0, "front");mid_layer.create(300, 200, "object1");mid_layer.create(500, 400, "object2"); icp likes this
+
+		 
+	}
+	var retVal;
+	function update(){ 
+	}
+	function RadianstoDegrees (angle) {
+	  return angle * (180 / Math.PI);
+	}
+
+	function DegreestoRadians (angle) {
+	  return angle * (Math.PI / 180);
+	}
+	function normalize_angle_hack(angle) {
+		angle+=360; 
+		angle=angle%360; 
+		angle+=360; 
+		angle=angle%360; 
+		return angle;
+	}
+	function clone_sprite() {
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);	
+		
+		//sprites[sprites.length-1].sprite = game.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[sprites.length-1].name);
+		var clone={};
+		clone.sprite = game.add.sprite(game_object.sprite.x, game_object.sprite.y, game_object.sprite.key, game_object.sprite.frame);
+		//clone.frames= Object.assign({}, game_object.frames);//***TODO:this does not work, clone the frames from teh original frames the same way I did the clonning on top...
+		//***TO-DO:need to set the alias by project.game_objects[3].frames[1]
+		clone.frames=[]
+		for(frame in game_object.frames) {
+			clone.frames[frame]={};
+			clone.frames[frame].sprite = game.add.sprite(game_object.sprite.x, game_object.sprite.y, game_object.frames[frame].sprite.key, game_object.frames[frame].sprite.frame);
+		}
+		
+		found=false;
+		for(proj_index in project.game_objects) {
+			if(project.game_objects[proj_index].name==current_sprite_name) {
+				break;
+			}
+		}
+		for(frame in game_object.frames) {
+			clone.frames[frame].alias = project.game_objects[proj_index].frames[frame-1].alias;//game_object.frames[frame].alias;
+			clone.frames[frame].sprite.visible=false;
+		}
+		game_object.sprite.visible=false;//I don't think this should exist , but I am adding it cause there seems to be a duplicate fo zombie bare
+		clone.number_of_frames=game_object.number_of_frames;
+		clone.current_frame=1;
+		//clone.name=game_object.name;
+		sprite_ = front_layer.create(clone.sprite);
+		//scale sprite down
+		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
+		clone.sprite.angle=game_object.sprite.angle;
+		game.physics.enable(clone.sprite, Phaser.Physics.ARCADE);
+		//set it so that the sprites rotate on hte center axis
+		clone.sprite.anchor.setTo(0.5, 0.5);
+		if(typeof game_object.clones == 'undefined') {
+			game_object.clones=[];
+		}
+		game_object.clones.push(clone);
+	}
+	
+	function destroy_current_sprite(){
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		destory_current_sprite_frames();
+		game_object.sprite.destroy();
+		//yet another quickfix due to the difference between sprites and clones
+		if(current_clone!=null){
+			for(var obj in sprites){
+				if(sprites[obj].name==current_sprite_name) {
+					if(sprites[obj].clones.length==0){
+						break;
+					}else{
+						sprites[obj].clones.splice(current_clone, 1);	
+					}	
+				}//);
+			}
+		}
+	}
+	function hide_current_sprite(){
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		game_object.hidden=true;
+		if(current_clone!=null) {
+			//(done)***TODO:need to deal with number_of_frames == 'undefined' for clones too as well as non clones
+			game_object.sprite.visible=false//make sure the top srite is invisible now
+			//fudge to make all other frames invisible cause there seems to be all frames visible now with clones
+			for(frame in game_object.frames) {
+				game_object.frames[frame].sprite.visible=false;
+			}
+		}
+		if (typeof game_object.number_of_frames == 'undefined') {
+			//eventually change this to trow an exception
+			game_object.sprite.visible = false;
+			return
+		}
+	
+		game_object.sprite.visible = false;
+		game_object.frames[game_object.current_frame].sprite.visible = false;		
+	}
+	function show_current_sprite(){
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		game_object.hidden=false;
+		if (typeof game_object.number_of_frames == 'undefined') {
+			//eventually change this to trow an exception
+			game_object.sprite.visible=true;
+			return
+		}
+		game_object.frames[game_object.current_frame].sprite.visible=true;		
+	}	
+	function find_sprite_object_by_name(sprite_name,original_sprite) {		
+		//remember to show an error if no sprite name is given
+		if(sprite_name=="") {
+			//bug, this error does not go away cause we cant get rid of the block unless we reload the page, need to domehow get rid of just the previous block, some kind of undo or some other way to only show this message once, then set a timer for a time to not constantly nag the user
+			return null;
+			//try adding if(evalrun) here 
+			//alert("Error, no sprite name given, you probably need to select a current sprite using the Sprites->set current sprite block");
+		}
+		for(var obj in sprites){
+			if(sprites[obj].name==sprite_name) {
+				if(current_clone!=null) {
+					//quickfix for when a clone is set but we are really looking for another sprite which has no clones,
+					//in sprite collision detection
+					//not this wont work well if we are actually looking for hte clones of the target, but that is not what I
+					//think we have in mind, at least in space invaders
+					//it should work if the target has clones, so may work anyway
+					//a sideeffect of this is that the bullet gets hidden when I am just trying to hide the alines.
+					if(sprites[obj].clones.length==0){
+						return sprites[obj];
+					}
+					//end quickfix
+					return sprites[obj].clones[current_clone];
+					//return sprites[obj];
+				}else{
+					return sprites[obj];
+				}				
+			}
+		}
+	}
+	function find_sprite_object_by_name_new(sprite_name){		
+		//remember to show an error if no sprite name is given
+		if(sprite_name=="") {
+			//bug, this error does not go away cause we cant get rid of the block unless we reload the page, need to domehow get rid of just the previous block, some kind of undo or some other way to only show this message once, then set a timer for a time to not constantly nag the user
+			return null;
+			//try adding if(evalrun) here 
+			//alert("Error, no sprite name given, you probably need to select a current sprite using the Sprites->set current sprite block");
+		}
+		for(var obj in sprites){
+			if(sprites[obj].name==sprite_name) {
+				if(current_clone!=null) {
+					//quickfix for when a clone is set but we are really looking for another sprite which has no clones,
+					//in sprite collision detection
+					//not this wont work well if we are actually looking for hte clones of the target, but that is not what I
+					//think we have in mind, at least in space invaders
+					//it should work if the target has clones, so may work anyway
+					//a sideeffect of this is that the bullet gets hidden when I am just trying to hide the alines.
+					if(sprites[obj].clones.length==0){
+						return sprites[obj];
+					}
+					//end quickfix
+					return sprites[obj].clones[current_clone];
+					//return sprites[obj];
+				}else{
+					return sprites[obj];
+				}				
+			}
+		}
+	}	
+	function find_target_sprite_with_clones_object_by_name(sprite_name){
+		//remember to show an error if no sprite name is given
+		if(sprite_name=="") {
+			//bug, this error does not go away cause we cant get rid of the block unless we reload the page, need to domehow get rid of just the previous block, some kind of undo or some other way to only show this message once, then set a timer for a time to not constantly nag the user
+			return null;
+			//try adding if(evalrun) here 
+			//alert("Error, no sprite name given, you probably need to select a current sprite using the Sprites->set current sprite block");
+		}
+		for(var obj in sprites){
+			if(sprites[obj].name==sprite_name) {
+				if(current_target_clone!=null) {
+					//quickfix for when a clone is set but we are really looking for another sprite which has no clones, in sprite collision detection
+					//not this wont work well if we are actually looking for hte clones of the target, but that is not what I think we have in mind, at least in space invaders
+					//it should work if the target has clones, so may work anyway
+					//a sideeffect of this is that the bullet gets hidden when I am just trying to hide the alines.
+					if(sprites[obj].clones.length==0){
+						return sprites[obj]
+					}
+					//end quickfix
+					return sprites[obj].clones[current_target_clone];
+					//return sprites[obj]
+				}else{
+					return sprites[obj];
+				}				
+			}
+		}
+	}
+	
+	function set_current_sprite_name(sprite_name) {
+		//current_sprite_name=sprite_name.data;
+		current_sprite_name=sprite_name;
+	}
+	function set_target_sprite_name(sprite_name) {
+		//target_sprite_name=sprite_name.data;
+		target_sprite_name=sprite_name;
+	}
+	
+
+	function point_in_direction_degrees(angle_degrees) {
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+
+		game_object.sprite.angle=-angle_degrees;
+	}
+	
+	function point_in_direction(x1,y1,x2,y2){
+		/*
+		//From what I understood about your question, you want to find the angle between two points given their coordinates. In that case, first find the slope of the line using the slope formula:
+		y2=10;y1=20;
+		x2=0;x1=10;
+		m=(y2-y1)/(x2-x1);
+		console.log("m:"+m);
+		//where (x1,y1)(x1,y1) and (x2,y2)(x2,y2) are coordinates on the line. Next, use this formula:
+		//tan⁡(θ)=m
+		//where θ is the angle. Therefore, the angle θθ equals:
+		//θ=tan−1⁡(m)
+		//final_angle=Math.pow(Math.tan(m), -1);
+		final_angle=Math.atan2(y2−y1,x2−x1)
+		console.log("final angle:"+final_angle);
+	*/
+		return RadianstoDegrees(Math.atan2(y2-y1,x2-x1));
+	}
+
+	
+	function point_in_direction_broken(a_x,a_y,b_x,b_y) {
+		/*
+		tangentstorm: so to do that, you just subtract a from b.  dx = b.x - a.x  ;  dy = b.y - a.y
+		tangentstorm: just divide dx/dy to get the tangent, and then pass it to the atan() function to get the angle.
+		DazedandC-onfuse: ahh it returns in rads
+		DazedandC-onfuse: ehh the code looks off to me... I really think it should be dy/dx
+		*/
+		/*
+		var dx = b_x - a_x;
+		var dy = -b_y + a_y;
+		angle_radians=Math.atan2(dy,dx);
+		//this does not work either. angle_radians=Math.atan2(dx,dy);
+		return RadianstoDegrees(angle_radians);	
+		*/
+		
+	}
+	//alert(point_in_direction(0,0,10,10));
+	function point_spriteA_in_direction_spriteB(a_x,a_y,b_x,b_y) {
+		var game_object;
+		game_objectA=find_sprite_object_by_name(current_sprite_name);
+		var game_object;
+		game_objectB=find_sprite_object_by_name(target_sprite_name);
+		//x1,y1,x2,y2
+		game_objectA.sprite.angle=point_in_direction(game_objectA.sprite.x,game_objectA.sprite.y,game_objectB.sprite.x,game_objectB.sprite.y);
+	}
+	
+	function foward(distance){
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		
+    	var angle_radians=game_object.sprite.rotation;//angle*Math.PI/180;//converts degrees to radians
+		angle_radians=angle_radians*-1;
+    	var newx=game_object.sprite.x+distance*Math.cos(angle_radians);
+    	var newy=game_object.sprite.y-distance*Math.sin(angle_radians);
+		game_object.sprite.x=newx;
+		game_object.sprite.y=newy;		
+		update_position_of_frames(game_object);
+	}
+	function set_x_to(X) {
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		
+		game_object.sprite.x=X;
+		update_position_of_frames(game_object);		
+	}
+	function set_y_to(Y) {
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		
+		game_object.sprite.y=Y;		
+		update_position_of_frames(game_object);
+	}
+	function turn_right(degrees) {
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		
+	    game_object.sprite.angle=game_object.sprite.angle+degrees;
+	    update_position_of_frames(game_object);
+	}
+	function turn_left(degrees) {
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		
+	    game_object.sprite.angle=game_object.sprite.angle-degrees;
+	    update_position_of_frames(game_object);
+	}
+	function get_x_value() {
+		return find_sprite_object_by_name(current_sprite_name).sprite.x;
+	} 
+	function get_y_value() {
+		return find_sprite_object_by_name(current_sprite_name).sprite.y;
+	}
+    function intersectRect(s1, s2) {
+        var r1={};
+        var r2={};
+        r1.top =  s1.y;
+        r1.left = s1.x;
+        r1.right = s1.x+s1.width;
+        r1.bottom = s1.y+s1.height;
+        r2.top =  s2.y;
+        r2.left = s2.x;
+        r2.right = s2.x+s2.width;
+        r2.bottom = s2.y+s2.height;		
+        return !(	r2.left > r1.right || r2.right < r1.left || r2.top > r1.bottom || r2.bottom < r1.top);
+    }
+	function current_sprite_clones_are_colliding_with_target_sprite_clones() {
+		var game_objectA;
+		game_objectA=find_sprite_object_by_name_new(current_sprite_name);
+		var game_objectB;
+		game_objectB=find_target_sprite_with_clones_object_by_name(target_sprite_name);
+		/*
+		if(game_objectA.sprite.visible!=true||game_objectB.sprite.visible!=true){//quick fix to avoid collision with invisible things which where hidden, I dont think we ever need to collide with hidden objects(changed my mind after adding frames!), //***TODO:maybe add my own solid property later
+			return false;
+		}
+		*/
+		//seems this and testboudns are buggy writing my own overlap, hope it is not slow return game.physics.arcade.overlap(game_objectA.sprite, game_objectB.sprite);//this returns true//it seems overlap is pixel perfect after all!//no, I tested it and this is bouding box after all//apparently phaser does not have pixel perfect collision detection at all, they say it would be too expensive
+		return intersectRect(game_objectA.sprite, game_objectB.sprite)
+	} 
+	function is_colliding_with_target() {
+		var game_objectA;
+		game_objectA=find_sprite_object_by_name(current_sprite_name);
+		var game_objectB;
+		game_objectB=find_sprite_object_by_name(target_sprite_name);
+		/*
+		if(game_objectA.sprite.visible!=true||game_objectB.sprite.visible!=true){//quick fix to avoid collision with invisible things which where hidden, I dont think we ever need to collide with hidden objects(changed my mind after adding frames!), //***TODO:maybe add my own solid property later
+			return false;
+		}
+		*/
+		//seems this and testboudns are buggy writing my own overlap, hope it is not slow return game.physics.arcade.overlap(game_objectA.sprite, game_objectB.sprite);//this returns true//it seems overlap is pixel perfect after all!//no, I tested it and this is bouding box after all//apparently phaser does not have pixel perfect collision detection at all, they say it would be too expensive
+		return intersectRect(game_objectA.sprite, game_objectB.sprite)
+	} 
+	
+	function next_fame() {
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		if (typeof game_object.number_of_frames == 'undefined') {
+			//eventually change this to trow an exception
+			alert("runtime Error, sprite "+ game_object.name + " contains no frames, but 'next frame' block used");		
+			return
+		}
+		game_object.frames[game_object.current_frame].sprite.visible=false;
+		if(game_object.number_of_frames==game_object.current_frame) {//if at last frame loop back to first frame
+			game_object.current_frame=1;
+		} else {
+			game_object.current_frame++;
+		}
+		if(game_object.hidden==false) {
+			game_object.frames[game_object.current_frame].sprite.visible=true;
+		}
+	}
+	function set_frame_to_frame_number(frame_number_or_alias) {
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		if (typeof game_object.number_of_frames == 'undefined') {
+			//eventually change this to trow an exception
+			alert("runtime Error, sprite "+ game_object.name + " contains no frames, but 'set fame to fame number' block used");		
+			return
+		}
+		if(typeof frame_number_or_alias == "string") {
+			var frame_alias=frame_number_or_alias;
+			var found=false;
+			//for clones
+			if(current_clone!=null){
+				game_object.sprite.visible=false//make sure the top srite is invisible now
+				//fudge to make all other frames invisible cause there seems to be all frames visible now with clones
+				for(frame in game_object.frames) {
+					game_object.frames[frame].sprite.visible=false;
+				}
+
+				for(frame_index in game_object.frames) {
+					if(game_object.frames[frame_index].alias==frame_alias) {
+						//return project.game_objects[obj].frames[frame].frame_image_data;
+						var frame_number=parseInt(frame_index);
+						found=true;
+					}
+				}	
+			} else {
+				//for non clones
+				for(frame in game_object.frames) {
+					game_object.frames[frame].sprite.visible=false;
+				}
+
+				for(obj in project.game_objects) {
+					if(project.game_objects[obj].name==game_object.name) {
+						for(frame_index in project.game_objects[obj].frames) {
+							if(project.game_objects[obj].frames[frame_index].alias==frame_alias) {
+								//return project.game_objects[obj].frames[frame].frame_image_data;
+								var frame_number=parseInt(frame_index);
+								game_object.frames[frame_number+1].sprite.visible=true;//adjusting cause the frames in game_object.frames are indexed on 1, but the frames of the project are indexed on 0
+								return;
+								//found=true;
+								//break;//i think i could add this to both the next for loop too and in clones for optimization
+							}
+						}
+					}
+				}
+			}
+			if(!found) {
+				alert("Error: the frame alias " + frame_alias +" does not exist, but it was used in [set frame to frame] block");
+				return;
+			}
+
+			/*
+			for(var frame_index in game_object.frames) {
+				if(game_object.frames[frame_index].alias==frame_alias) {
+					var frame_number=frame_index;
+				} else {
+					alert("Error: the frame alias " + frame_alias +" does not exist, but it was used in [set frame to frame] block");
+				}
+			}
+			*/
+		} else {
+			var frame_number=frame_number_or_alias;
+		}
+		game_object.frames[game_object.current_frame].sprite.visible=false;
+		if(frame_number>game_object.number_of_frames) {//if at last frame loop back to first frame
+			//eventually change this to trow an exception
+			alert("runtime Error, sprite "+ game_object.name + " in 'set fame to fame number' last frame is frame number " + game_object.number_of_frames + "but tried to set frame to frame numbe " + frame_number);		
+			return
+		} else {
+			game_object.current_frame=frame_number;
+		}
+		if(game_object.hidden==false) {
+			game_object.frames[game_object.current_frame].sprite.visible=true;
+		}
+	}
+	function current_frame_number() {
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		if (typeof game_object.number_of_frames == 'undefined') {
+			//eventually change this to trow an exception
+			alert("runtime Error, sprite "+ game_object.name + " contains no frames, but 'currrent_fame_number' block used");		
+			return 0
+		}
+		game_object.frames[game_object.current_frame].sprite.visible=false;
+		return game_object.current_frame;
+	}
+
+	function update_position_of_frames(game_Object) {
+		for(frame in game_Object.frames) {
+			game_Object.frames[frame].sprite.x=game_Object.sprite.x;
+			game_Object.frames[frame].sprite.y=game_Object.sprite.y;
+			game_Object.frames[frame].sprite.angle=game_Object.sprite.angle;
+		}
+	}
+
+	//end phaser
+    var workspace = Blockly.inject('blocklyDiv',{media: '../../media/',toolbox: document.getElementById('toolbox')});Blockly.Xml.domToWorkspace(workspace,document.getElementById('startBlocks'));
+
+    var workspace_hidden = Blockly.inject('blocklyDiv_hidden',{media: '../../media/',toolbox: document.getElementById('toolbox')});Blockly.Xml.domToWorkspace(workspace,document.getElementById('startBlocks'));
+        
+    var myInterpreter = null;
+
+    function initApi(interpreter, scope) {
+			/*
+      // Add an API functions (whitelist of save eval)
+      var wrapper = function(distance) {
+        distance = distance ? distance.toString() : '0';
+		distance=parseInt(distance);
+        return interpreter.createPrimitive(foward(distance));
+      };
+      interpreter.setProperty(scope, 'foward', interpreter.createNativeFunction(wrapper));
+
+      var wrapper = function(degrees) {
+        degrees = degrees ? degrees.toString() : '0';
+				degrees=parseInt(degrees);
+        return interpreter.createPrimitive(turn_right(degrees));
+      };
+      interpreter.setProperty(scope, 'turn_right', interpreter.createNativeFunction(wrapper));
+
+      var wrapper = function(degrees) {
+        degrees = degrees ? degrees.toString() : '0';
+				degrees=parseInt(degrees);
+        return interpreter.createPrimitive(turn_left(degrees));
+      };
+      interpreter.setProperty(scope, 'turn_left', interpreter.createNativeFunction(wrapper));
+
+
+      var wrapper = function(text) {
+        text = text ? text.toString() : '';
+        return interpreter.createPrimitive(move_right());
+      };
+      interpreter.setProperty(scope, 'move_right',
+          interpreter.createNativeFunction(wrapper));
+
+      var wrapper = function(X) {
+        X = X ? X.toString() : '0';
+        return interpreter.createPrimitive(set_x_to(X));
+      };
+      interpreter.setProperty(scope, 'set_x_to',
+          interpreter.createNativeFunction(wrapper));
+
+      var wrapper = function(Y) {
+        Y = Y ? Y.toString() : '0';
+        return interpreter.createPrimitive(set_y_to(Y));
+      };
+      interpreter.setProperty(scope, 'set_y_to',
+          interpreter.createNativeFunction(wrapper));
+
+
+      var wrapper = function(text) {
+        return interpreter.createPrimitive(point_spriteA_in_direction_spriteB());
+      };
+      interpreter.setProperty(scope, 'point_spriteA_in_direction_spriteB',
+          interpreter.createNativeFunction(wrapper));
+		  
+      var wrapper = function() {
+        return interpreter.createPrimitive(get_x_value());
+      };
+      interpreter.setProperty(scope, 'get_x_value',
+          interpreter.createNativeFunction(wrapper));
+
+      var wrapper = function() {
+        return interpreter.createPrimitive(get_y_value());
+      };
+      interpreter.setProperty(scope, 'get_y_value',
+          interpreter.createNativeFunction(wrapper));	  
+
+      var wrapper = function(sprite,degrees) {
+        degrees = degrees ? degrees.toString() : '0';
+		degrees=parseInt(degrees);
+        return interpreter.createPrimitive(point_in_direction_degrees(sprite,degrees));
+      };
+      interpreter.setProperty(scope, 'point_in_direction_degrees',
+          interpreter.createNativeFunction(wrapper));
+
+      var wrapper = function(sprite) {
+        return interpreter.createPrimitive(set_current_sprite_name(sprite));
+      };
+      interpreter.setProperty(scope, 'set_current_sprite_name',
+          interpreter.createNativeFunction(wrapper));
+
+      var wrapper = function(sprite) {
+        return interpreter.createPrimitive(set_target_sprite_name(sprite));
+      };
+      interpreter.setProperty(scope, 'set_target_sprite_name',
+          interpreter.createNativeFunction(wrapper));
+
+      var wrapper = function() {
+        return interpreter.createPrimitive(interalPollevent());
+      };
+      interpreter.setProperty(scope, 'interalPollevent',
+          interpreter.createNativeFunction(wrapper));
+
+
+      // Add an API function for the prompt() block.
+      var wrapper = function(text) {
+        text = text ? text.toString() : '';
+        return interpreter.createPrimitive(prompt(text));
+      };
+      interpreter.setProperty(scope, 'prompt',
+          interpreter.createNativeFunction(wrapper));
+
+
+      // Add an API function for the alert() block.
+      var wrapper = function(text) {
+        text = text ? text.toString() : '';
+        return interpreter.createPrimitive(alert(text));
+      };
+      interpreter.setProperty(scope, 'alert',
+          interpreter.createNativeFunction(wrapper));
+
+      // Add an API function for highlighting blocks.
+      var wrapper = function(id) {
+        id = id ? id.toString() : '';
+        return interpreter.createPrimitive(highlightBlock(id));
+      };
+      interpreter.setProperty(scope, 'highlightBlock',
+          interpreter.createNativeFunction(wrapper));
+	  
+      // Add an API function for setInterval.
+			*/
+	  /*
+      var wrapper = function(funct,interval) {
+		  //id = setInterval(stepCode, parseInt(execution_speed));
+        return interpreter.createPrimitive(setInterval(funct,interval));
+      };
+      interpreter.setProperty(scope, 'setInterval',
+          interpreter.createNativeFunction(wrapper));
+    
+    */
+	}
+    var highlightPause = false;
+
+    function highlightBlock(id) {
+      workspace.highlightBlock(id);
+      highlightPause = true;
+    }
+
+    function parseCode() {
+      // Generate JavaScript code and parse it.
+      //Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+      Blockly.JavaScript.addReservedWords('highlightBlock');
+      var code = Blockly.JavaScript.workspaceToCode(workspace);
+	  var xml = Blockly.Xml.workspaceToDom(workspace);
+	  var xml_text = Blockly.Xml.domToPrettyText(xml);
+      myInterpreter = new Interpreter(code, initApi);
+
+      alert('Ready to execute this code:\n\n' + code);
+	  console.log('\n\nXML:\n\n' + xml_text);
+      document.getElementById('stepButton').disabled = '';
+      highlightPause = false;
+      workspace.traceOn(true);
+      workspace.highlightBlock(null);
+    }
+	
+	//var generation_complete=false;
+	function generateJS(add_highlighting) {
+		//if(!generation_complete){
+			var Code="";
+			/*
+			var xml = Blockly.Xml.workspaceToDom(workspace_hidden);
+			var xml_text = Blockly.Xml.domToPrettyText(xml);
+			*/				
+			for(var pageindex in project.pages){
+				Code=Code+"\n\n//"+project.pages[pageindex].pagename+"\n\n"
+				workspace_hidden.clear();
+				if(project.pages[pageindex].xml=="uninitialized xml") {
+					return;
+				}
+				var xml = Blockly.Xml.textToDom(project.pages[pageindex].xml);
+				Blockly.Xml.domToWorkspace(workspace_hidden, xml);	
+				//gegerate
+				if(add_highlighting) {
+					Blockly.JavaScript.addReservedWords('highlightBlock');
+					//Blockly.JavaScript.STATEMENT_PREFIX = '';
+					//Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+				}
+				Code = Code + Blockly.JavaScript.workspaceToCode(workspace_hidden);
+			}
+			
+			//document.getElementById('funct').value = Code;
+			return Code;
+			//generation_complete=true;
+		//}
+	}
+	function lockKeysForGame() {
+	  	//extra keys
+		aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+		bKey = game.input.keyboard.addKey(Phaser.Keyboard.B);		
+	}
+	var id;
+	var evalRun=false;
+  function evalCode() {
+		//terminal
+		number_of_inputs=0;
+		lockKeysForGame();
+		//var xml = Blockly.Xml.workspaceToDom(workspace);
+		//var xml_text = Blockly.Xml.domToPrettyText(xml);
+
+	  //Unless I am mistaken there isn't a way currently to call into the context created when running a program with the JSInterpreter. On workaround could be to have a setInterval going inside the interpreter context that is polling an exposed api which is watching for events on the page and responds by calling your users code. https://neil.fraser.name/software/JS-Interpreter/docs.html
+
+		finalCode = generateJS(true);
+		//clear timers
+		clearTimers();
+	  //cursor key events
+	  //evalRun=true;
+		finalCode+= "var pollEvent = function() {\n";
+		finalCode+= "	if (typeof EACH_FRAME !== 'undefined' && evalRun) {\n";//cehck to see if funtion is defined
+		finalCode+= "		EACH_FRAME();\n";
+		finalCode+= "	}\n";		
+		finalCode+= "	if (cursors.left.isDown||onScreenKeyboard.btnLeftPressed) {\n"
+		finalCode+= "		if (typeof LEFT_KEY_PRESSED !== 'undefined') {\n";//cehck to see if funtion is defined
+		finalCode+= "			LEFT_KEY_PRESSED();\n";
+		finalCode+= "		}\n";
+		finalCode+= "	}\n"
+		finalCode+= "	if (cursors.right.isDown||onScreenKeyboard.btnRightPressed) {\n"
+		finalCode+= "		if (typeof RIGHT_KEY_PRESSED !== 'undefined') {\n";//cehck to see if funtion is defined
+		finalCode+= "			RIGHT_KEY_PRESSED();\n";
+		finalCode+= "		}\n";
+		finalCode+= "	}\n"
+		finalCode+= "	if (cursors.up.isDown||onScreenKeyboard.btnUpPressed) {\n"
+		finalCode+= "		if (typeof UP_KEY_PRESSED !== 'undefined') {\n";//cehck to see if funtion is defined
+		finalCode+= "			UP_KEY_PRESSED();\n";
+		finalCode+= "		}\n";
+		finalCode+= "	}\n"
+		finalCode+= "	if (cursors.down.isDown||onScreenKeyboard.btnDownPressed) {\n"
+		finalCode+= "		if (typeof DOWN_KEY_PRESSED !== 'undefined') {\n";//cehck to see if funtion is defined
+		finalCode+= "			DOWN_KEY_PRESSED();\n";
+		finalCode+= "		}\n";
+		finalCode+= "	}\n";
+		finalCode+= "	if (aKey.isDown||onScreenKeyboard.btnAPressed) {\n"
+		finalCode+= "		if (typeof A_KEY_PRESSED !== 'undefined') {\n";//cehck to see if funtion is defined
+		finalCode+= "			A_KEY_PRESSED();\n";
+		finalCode+= "		}\n";
+		finalCode+= "	}\n";
+		finalCode+= "	if (bKey.isDown||onScreenKeyboard.btnBPressed) {\n"
+		finalCode+= "		if (typeof B_KEY_PRESSED !== 'undefined') {\n";//cehck to see if funtion is defined
+		finalCode+= "			B_KEY_PRESSED();\n";
+		finalCode+= "		}\n";
+		finalCode+= "	}\n";
+		finalCode+= "}\n";
+		finalCode+= "if (typeof window.id_ !== 'undefined') window.clearInterval(window.id_);\n";
+		finalCode+= "window.id_ = setInterval(pollEvent, 60);\n"; //60 is the average of game.time.fps
+		finalCode+= "console.log('setting interval to 60FPS id:'+window.id_);\n";			
+		finalCode+= "if(URLRunLoading==true){setTimeout(function(){ evalRun=true;ON_STARTUP(); }, 3000);}else{evalRun=true;ON_STARTUP();}\n";//I think this fudge will wait until the ON_STARTUP() function is ready to be called, avoiding the race condition of when the browser is still loading;		
+		destory_all_clones();//this works in nikurabero2 but seems to break bomberman walk test,hmm the debugger does not even stop at this line :(
+		set_all_fames_to_first_frame();
+		//eval(finalCode);
+		eval.call(window,finalCode);
+		//myInterpreter = new Interpreter(finalCode, initApi);
+		
+		//var execution_speed =document.getElementById('execution_speed').value;
+		//id = setInterval(stepCode, parseInt(execution_speed));
+	}
+    function runCode() {	
+		var execution_speed =document.getElementById('execution_speed').value;
+		id = setInterval(stepCode, parseInt(execution_speed));
+	}
+
+	function download(filename, text) {
+			//from http://stackoverflow.com/questions/3665115/create-a-file-in-memory-for-user-to-download-not-through-server
+		var element = document.createElement('a');
+		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+		element.setAttribute('download', filename);
+
+		element.style.display = 'none';
+		document.body.appendChild(element);
+
+		element.click();
+
+		document.body.removeChild(element);
+	}
+    function saveCode() {
+		/*not nessesary anymore	
+	    var xml = Blockly.Xml.workspaceToDom(workspace);
+	    var xml_text = Blockly.Xml.domToPrettyText(xml);
+		document.getElementById('funct').value = xml_text;
+		//mock download
+		project.block_xml = xml_text;
+		*/
+		var project_json = JSON.stringify(project);
+		var project_name=prompt("Enter project name","GAME.s-found");
+		download(project_name,project_json);
+    }
+
+    function xmlToWS() {	
+			Blockly.mainWorkspace.clear();
+			var xml = Blockly.Xml.textToDom(document.getElementById('funct').value);
+			Blockly.Xml.domToWorkspace(workspace, xml);
+    }
+
+    function wsToXML() {	
+	    var xml = Blockly.Xml.workspaceToDom(workspace);
+	    var xml_text = Blockly.Xml.domToPrettyText(xml);
+			document.getElementById('funct').value = xml_text;
+    }
+
+	
+    function pauseCode() {
+		  if(id) {
+			  window.clearInterval(id);
+		  }
+    }
+    function stopCode() {
+		  if(id) {
+			  window.clearInterval(id);
+		  }
+	      //Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+	      Blockly.JavaScript.addReservedWords('highlightBlock');
+	      var code = Blockly.JavaScript.workspaceToCode(workspace);
+	      myInterpreter = new Interpreter(code, initApi);
+	      highlightPause = false;
+	      workspace.traceOn(true);
+	      workspace.highlightBlock(null);
+		  evalRun=false;
+		  unblockKeys();
+    }
+	function unblockKeys() {
+		  //unblock keys
+		  game.input.keyboard.removeKey(Phaser.Keyboard.A);
+		  game.input.keyboard.removeKey(Phaser.Keyboard.B);		
+	}
+    function stepCode() {
+      try {
+        var ok = myInterpreter.step();
+      } finally {
+        if (!ok) {
+          // Program complete, no more code to execute.
+          document.getElementById('stepButton').disabled = 'disabled';
+		  if(id) {
+			  window.clearInterval(id);
+		  }
+          return;
+        }
+      }
+      if (highlightPause) {
+        // A block has been highlighted.  Pause execution here.
+        highlightPause = false;
+      } else {
+        // Keep executing until a highlight statement is reached.
+        stepCode();
+      }
+    }
+	//user defined blocks
+	//point in direction https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#8jezk6
+	//move_right and other stuff https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#mvuwrg
+
+	//point in direction https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#putex4
+
+//the following line is an imperitive do not erase
+//imperitive:do not interlace this block(this is not a commend)	
+	Blockly.Blocks['motion_point_in_direction'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("point in direction (degrees)");
+	    this.appendValueInput("ANGLE")
+	        .setCheck("Number")
+	        .setAlign(Blockly.ALIGN_RIGHT)
+	        .appendField(new Blockly.FieldAngle(90), "A");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['motion_point_in_direction'] = function(block) {
+	  var angle_a = block.getFieldValue('A');
+	  var value_angle = Blockly.JavaScript.valueToCode(block, 'ANGLE', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var argument0 = Blockly.JavaScript.valueToCode(block, 'ANGLE',
+      Blockly.JavaScript.ORDER_NONE) || '\'\'';
+	  var angle_final=argument0=="''"?angle_a:argument0;
+	  var code = 'point_in_direction_degrees('+angle_final+');\n';
+	  return code;
+	};
+	
+	//point in direction with sprite selection box https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#vv9mth
+	function dynamicOptions() {
+		//make array of arrays to send as parameter(not original code from this block)
+		//[["select a sprite", "OPT"], ["option", "OPTIONNAME"]]
+		var parent_=[]
+		parent_.push(["select a sprite", "OPT0"]);
+		for(var obj in sprites){
+			parent_.push([sprites[obj].name, sprites[obj].name]);
+		}
+	  	return parent_;
+	}
+	Blockly.Blocks['sprites_set_current_sprite'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	    	.appendField("set the current sprite");
+	    this.appendValueInput("SPRITE_OPTION_BOX")
+			.setCheck("String")
+	        //.appendField(new Blockly.FieldDropdown(parent_), "sprite");
+			.appendField(new Blockly.FieldDropdown(dynamicOptions), "sprite");
+	    //this.appendValueInput("ANGLE")
+	    //    .setCheck("Number")
+	    //    .setAlign(Blockly.ALIGN_RIGHT)
+	    //    .appendField(new Blockly.FieldAngle(90), "A");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_set_current_sprite'] = function(block) {
+	  var dropdown_sprite = block.getFieldValue('sprite');
+	  var value_sprite_option_box = Blockly.JavaScript.valueToCode(block, 'SPRITE_OPTION_BOX', Blockly.JavaScript.ORDER_ATOMIC);
+	  //var angle_a = block.getFieldValue('A');
+	  //var value_angle = Blockly.JavaScript.valueToCode(block, 'ANGLE', Blockly.JavaScript.ORDER_ATOMIC);
+	  var sprite_name = Blockly.JavaScript.valueToCode(block, 'SPRITE_OPTION_BOX', Blockly.JavaScript.ORDER_ATOMIC);
+	  
+	  // TODO: Assemble JavaScript into code variable
+	  //var argument0 = Blockly.JavaScript.valueToCode(block, 'ANGLE',Blockly.JavaScript.ORDER_NONE) || '\'\'';
+	  //override fields if variables provided
+	  var sprite_name_final=value_sprite_option_box==""?dropdown_sprite:value_sprite_option_box;
+	  if(sprite_name_final=="OPT0") {
+		  //alert("You have not selected a sprite in 'set current sprite' block, please select a sprite");
+		  return "//error,failed to select sprite in 'set current sprite' block"
+	  }
+
+	  var code = 'set_current_sprite_name("'+sprite_name_final+'");\n';
+	  return code;
+	};
+	Blockly.Blocks['sprites_set_target_sprite'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	    	.appendField("set the target sprite");
+	    this.appendValueInput("SPRITE_OPTION_BOX")
+			.setCheck("String")
+	        //.appendField(new Blockly.FieldDropdown(parent_), "sprite");
+			.appendField(new Blockly.FieldDropdown(dynamicOptions), "sprite");
+	    //this.appendValueInput("ANGLE")
+	    //    .setCheck("Number")
+	    //    .setAlign(Blockly.ALIGN_RIGHT)
+	    //    .appendField(new Blockly.FieldAngle(90), "A");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_set_target_sprite'] = function(block) {
+	  var dropdown_sprite = block.getFieldValue('sprite');
+	  var value_sprite_option_box = Blockly.JavaScript.valueToCode(block, 'SPRITE_OPTION_BOX', Blockly.JavaScript.ORDER_ATOMIC);
+	  //var angle_a = block.getFieldValue('A');
+	  //var value_angle = Blockly.JavaScript.valueToCode(block, 'ANGLE', Blockly.JavaScript.ORDER_ATOMIC);
+	  var sprite_name = Blockly.JavaScript.valueToCode(block, 'SPRITE_OPTION_BOX', Blockly.JavaScript.ORDER_ATOMIC);
+	  
+	  // TODO: Assemble JavaScript into code variable
+	  //var argument0 = Blockly.JavaScript.valueToCode(block, 'ANGLE',Blockly.JavaScript.ORDER_NONE) || '\'\'';
+	  //override fields if variables provided
+	  var sprite_name_final=value_sprite_option_box==""?dropdown_sprite:value_sprite_option_box;
+	  if(sprite_name_final=="OPT0") {
+		  //alert("You have not selected a sprite in 'set current sprite' block, please select a sprite");
+		  return "//error,failed to select sprite in 'set current sprite' block"
+	  }
+
+	  var code = 'set_target_sprite_name("'+sprite_name_final+'");\n';
+	  return code;
+	};
+	
+	
+	Blockly.Blocks['motion_point_in_direction_of_target'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("point in direction of target");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+
+	Blockly.JavaScript['motion_point_in_direction_of_target'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'point_spriteA_in_direction_spriteB();\n';
+	  return code;
+	};
+	
+	
+	Blockly.Blocks['motion_foward'] = {
+	  init: function() {
+	    this.appendValueInput("DISTANCE")
+	        .setCheck("Number")
+	        .appendField("foward");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['motion_foward'] = function(block) {
+	  var value_distance = Blockly.JavaScript.valueToCode(block, 'DISTANCE', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var argument0 = Blockly.JavaScript.valueToCode(block, 'DISTANCE',
+      Blockly.JavaScript.ORDER_NONE) || '\'\'';
+	  var code = 'foward('+argument0+');\n';
+	  return code;
+	};
+	
+	Blockly.Blocks['sprites_set_frame_to_frame_number'] = {
+	  init: function() {
+	    this.appendValueInput("FRAME_NUMBER")
+	        //.setCheck("Number")
+	        .appendField("set frame to frame");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_set_frame_to_frame_number'] = function(block) {
+	  var value_FRAME_NUMBER = Blockly.JavaScript.valueToCode(block, 'FRAME_NUMBER', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var argument0 = Blockly.JavaScript.valueToCode(block, 'FRAME_NUMBER',
+      Blockly.JavaScript.ORDER_NONE) || '\'\'';
+	  var code = 'set_frame_to_frame_number('+argument0+');\n';
+	  return code;
+	};
+
+	Blockly.Blocks['motion_turn_right'] = {
+	  init: function() {
+	    this.appendValueInput("DEGREES")
+	        .setCheck("Number")
+	        .appendField("turn right");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['motion_turn_right'] = function(block) {
+	  var value_distance = Blockly.JavaScript.valueToCode(block, 'DEGREES', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var argument0 = Blockly.JavaScript.valueToCode(block, 'DEGREES',
+      Blockly.JavaScript.ORDER_NONE) || '\'\'';
+	  var code = 'turn_right('+argument0+');\n';
+	  return code;
+	};
+	
+	
+	
+	
+	Blockly.Blocks['motion_turn_left'] = {
+	  init: function() {
+	    this.appendValueInput("DEGREES")
+	        .setCheck("Number")
+	        .appendField("turn left");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['motion_turn_left'] = function(block) {
+	  var value_distance = Blockly.JavaScript.valueToCode(block, 'DEGREES', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var argument0 = Blockly.JavaScript.valueToCode(block, 'DEGREES',
+      Blockly.JavaScript.ORDER_NONE) || '\'\'';
+	  var code = 'turn_left('+argument0+');\n';
+	  return code;
+	};
+	
+	Blockly.Blocks['motion_set_x_to'] = {
+	  init: function() {
+	    this.appendValueInput("X")
+	        .setCheck("Number")
+	        .appendField("set x to");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['motion_set_x_to'] = function(block) {
+	  var value_distance = Blockly.JavaScript.valueToCode(block, 'X', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var argument0 = Blockly.JavaScript.valueToCode(block, 'X',
+      Blockly.JavaScript.ORDER_NONE) || '\'\'';
+	  var code = 'set_x_to('+argument0+');\n';
+	  return code;
+	};
+	Blockly.Blocks['motion_set_y_to'] = {
+	  init: function() {
+	    this.appendValueInput("Y")
+	        .setCheck("Number")
+	        .appendField("set y to");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['motion_set_y_to'] = function(block) {
+	  var value_distance = Blockly.JavaScript.valueToCode(block, 'Y', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var argument0 = Blockly.JavaScript.valueToCode(block, 'Y',
+      Blockly.JavaScript.ORDER_NONE) || '\'\'';
+	  var code = 'set_y_to('+argument0+');\n';
+	  return code;
+	};
+	//https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#85m6e7
+	Blockly.Blocks['sprites_value_of_x'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("value of x");
+	    this.setOutput(true, "Number");
+	    this.setColour(210);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_value_of_x'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+		var code = "parseInt(get_x_value())";;
+	  // TODO: Change ORDER_NONE to the correct strength.
+	  //return [code, Blockly.JavaScript.ORDER_NONE];
+	  return [code, Blockly.JavaScript.ORDER_ATOMIC];
+	};
+	
+	Blockly.Blocks['sprites_value_of_y'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("value of y");
+	    this.setOutput(true, "Number");
+	    this.setColour(210);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+		//oncgange Javascript generation
+	  }
+	};
+	Blockly.JavaScript['sprites_value_of_y'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+		var code = "parseInt(get_y_value())";
+		return [code, Blockly.JavaScript.ORDER_ATOMIC];
+	};
+	
+	Blockly.Blocks['sprites_current_frame_number'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("get current frame number");
+	    this.setOutput(true, "Number");
+	    this.setColour(210);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+		//oncgange Javascript generation
+	  }
+	};
+	Blockly.JavaScript['sprites_current_frame_number'] = function(block) {
+		// TODO: Assemble JavaScript into code variable.
+		var code = "parseInt(current_frame_number())";
+		return [code, Blockly.JavaScript.ORDER_ATOMIC];
+	};
+
+	//this is a little like what the event blocks should look like,  but I am still not sure how to implement them  		https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#9vi23k
+	Blockly.Blocks['events_when_event_happens'] = {
+	  init: function() {
+	    this.appendStatementInput("EVENT_CODE")
+	        .setCheck(null)
+	        .appendField("when event happens");
+	    this.appendValueInput("EVENT_NAME")
+	        .setCheck(null)
+	        .appendField(new Blockly.FieldDropdown([["Select an event", "NO_EVENT_SELECTED"], ["On startup", "ON_STARTUP"], ["Each frame", "EACH_FRAME"], ["On Input", "ON_INPUT"], ["Left key pressed", "LEFT_KEY_PRESSED"], ["Right key pressed", "RIGHT_KEY_PRESSED"], ["Up key pressed", "UP_KEY_PRESSED"], ["Down key pressed", "DOWN_KEY_PRESSED"], ["A key pressed", "A_KEY_PRESSED"], ["B key pressed", "B_KEY_PRESSED"]]), "EVENT");
+	    this.setColour(65);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['events_when_event_happens'] = function(block) {
+	  var statements_event_code = Blockly.JavaScript.statementToCode(block, 'EVENT_CODE');
+	  var dropdown_event = block.getFieldValue('EVENT');
+	  var value_event_name = Blockly.JavaScript.valueToCode(block, 'EVENT_NAME', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  if(dropdown_event=="NO_EVENT_SELECTED") {
+	  	return "//error, you did not select an event in the 'when event happens' block\n"
+	  }
+	  var code = 'function ' + dropdown_event +'(){\n'+statements_event_code+'\n}';
+	  return code;
+	};
+	//https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#mtepdf
+	Blockly.Blocks['sprites_create_clone_of_current_sprite'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("create clone of current sprite");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_create_clone_of_current_sprite'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'clone_sprite();\n';
+	  return code;
+	};
+	function set_current_sprite_to_target_sprite() {
+			current_sprite_name=target_sprite_name;
+			current_clone=current_target_clone;
+	}
+	Blockly.Blocks['sprites_set_current_sprite_to_target_sprite'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("set current sprite to target sprite");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_set_current_sprite_to_target_sprite'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'set_current_sprite_to_target_sprite();\n';
+	  return code;
+	};
+	Blockly.Blocks['set_break_point_here'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("set break point here");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['set_break_point_here'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'debugger;//bring up debugger at this point\n';
+	  return code;
+	};
+
+	//made from previous block
+	Blockly.Blocks['sprites_current_sprite_bring_to_front'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("current sprite bring to front");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_current_sprite_bring_to_front'] = function(block) {
+		// TODO: Assemble JavaScript into code variable.
+		/*
+		set_current_sprite_name("frog");
+		game_object=find_sprite_object_by_name(current_sprite_name);
+
+		//but this did
+		game_object=find_sprite_object_by_name("frog");
+		game_object.sprite.bringToTop()
+		*/
+		var code = 	'var go=find_sprite_object_by_name(current_sprite_name);\n';
+		code = code + 'go.sprite.bringToTop();\n';
+		return code;
+	};
+	//made from previous block
+	Blockly.Blocks['sprites_current_sprite_send_to_back'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("current sprite send to back");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_current_sprite_send_to_back'] = function(block) {
+		// TODO: Assemble JavaScript into code variable.
+		/*
+		set_current_sprite_name("frog");
+		game_object=find_sprite_object_by_name(current_sprite_name);
+
+		//but this did
+		game_object=find_sprite_object_by_name("frog");
+		game_object.sprite.bringToTop()
+		
+		I am able to do game_object.sprite.bringToTop() and it works, but when I try game_object.sprite.sendToBack() I get TypeError: game_object.sprite.sendToBack is not a function , I am using Phaser v2.0.2 - Canvas - WebAudio     , any idea what could be wrong?
+		
+		ada answer: game.world.sendToBack(sprite)
+		*/
+		var code = 	'var go=find_sprite_object_by_name(current_sprite_name);\n';
+		code = code + 'go.sprite.sendToBack();\n';
+		return code;
+	};
+	Blockly.Blocks['sprites_next_frame'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("next frame of current sprite");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	}
+	Blockly.JavaScript['sprites_next_frame'] = function(block) {
+	  //Assemble JavaScript into code variable.
+	  var code = 'next_fame();\n';
+	  return code;
+	}
+
+	Blockly.Blocks['sprites_destroy_current_sprite'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("Destroy current sprite");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_destroy_current_sprite'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'destroy_current_sprite();\n';
+	  return code;
+	};	
+	Blockly.Blocks['sprites_hide_current_sprite'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("Hide sprite");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_hide_current_sprite'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'hide_current_sprite();\n';
+	  return code;
+	};	
+	Blockly.Blocks['sprites_show_current_sprite'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("Show sprite");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_show_current_sprite'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'show_current_sprite();\n';
+	  return code;
+	};	
+	//https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#aur2q8
+	Blockly.Blocks['sprites_for_each_clone_of_current_sprite'] = {
+	  init: function() {
+	    this.appendStatementInput("STATEMENT_CODE")
+	        .setCheck(null)
+	        .appendField("for each clone of current sprite");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(120);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_for_each_clone_of_current_sprite'] = function(block) {
+	  var statements_statement_code = Blockly.JavaScript.statementToCode(block, 'STATEMENT_CODE');
+	  // TODO: Assemble JavaScript into code variable.
+	  code=	'var game_object;\n';
+	  code+='game_object=find_sprite_object_by_name(current_sprite_name);\n';
+	  code+='for(var clone in game_object.clones) {\n';
+	  //code+='	debug_current_sprite_name=current_sprite_name;\n';
+	  code+='	current_clone=clone;\n';
+		//all clones traversed code+='	console.log("current_clone"+current_clone);\n';
+	  code+=statements_statement_code+'\n';
+	  code+='}\n';
+	  code+='current_clone=null;\n';
+	  return code;
+	};
+	Blockly.Blocks['sprites_for_each_clone_of_current_sprite_new'] = {
+	  init: function() {
+	    this.appendStatementInput("STATEMENT_CODE")
+	        .setCheck(null)
+	        .appendField("do when clones collides");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(120);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_for_each_clone_of_current_sprite_new'] = function(block) {
+	  var statements_statement_code = Blockly.JavaScript.statementToCode(block, 'STATEMENT_CODE');
+	  
+	  code=	'var game_object;\n';
+	  code+='game_object=find_sprite_object_by_name_new(current_sprite_name);\n';
+	  code+='for(var clone in game_object.clones) {\n';
+	  code+='  current_clone=clone;\n';
+	  code+='  var game_object_target;\n';
+	  code+='  game_object_target=find_target_sprite_with_clones_object_by_name(target_sprite_name);\n';
+	  code+='  for(var clone_target in game_object_target.clones) {\n';
+	  code+='    current_target_clone=clone_target;\n';
+	  code+='    if(current_sprite_clones_are_colliding_with_target_sprite_clones()) {\n';
+	  code+='      //do when current sprite clone collides with target clone\n';
+	  code+=statements_statement_code+'\n';
+	  code+='      //end\n';
+	  code+='    }\n';
+	  code+='  }\n';
+	  code+='  current_target_clone=null;\n';
+	  code+='}\n';
+	  code+='current_clone=null;\n';
+	  return code;
+	};	
+	Blockly.Blocks['sprites_nested_for_each_clone_of_current_target_sprite'] = {
+	  init: function() {
+	    this.appendStatementInput("STATEMENT_CODE")
+	        .setCheck(null)
+	        .appendField("nested for each clone of current target sprite");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(120);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	var current_target_clone=null;
+	Blockly.JavaScript['sprites_nested_for_each_clone_of_current_target_sprite'] = function(block) {
+	  var statements_statement_code = Blockly.JavaScript.statementToCode(block, 'STATEMENT_CODE');
+	  // TODO: Assemble JavaScript into code variable.
+	  code=	'var game_object_target;\n';
+	  code+='game_object_target=find_target_sprite_with_clones_object_by_name(target_sprite_name);\n';
+	  code+='for(var clone_target in game_object_target.clones){\n';
+	  //code+='	debug_current_sprite_name=current_sprite_name;\n';
+	  code+='	current_target_clone=clone_target;\n';
+	  code+=statements_statement_code+'\n';
+	  code+='}\n';
+	  code+='current_target_clone=null;\n';
+	  return code;
+	};	
+	//[set target sprite to current sprite] block    this will be useful for actually doing something with the target sprite
+	Blockly.Blocks['sprites_is_colliding_with_target'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("Is colliding with target");
+	    this.setOutput(true, "Boolean");
+	    this.setColour(210);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+		//oncgange Javascript generation
+	  }
+	};
+	Blockly.JavaScript['sprites_is_colliding_with_target'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+		var code = "is_colliding_with_target()";
+	  // TODO: Change ORDER_NONE to the correct strength.
+	  //return [code, Blockly.JavaScript.ORDER_NONE];
+	  return [code, Blockly.JavaScript.ORDER_ATOMIC];
+	};
+	Blockly.Blocks['text_alert'] = {
+	  init: function() {
+	    this.appendValueInput("strString")
+	        .appendField("alert with textbox");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(120);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['text_alert'] = function(block) {
+	  var value_strstring = Blockly.JavaScript.valueToCode(block, 'strString', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'if(evalRun){alert('+value_strstring+');}\n';
+	  //var code = 'if(evalRun){if(typeof '+value_strstring+' == "undefined") {alert(eval.call(window,"'+value_strstring+'"));}else{alert('+value_strstring+')}}\n';
+	  return code;
+	};
+	Blockly.Blocks['text_echo'] = {
+	  init: function() {
+	    this.appendValueInput("strString")
+	        .appendField("echo in terminal");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(120);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['text_echo'] = function(block) {
+	  var value_strstring = Blockly.JavaScript.valueToCode(block, 'strString', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'if(evalRun){echo('+value_strstring+');}\n';
+	  //var code = 'if(evalRun){echo(eval.call(window,"'+value_strstring+'"));}\n';
+	  //var code = 'if(evalRun){if(typeof '+value_strstring+' == "undefined") {echo(eval.call(window,"'+value_strstring+'"));}else{echo('+value_strstring+')}}\n';
+	  return code;
+	};
+	//https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#j472r7
+	Blockly.Blocks['to_number'] = {
+	  init: function() {
+		this.appendValueInput("string_var")
+			.setCheck(null)
+			.appendField("convert to integer");
+		this.setOutput(true, null);
+		this.setColour(230);
+		this.setTooltip('');
+		this.setHelpUrl('');
+	  }
+	};
+	Blockly.JavaScript['to_number'] = function(block) {
+	  var value_string_var = Blockly.JavaScript.valueToCode(block, 'string_var', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'parseInt('+ value_string_var +')';
+	  // TODO: Change ORDER_NONE to the correct strength.
+	  return [code, Blockly.JavaScript.ORDER_NONE];
+	};
+	//https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#jbko84
+	Blockly.Blocks['functional_first_class_function'] = {
+	  init: function() {
+	    this.appendStatementInput("FUNCTION")
+	        .appendField("set")
+	        .appendField(new Blockly.FieldVariable("item"), "VARIABLE")
+	        .appendField("to the following function:");
+	    this.appendDummyInput()
+	        .appendField("return")
+	        .appendField(new Blockly.FieldVariable("item"), "RETURN");
+	    this.setInputsInline(true);
+	    this.setColour(20);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+		
+	    //this.setMutator(new Blockly.Mutator(['procedures_mutatorarg']));
+		this.setMutator(new Blockly.Mutator(['controls_if_elseif']));
+	       //if (Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT) {
+	       //  this.setCommentText(Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT);
+	       //}
+	  }
+	};
+	
+	Blockly.JavaScript['functional_first_class_function'] = function(block) {
+	  var variable_variable = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('VARIABLE'), Blockly.Variables.NAME_TYPE);
+	  var statements_function = Blockly.JavaScript.statementToCode(block, 'FUNCTION');
+	  var variable_return = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('RETURN'), Blockly.Variables.NAME_TYPE);
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = variable_variable+'= function(){\n'+statements_function+'\nreturn '+variable_return+'\n}';
+	  return code;
+	};
+	//blockly how to get the name of a variable passed to a stateemnt block
+	//Blockly.JavaScript.variableDB_.getName(block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
+	//end blockly
+	var debuggerCode;
+	function destory_all_sprites(){//this does not seem to work, and it iok for now cause I plan on reloading the whole page every time, but this is difficult for developing, eventually I shoudl fix it...stop and start does nto work with clones :(
+		for(var sprite in sprites){
+			//also destroy frames of clones
+			set_current_sprite_name(sprites[sprite].name);
+			game_object=find_sprite_object_by_name(current_sprite_name);
+			destroy_current_sprite();
+		}
+	}
+
+	function destory_current_sprite_frames(){
+			game_object=find_sprite_object_by_name(current_sprite_name);
+			for(frame in game_object.frames) {
+				game_object.frames[frame].sprite.destroy();
+			}	
+	}
+		
+	function destory_all_clones(){
+		for(var sprite in sprites){
+			set_current_sprite_name(sprites[sprite].name);
+			/*
+			go=find_sprite_object_by_name(sprites[sprite].name)
+			if(go.clones.length==0) {//this is to make bomberman and nikutabero2 work at the same time
+				return;
+			}
+						console.log("destroying: "+go.frames.length+" frames...");
+
+			*/
+			//destory_current_sprite_frames();
+			for(var clone in sprites[sprite].clones){
+				sprites[sprite].clones[clone].sprite.destroy();
+				for(var frame in sprites[sprite].clones[clone].frames){
+					sprites[sprite].clones[clone].frames[frame].sprite.destroy();
+				}
+			}
+			sprites[sprite].clones=[];//remove this elements from the clones
+		}
+	}
+	/*
+	//timer https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#iqgsvm
+	Blockly.Blocks['set_timer'] = {
+	  init: function() {
+		this.appendStatementInput("statement")
+			.setCheck(null)
+			.appendField("timer")
+			.appendField(new Blockly.FieldTextInput("timer name"), "timer_name")
+			.appendField("milliseconds")
+			.appendField(new Blockly.FieldTextInput("1000"), "milliseconds");
+		this.setColour(160);
+		this.setTooltip('');
+		this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	timersObj={};
+	timerIDs=[];
+	Blockly.JavaScript['set_timer'] = function(block) {
+		var text_timer_name = block.getFieldValue('timer_name');
+		var text_milliseconds = block.getFieldValue('milliseconds');
+		var statements_statement = Blockly.JavaScript.statementToCode(block, 'statement');
+		// TODO: Assemble JavaScript into code variable.
+		var code = 'timersObj["'+text_timer_name+'"] = function() {\n';
+		code=code+ statements_statement+'\n';
+		code=code+'}\n';
+		code=code+'var ID = setInterval(timersObj["'+text_timer_name+'"], '+text_milliseconds+');\n';
+		code=code+'timerIDs.push(ID);\n';
+		return code;
+	};
+	*/
+	//https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#krmehw
+	Blockly.Blocks['set_timer'] = {
+	  init: function() {
+		this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+		this.appendStatementInput("statement")
+			.setCheck(null)
+			.appendField("repeting timer")
+			.appendField(new Blockly.FieldTextInput("timer name"), "timer_name")
+			.appendField("milliseconds")
+			.appendField(new Blockly.FieldTextInput("1000"), "milliseconds");
+		this.appendValueInput("ID_VAR")
+			.setCheck("String")
+			.setAlign(Blockly.ALIGN_RIGHT)
+			.appendField("ID");
+		this.appendValueInput("MS_VAR")
+			.setCheck("Number")
+			.setAlign(Blockly.ALIGN_RIGHT)
+			.appendField("MS");
+		this.setColour(160);
+		this.setTooltip('');
+		this.setHelpUrl('');
+	  }
+	};
+	Blockly.JavaScript['set_timer'] = function(block) {
+	  var text_timer_name = block.getFieldValue('timer_name');
+	  var text_milliseconds = block.getFieldValue('milliseconds');
+	  var statements_statement = Blockly.JavaScript.statementToCode(block, 'statement');
+	  var value_id_var = Blockly.JavaScript.valueToCode(block, 'ID_VAR', Blockly.JavaScript.ORDER_ATOMIC);
+	  var value_ms_var = Blockly.JavaScript.valueToCode(block, 'MS_VAR', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+		var id;
+		if(text_timer_name=="timer name"||text_timer_name=="") {
+			if(value_id_var==""||value_id_var==null) {
+				return "//Error, there is no ID set for this timer";
+			}
+			id=value_id_var;
+		} else {
+			id="'"+text_timer_name+"'";
+		}
+		var ms;
+		if((text_milliseconds=="1000")&&(value_ms_var!="")) {
+			ms=value_ms_var
+		} else {
+			ms=text_milliseconds;
+		}
+		var code = 'timersObj['+id+'] = function() {\n';
+		code=code+ statements_statement+'\n';
+		code=code+'}\n';
+		code=code+'var ID = setTimeout(timersObj['+id+'], '+ms+');\n';
+		code=code+'timerIDs.push(ID);\n';
+		return code;
+	};
+
+	Blockly.Blocks['set_one_time_timer'] = {
+	  init: function() {
+		this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+		this.appendStatementInput("statement")
+			.setCheck(null)
+			.appendField("set one time timer")
+			.appendField(new Blockly.FieldTextInput("timer name"), "timer_name")
+			.appendField("milliseconds")
+			.appendField(new Blockly.FieldTextInput("1000"), "milliseconds");
+		this.appendValueInput("ID_VAR")
+			.setCheck("String")
+			.setAlign(Blockly.ALIGN_RIGHT)
+			.appendField("ID");
+		this.appendValueInput("MS_VAR")
+			.setCheck("Number")
+			.setAlign(Blockly.ALIGN_RIGHT)
+			.appendField("MS");
+		this.setColour(160);
+		this.setTooltip('');
+		this.setHelpUrl('');
+	  }
+	};
+	Blockly.JavaScript['set_one_time_timer'] = function(block) {
+	  var text_timer_name = block.getFieldValue('timer_name');
+	  var text_milliseconds = block.getFieldValue('milliseconds');
+	  var statements_statement = Blockly.JavaScript.statementToCode(block, 'statement');
+	  var value_id_var = Blockly.JavaScript.valueToCode(block, 'ID_VAR', Blockly.JavaScript.ORDER_ATOMIC);
+	  var value_ms_var = Blockly.JavaScript.valueToCode(block, 'MS_VAR', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+		var id;
+		if(text_timer_name=="timer name"||text_timer_name=="") {
+			if(value_id_var==""||value_id_var==null) {
+				return "//Error, there is no ID set for this timer";
+			}
+			id=value_id_var;
+		} else {
+			id="'"+text_timer_name+"'";
+		}	
+		var ms;
+		if((text_milliseconds=="1000")&&(value_ms_var!="")) {
+			ms=value_ms_var
+		} else {
+			ms=text_milliseconds;
+		}
+		var code = 'timersObj['+id+'] = function() {\n';
+		code=code+ statements_statement+'\n';
+		code=code+'}\n';
+		code=code+'var ID = setTimeout(timersObj['+id+'], '+ms+');\n';
+		code=code+'timerIDs.push(ID);\n';
+		return code;
+	};
+
+	Blockly.Blocks['clear_timer'] = {
+	  init: function() {
+		this.appendValueInput("ID_VAR")
+			.setCheck("String")
+			.setAlign(Blockly.ALIGN_RIGHT)
+			.appendField("clear timer")
+			.appendField(new Blockly.FieldTextInput("timer name"), "timer_name")
+			.appendField("ID");
+		this.setColour(160);
+		this.setTooltip('');
+		this.setHelpUrl('');
+	  }
+	};
+	Blockly.JavaScript['clear_timer'] = function(block) {
+	  var text_timer_name = block.getFieldValue('timer_name');
+	  var statements_statement = Blockly.JavaScript.statementToCode(block, 'statement');
+	  var value_id_var = Blockly.JavaScript.valueToCode(block, 'ID_VAR', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+		var id;
+		if(text_timer_name=="timer name"||text_timer_name=="") {
+			if(value_id_var==""||value_id_var==null) {
+				return "//Error, there is no ID set for this timer";
+			}
+			id=value_id_var;
+		} else {
+			id="'"+text_timer_name+"'";
+		}
+		var code;
+		code='clearInterval(timersObj['+id+']);\n';
+		return code;
+	};
+	function clearTimers() {
+		for(timer in timerIDs) {
+			clearInterval(timerIDs[timer]);
+		}
+	}
+	//https://blockly-demo.appspot.com/static/blocks/procedures.js
+	Blockly.Blocks['procedures_defreturn_functional'] = {
+  /**
+   * Block for defining a procedure with a return value.
+   * @this Blockly.Block
+   */
+  init: function() {
+	//this.appendValueInput("value_input")
+    //    .setCheck(null)
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldVariable("item"), "variable_name");
+    var nameField = new Blockly.FieldTextInput(
+        Blockly.Msg.PROCEDURES_DEFRETURN_PROCEDURE,
+        Blockly.Procedures.rename);
+    nameField.setSpellcheck(false);
+    this.appendDummyInput()
+        .appendField("=function")
+        .appendField(nameField, 'NAME')
+        .appendField('', 'PARAMS');
+    this.appendValueInput('RETURN')
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField(Blockly.Msg.PROCEDURES_DEFRETURN_RETURN);
+    this.setMutator(new Blockly.Mutator(['procedures_mutatorarg']));
+    if ((this.workspace.options.comments ||
+         (this.workspace.options.parentWorkspace &&
+          this.workspace.options.parentWorkspace.options.comments)) &&
+        Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT) {
+      this.setCommentText(Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT);
+    }
+    this.setColour(Blockly.Blocks.procedures.HUE);
+    this.setTooltip(Blockly.Msg.PROCEDURES_DEFRETURN_TOOLTIP);
+    this.setHelpUrl(Blockly.Msg.PROCEDURES_DEFRETURN_HELPURL);
+    this.arguments_ = [];
+    this.setStatements_(true);
+    this.statementConnection_ = null;
+  },
+  //
+  //contextMenuType_: 'variables_set',
+  /**
+   * Add menu option to create getter/setter block for this setter/getter.
+   * @param {!Array} options List of menu options to add to.
+   * @this Blockly.Block
+   */
+  /*
+  customContextMenu: function(options) {
+    var option = {enabled: true};
+    var name = this.getFieldValue('variable_name');
+    option.text = this.contextMenuMsg_.replace('%1', name);
+    var xmlField = goog.dom.createDom('field', null, name);
+    xmlField.setAttribute('name', 'variable_name');
+    var xmlBlock = goog.dom.createDom('block', null, xmlField);
+    xmlBlock.setAttribute('type', this.contextMenuType_);
+    option.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
+    options.push(option);
+  } 
+  */
+  //
+  setStatements_: Blockly.Blocks['procedures_defnoreturn'].setStatements_,
+  updateParams_: Blockly.Blocks['procedures_defnoreturn'].updateParams_,
+  mutationToDom: Blockly.Blocks['procedures_defnoreturn'].mutationToDom,
+  domToMutation: Blockly.Blocks['procedures_defnoreturn'].domToMutation,
+  decompose: Blockly.Blocks['procedures_defnoreturn'].decompose,
+  compose: Blockly.Blocks['procedures_defnoreturn'].compose,
+  /**
+   * Return the signature of this procedure definition.
+   * @return {!Array} Tuple containing three elements:
+   *     - the name of the defined procedure,
+   *     - a list of all its arguments,
+   *     - that it DOES have a return value.
+   * @this Blockly.Block
+   */
+  getProcedureDef: function() {
+    return [this.getFieldValue('NAME'), this.arguments_, true];
+  },
+  getVars: Blockly.Blocks['procedures_defnoreturn'].getVars,
+  renameVar: Blockly.Blocks['procedures_defnoreturn'].renameVar,
+  customContextMenu: Blockly.Blocks['procedures_defnoreturn'].customContextMenu,
+  callType_: 'procedures_callreturn'
+};
+
+/**
+@license
+Copyright 2015 Hendrik Diel
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+@fileoverview
+this file enables predefined variables. You can add a variables by calling
+addPredefinedVar(name) and remove by calling removePredefinedVar(name).
+@author
+diel.hendrik@gmail.com (Hendrik Diel)
+*/
+(function(){
+  Blockly.Variables.predefinedVars = [];
+  Blockly.Variables.addPredefiendVar = function(name){
+    Blockly.Variables.predefinedVars.push(name);
+  };
+  
+  Blockly.Variables.removePredefiendVar = function(name){
+    var index = array.indexOf(name);
+    if (index > -1) {
+      Blockly.Variables.predefinedVars.splice(index, 1);
+    }
+  };
+  
+  var old = Blockly.Variables.allVariables;
+  Blockly.Variables.allVariables = function(root) {
+    var vars = old.call(this, root);
+    Blockly.Variables.predefinedVars.forEach(function(x){
+      if(vars.indexOf(x) < 0)
+      vars.push(x);
+    });
+    return vars;
+  };
+})();
+Blockly.JavaScript['procedures_defreturn_functional'] = function(block) {
+  // Define a procedure with a return value.
+    var variable_variable_name = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('variable_name'), Blockly.Variables.NAME_TYPE);
+  //var value_value_input = Blockly.JavaScript.valueToCode(block, 'value_input', Blockly.JavaScript.ORDER_ATOMIC);
+  
+  var funcName = Blockly.JavaScript.variableDB_.getName(
+      block.getFieldValue('NAME'), Blockly.Procedures.NAME_TYPE);
+  var branch = Blockly.JavaScript.statementToCode(block, 'STACK');
+  if (Blockly.JavaScript.STATEMENT_PREFIX) {
+    branch = Blockly.JavaScript.prefixLines(
+        Blockly.JavaScript.STATEMENT_PREFIX.replace(/%1/g,
+        '\'' + block.id + '\''), Blockly.JavaScript.INDENT) + branch;
+  }
+  if (Blockly.JavaScript.INFINITE_LOOP_TRAP) {
+    branch = Blockly.JavaScript.INFINITE_LOOP_TRAP.replace(/%1/g,
+        '\'' + block.id + '\'') + branch;
+  }
+  var returnValue = Blockly.JavaScript.valueToCode(block, 'RETURN',
+      Blockly.JavaScript.ORDER_NONE) || '';
+  if (returnValue) {
+    returnValue = '  return ' + returnValue + ';\n';
+  }
+  var args = [];
+  for (var i = 0; i < block.arguments_.length; i++) {
+    args[i] = Blockly.JavaScript.variableDB_.getName(block.arguments_[i],
+        Blockly.Variables.NAME_TYPE);
+  }
+  //custom code
+  /*
+  var xmlField = goog.dom.createDom('field', null, variable_variable_name);
+  xmlField.setAttribute('name', variable_variable_name);
+  var xmlBlock = goog.dom.createDom('block', null, xmlField);
+  xmlBlock.setAttribute('type', 'variables_set');
+  */
+  Blockly.Variables.addPredefiendVar(variable_variable_name);
+
+  var code = variable_variable_name + ' = function(' + args.join(', ') + ') {\n' +
+      branch + returnValue + '}';
+  //end custom code
+  code = Blockly.JavaScript.scrub_(block, code);
+  // Add % so as not to collide with helper functions in definitions list.
+  Blockly.JavaScript.definitions_['%' + funcName] = code;
+  return null;
+};
+
+	//functional variable call 
+	//https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#ndqffg
+Blockly.Blocks['call_first_class_function'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("return to")
+        .appendField(new Blockly.FieldVariable("item"), "return_to")
+        .appendField("call first class function")
+        .appendField(new Blockly.FieldVariable("item"), "variable_name")
+        .appendField("parameter")
+        .appendField(new Blockly.FieldVariable("item"), "parameter");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('');
+    this.setHelpUrl('http://www.example.com/');
+  }
+};
+Blockly.JavaScript['call_first_class_function'] = function(block) {
+  var variable_return_to = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('return_to'), Blockly.Variables.NAME_TYPE);
+  var variable_variable_name = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('variable_name'), Blockly.Variables.NAME_TYPE);
+  var variable_parameter = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('parameter'), Blockly.Variables.NAME_TYPE);
+  // TODO: Assemble JavaScript into code variable.
+  var code = variable_return_to+'='+variable_variable_name+'('+variable_parameter+');\n';
+  return code;
+};
+	//On Startup
+	var workspaceChanged = function() {
+	            console.log("workspaceChanged");
+	            //update the xml of the current page
+	            //generation_complete=false;
+           	    var xml = Blockly.Xml.workspaceToDom(workspace);
+				var xml_text = Blockly.Xml.domToPrettyText(xml);
+				for(var pageindex in project.pages) {
+					if(project.pages[pageindex].pagename==current_page) {
+						project.pages[pageindex].xml=xml_text;
+					}
+				}
+		        // Generate JavaScript code and parse it.
+				/*
+				Blockly.JavaScript.addReservedWords('highlightBlock');
+				Blockly.JavaScript.STATEMENT_PREFIX = '';
+		        document.getElementById('funct').value = Blockly.JavaScript.workspaceToCode(workspace);
+		        Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+				debuggerCode = Blockly.JavaScript.workspaceToCode(workspace);
+				*/
+				debuggerCode = generateJS(false);
+				document.getElementById('funct').value = debuggerCode;
+			  //var xml = Blockly.Xml.workspaceToDom(workspace);
+		  	  //var xml_text = Blockly.Xml.domToPrettyText(xml);
+
+			  //Unless I am mistaken there isn't a way currently to call into the context created when running a program with the JSInterpreter. On workaround could be to have a setInterval going inside the interpreter context that is polling an exposed api which is watching for events on the page and responds by calling your users code. https://neil.fraser.name/software/JS-Interpreter/docs.html
+
+			  	//finalCode = "var pollEvent = function() {alert('pollevent')};\n"
+			   	//finalCode+= "id_ = setInterval(pollEvent, 1);\n";//+debuggerCode;
+				//var finalCode = debuggerCode+"while(true){var event=interalPollevent();if(event=='left'){alert('here');}}";
+				//alert(finalCode);
+				if(!evalRun&&!URLRunLoading) {//this if statement prevents the code from running twice when the project loads if the code is already running because of RunAndLoadFromUrl paramenter on the URL
+					//destory_all_clones();
+					set_all_fames_to_first_frame();
+					var finalCode = generateJS(false);
+					finalCode+= "if (typeof ON_STARTUP !== 'undefined') {\n";//cehck to see if funtion is defined
+					finalCode+= "	ON_STARTUP();\n";
+					finalCode+= "}\n";
+					eval(finalCode);
+				}	
+		        //myInterpreter = new Interpreter(finalCode, initApi);
+
+		        //alert('Ready to execute this code:\n\n' + code);
+		  	  //console.log('\n\nXML:\n\n' + xml_text);
+		        //document.getElementById('stepButton').disabled = '';
+		        highlightPause = false;
+		        workspace.traceOn(true);
+		        workspace.highlightBlock(null);
+	}
+	/*
+		//before block
+		var loopID = "loopID_"+guid();//one side effect is that every time the blocks are recalculated this name will change
+		//in block
+		//get input from terminal
+		input_trigger_no_callback(varname,prompt);
+		function ' + loopID + '() {
+			if (input!=null) {
+				setTimeout(' + loopID + ', 0);
+			}
+			else {
+				//then do
+				
+			}
+		}
+		loop();
+		-terminal input block {
+			call input_trigger_no_callback(varname,prompt), take value prompt with lock in block, and also varname(what will hapen if someone provides a non variable? ah this should not be an variable input)
+			loop until user presses enter (loopID will "loopID_"+uniqueID)
+				in the else block we will have a statements block, which is where the program will continue after getting input
+			
+		-(not nessesary)input value block
+			eval(varname)
+		
+		-(done)make/use random range block(it exists in blockly playground)
+		-make a terminal guess my number game
+		https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#fznnhx
+	*/
+	//https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#q8cnym
+	Blockly.Blocks['text_input_term'] = {
+	  init: function() {
+		this.appendValueInput("prompt")
+			.setCheck("String")
+			.setAlign(Blockly.ALIGN_RIGHT)
+			.appendField("terminal input        ")
+			.appendField("prompt");
+		this.appendValueInput("LABEL")
+			.setCheck(null)
+			.setAlign(Blockly.ALIGN_RIGHT)
+			.appendField("label");
+		this.setPreviousStatement(true, null);
+		this.setNextStatement(true, null);
+		this.setColour(120);
+		this.setTooltip('');
+		this.setHelpUrl('');
+	  }
+	};
+	Blockly.JavaScript['text_input_term'] = function(block) {
+	  var value_prompt = Blockly.JavaScript.valueToCode(block, 'prompt', Blockly.JavaScript.ORDER_ATOMIC);
+	  var value_label = Blockly.JavaScript.valueToCode(block, 'LABEL', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'if(evalRun){input_trigger_label(' + value_label + ',' + value_prompt + ',ON_INPUT)};\n';
+	  return code;
+	};
+	/*
+	Blockly.Blocks['text_input_term'] = {
+	  init: function() {
+		this.appendValueInput("prompt")
+			.setCheck("String")
+			.setAlign(Blockly.ALIGN_RIGHT)
+			.appendField("terminal input        ")
+			.appendField("prompt");
+		this.appendStatementInput("NAME")
+			.setCheck(null)
+			.appendField("save in")
+			.appendField(new Blockly.FieldVariable("item"), "varname")
+			.appendField("then do");
+		this.setPreviousStatement(true, null);
+		this.setNextStatement(true, null);
+		this.setColour(120);
+		this.setTooltip('');
+		this.setHelpUrl('');
+	  }
+	};
+	*/
+	/*
+	var input_has_ended=true;
+	Blockly.JavaScript['text_input_term'] = function(block) {
+	  var value_prompt = Blockly.JavaScript.valueToCode(block, 'prompt', Blockly.JavaScript.ORDER_ATOMIC);
+	  var variable_varname = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('varname'), Blockly.Variables.NAME_TYPE);
+	  var statements_name = Blockly.JavaScript.statementToCode(block, 'NAME');
+	  // TODO: Assemble JavaScript into code variable.
+	  //before block
+	  var loopID = "loopID_"+guid();//one side effect is that every time the blocks are recalculated this name will change
+	  //in block
+	  var code = '';
+	  code+= '//get input from terminal\n';
+	  code+= 'if(evalRun){\n';
+	  code+= 'if(input_has_ended) input_trigger_no_callback("' + variable_varname + '",' + value_prompt + ');\n';
+	  code+= '  input_has_ended=false\n';
+	  code+= 'function ' + loopID + '() {\n';
+	  code+= 'console.log("hi1");\n';
+	  code+= '  if (input!=null) {\n';
+	  code+= 'console.log("hi2"+input);\n';
+	  code+= '    setTimeout(' + loopID + ', 0);\n';
+	  code+= '  } else {\n';
+	  code+= 'console.log("hi3"+eval.call(window,"'+variable_varname+'"));\n';
+	  code+= '    //then do\n';
+	  code+= statements_name;//oops realized I messed up the variable name,fix later...will still work...
+	  code+= '  input_has_ended=true;\n';
+	  code+= '  }\n';
+	  code+= '}\n';
+	  code+= loopID + '();\n';
+	  code+= '}\n';
+	  return code;
+	};	
+	
+		var input_has_ended=true;
+	Blockly.JavaScript['text_input_term'] = function(block) {
+	  var value_prompt = Blockly.JavaScript.valueToCode(block, 'prompt', Blockly.JavaScript.ORDER_ATOMIC);
+	  var variable_varname = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('varname'), Blockly.Variables.NAME_TYPE);
+	  var statements_name = Blockly.JavaScript.statementToCode(block, 'NAME');
+	  // TODO: Assemble JavaScript into code variable.
+	  var variable_varname="user_anser";
+	  //before block
+	  var loopID = "loopID_"+guid();//one side effect is that every time the blocks are recalculated this name will change
+	  //in block
+	  var code = '';
+	  code+= '//get input from terminal\n';
+	  code+= 'if(evalRun){\n';
+	  code+= 'if(input_has_ended) input_trigger_no_callback("' + variable_varname + '",' + value_prompt + ');\n';
+	  code+= '  input_has_ended=false\n';
+	  code+= 'function ' + loopID + '() {\n';
+	  code+= 'console.log("hi1");\n';
+	  code+= '  if (input!=null) {\n';
+	  code+= 'console.log("hi2"+input);\n';
+	  code+= '    setTimeout(' + loopID + ', 0);\n';
+	  code+= '  } else {\n';
+	  code+= 'console.log("hi3"+eval.call(window,"'+variable_varname+'"));\n';
+	  code+= '    //then do\n';
+	  code+= statements_name;//oops realized I messed up the variable name,fix later...will still work...
+	  code+= '  input_has_ended=true;\n';
+	  code+= '  }\n';
+	  code+= '}\n';
+	  code+= loopID + '();\n';
+	  code+= '}\n';
+	  return code;
+	};	
+	
+	var user_answer;
+		Blockly.JavaScript['text_input_term'] = function(block) {
+	  var value_prompt = Blockly.JavaScript.valueToCode(block, 'prompt', Blockly.JavaScript.ORDER_ATOMIC);
+	  var variable_varname = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('varname'), Blockly.Variables.NAME_TYPE);
+	  var statements_name = Blockly.JavaScript.statementToCode(block, 'NAME');
+	  // TODO: Assemble JavaScript into code variable.
+	  var variable_varname="user_answer";
+	  //before block
+	  //var loopID = "loopID_"+guid();//one side effect is that every time the blocks are recalculated this name will change
+	  //in block
+	  var code = 'number_of_inputs++;input_trigger(' + variable_varname + ',' + value_prompt + ', ON_INPUT);\n';
+	  return code;
+	};	
+	*/
+	var user_answer="no answer given";
+	Blockly.Blocks['user_answer'] = {
+	  init: function() {
+		this.appendDummyInput()
+			.appendField("user answer");
+		this.setOutput(true, "String");
+		this.setColour(120);
+		this.setTooltip('');
+		this.setHelpUrl('');
+	  }
+	};
+	Blockly.JavaScript['user_answer'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'user_answer';
+	  // TODO: Change ORDER_NONE to the correct strength.
+	  return [code, Blockly.JavaScript.ORDER_NONE];
+	};	
+	var label;
+	Blockly.Blocks['label'] = {
+	  init: function() {
+		this.appendDummyInput()
+			.appendField("label");
+		this.setOutput(true, "String");
+		this.setColour(120);
+		this.setTooltip('');
+		this.setHelpUrl('');
+	  }
+	};
+	Blockly.JavaScript['label'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'label';
+	  // TODO: Change ORDER_NONE to the correct strength.
+	  return [code, Blockly.JavaScript.ORDER_NONE];
+	};	
+	
+	//https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#xbrfpe
+	Blockly.Blocks['text_prompt'] = {
+	  init: function() {
+		this.appendValueInput("prompt")
+			.setCheck("String")
+			.setAlign(Blockly.ALIGN_RIGHT)
+			.appendField("message:");
+		this.appendDummyInput()
+			.appendField("prompt");
+		this.setPreviousStatement(true, null);
+		this.setNextStatement(true, null);
+		this.setColour(120);
+		this.setTooltip('');
+		this.setHelpUrl('');
+	  }
+	};
+	Blockly.JavaScript['text_prompt'] = function(block) {
+	  var value_prompt = Blockly.JavaScript.valueToCode(block, 'prompt', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'if(evalRun) {user_answer = prompt("'+value_prompt+'","");}\n';
+	  // TODO: Change ORDER_NONE to the correct strength.
+	  return code;//[code, Blockly.JavaScript.ORDER_NONE];
+	  //return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+	};
+
+	//blobk change stage https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#tmykc7
+	Blockly.Blocks['block_change_stage'] = {
+		init: function() {
+			this.appendValueInput("URL")
+					.setCheck("String")
+					.appendField("change stage. URL:");
+			this.setPreviousStatement(true, null);
+			this.setNextStatement(true, null);
+			this.setColour(65);
+			this.setTooltip('');
+			this.setHelpUrl('');
+		}
+	};	
+
+	Blockly.JavaScript['block_change_stage'] = function(block) {
+		var value_url = Blockly.JavaScript.valueToCode(block, 'URL', Blockly.JavaScript.ORDER_ATOMIC);
+		// TODO: Assemble JavaScript into code variable.
+		var code = 'if(evalRun) {window.location.href = '+ value_url +';}\n';
+		return code;
+	};
+	//End Blocks
+//imperitive:start interlacing blocks(this is not a commend)
+	//depracated Blockly.addChangeListener(workspaceChanged());
+	workspace.addChangeListener(workspaceChanged);
+	
+	//global variables
+	//timers
+	var timersObj={};
+	var timerIDs=[];
+	//project
+	var project = {};
+	project.images = [];
+	project.background_ = "not set";
+	var current_page="main";
+	project.pages=[];
+	var page={};
+	page.pagename="main";
+	project.pages.push(page);
+	updatePages();
+
+	function updatePages() {
+		document.getElementById("pages").innerHTML="Pages"
+	  //parsing data structure
+	  for(var pageindex in project.pages) {
+	  var finaltag=(project.pages[pageindex].pagename=="main")?"":">(-)"
+	  document.getElementById("pages").innerHTML=document.getElementById("pages").innerHTML+" <a href=javascript:clikedLink('"+project.pages[pageindex].pagename+"')"+ " id="+project.pages[pageindex].pagename+">"+project.pages[pageindex].pagename+"</a>"+" <a href=javascript:clikedDeleteLink('"+project.pages[pageindex].pagename+"')"+ " id=del"+project.pages[pageindex].pagename+finaltag+"</a>";
+		}
+	}
+	function addPage() {
+		//new page
+		var page={};
+		page.pagename=prompt("Enter new page name","page#");
+		page.xml="uninitialized xml";
+		for(var pageindex in project.pages){
+			if(project.pages[pageindex].pagename==page.pagename) {
+				alert("Error, page name must be unique, '" + page.pagename + "' already exists.");
+				return;	
+			}	
+		}
+
+		project.pages.push(page);
+		updatePages();
+	}
+	function clikedLink(linkName) {
+		//alert("s:"+linkName);
+		current_page=linkName;
+		for(var pageindex in project.pages){
+			if(project.pages[pageindex].pagename==linkName) {
+				//Blockly.mainWorkspace.clear();
+				workspace.clear();
+				if(project.pages[pageindex].xml=="uninitialized xml") {
+					return;
+				}
+				var xml = Blockly.Xml.textToDom(project.pages[pageindex].xml);
+				Blockly.Xml.domToWorkspace(workspace, xml);	
+			}
+		}
+	}
+	function clikedDeleteLink(linkName) {
+	  var answer = confirm("Delete page "+linkName+"? -- warning this cannot be undone, blocks in this page will be deleted!!")
+	  if (answer) {
+	 for(var pageindex in project.pages){
+					if(project.pages[pageindex].pagename==linkName) {
+						if(project.pages.length==0){
+							break;
+						}else{
+							project.pages.splice(pageindex, 1);	
+						}	
+					}//);
+				}
+	  updatePages();
+	  }
+	}
+	
+	//toolbar code
+	function guid() {
+	  function s4() {
+	    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+	  }
+	  return s4() + s4();
+	}
+
+	function set_all_fames_to_first_frame() {
+		var go;
+		for(var sprite in sprites) {
+			set_current_sprite_name(sprites[sprite].name)
+			go=find_sprite_object_by_name(current_sprite_name);
+			if_frames_exist_set_frame_to_first_frame(go);
+		}
+	}
+	function if_frames_exist_set_frame_to_first_frame(go) {
+		for(var frame in go.frames) {
+			go.frames[frame].sprite.visible=false
+		} 
+		if(typeof go.frames != 'undefined'){//if there are any frames
+			go.frames[1].sprite.visible=true;
+			go.sprite.visible=false;
+		}
+	}
+	onLoaded = function(){
+		//console.log('image loaded');
+		sprites[sprites.length-1].sprite = game.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[sprites.length-1].name);
+		sprite_ = front_layer.create(sprites[sprites.length-1].sprite);
+		//scale sprite down
+		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
+
+		game.physics.enable(sprites[sprites.length-1].sprite, Phaser.Physics.ARCADE);
+		//set it so that the sprites rotate on hte center axis
+		sprites[sprites.length-1].sprite.anchor.setTo(0.5, 0.5);
+		sprites[sprites.length-1].clones=[];
+		//scale sprite down
+		//sprites[sprites.length-1].sprite.scale.setTo(2,2);
+		//add sprite to blockly blocks
+		//Blockly.Blocks['motion_point_in_direction'].init()
+	}
+
+	onLoadedFrame = function(){
+		//console.log('image loaded');
+		var local_game_object=find_sprite_object_by_name(current_sprite_name);
+		local_game_object.frames[local_game_object.number_of_frames]={};//need to have an object to hold the sprite
+		local_game_object.frames[local_game_object.number_of_frames].sprite = game.add.sprite(local_game_object.sprite.x,local_game_object.sprite.y, "img"+sprites[sprites.length-1].name+"Frame"+local_game_object.number_of_frames);
+		sprite_ = front_layer.create(local_game_object.frames[local_game_object.number_of_frames].sprite);
+		//scale sprite down
+		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
+
+		game.physics.enable(local_game_object.frames[local_game_object.number_of_frames].sprite, Phaser.Physics.ARCADE);
+		//set it so that the sprites rotate on hte center axis
+		local_game_object.frames[local_game_object.number_of_frames].sprite.anchor.setTo(0.5, 0.5);
+		//need to create all frames for clones too :( sprites[sprites.length-1].clones=[];
+		if(local_game_object.number_of_frames==1) {
+			local_game_object.frames[1].sprite.visible=true;
+		} else {
+			local_game_object.frames[local_game_object.number_of_frames].sprite.visible=false;			
+		}
+
+
+		/*
+		//console.log('image loaded');
+		var local_game_object=find_sprite_object_by_name(current_sprite_name);
+		local_game_object.frames[local_game_object.number_of_frames]={};//need to have an object to hold the sprite
+		local_game_object.frames[local_game_object.number_of_frames].sprite = game.add.sprite(local_game_object.sprite.x,local_game_object.sprite.y, "img"+sprites[sprites.length-1].name+"Frame"+local_game_object.number_of_frames);
+		sprite_ = front_layer.create(local_game_object.frames[local_game_object.number_of_frames].sprite);
+		//scale sprite down
+		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
+
+		game.physics.enable(local_game_object.frames[local_game_object.number_of_frames].sprite, Phaser.Physics.ARCADE);
+		//set it so that the sprites rotate on hte center axis
+		local_game_object.frames[local_game_object.number_of_frames].sprite.anchor.setTo(0.5, 0.5);
+		//need to create all frames for clones too :( sprites[sprites.length-1].clones=[];
+		if(local_game_object.number_of_frames==1) {
+			local_game_object.frames[1].sprite.visible=true;
+		} else {
+			local_game_object.frames[local_game_object.number_of_frames].sprite.visible=false;			
+		}
+		*/
+	}
+	//var global_current_frame=1;
+	onLoadedFrame_ForProject = function(){
+		//console.log('image loaded');
+		var local_game_object=find_sprite_object_by_name(current_sprite_name);
+		local_game_object.frames[local_game_object.number_of_frames]={};//need to have an object to hold the sprite
+		local_game_object.frames[local_game_object.number_of_frames].sprite = game.add.sprite(this.initial_x,this.initial_y,this.image_name);
+		/*
+		var x=local_game_object.sprite.x;
+		var y=local_game_object.sprite.y;
+		var key=project.game_objects[sprites.length-1].frames[local_game_object.number_of_frames-1].image_name;	
+		local_game_object.frames[local_game_object.number_of_frames].sprite = game.add.sprite(x,y,key);
+		*/
+		//did not follow parent local_game_object.frames[local_game_object.number_of_frames].sprite = local_game_object.sprite.addChild(game.make.sprite(local_game_object.sprite.x,local_game_object.sprite.y, project.game_objects[sprites.length-1].frames[local_game_object.number_of_frames-1].image_name));
+		
+		sprite_ = front_layer.create(local_game_object.frames[local_game_object.number_of_frames].sprite);
+		//scale sprite down
+		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
+
+		game.physics.enable(local_game_object.frames[local_game_object.number_of_frames].sprite, Phaser.Physics.ARCADE);
+		//set it so that the sprites rotate on hte center axis
+		local_game_object.frames[local_game_object.number_of_frames].sprite.anchor.setTo(0.5, 0.5);
+		//need to create all frames for clones too :( sprites[sprites.length-1].clones=[];
+		if(local_game_object.number_of_frames==1) {
+			local_game_object.frames[1].sprite.visible=true;
+		} else {
+			local_game_object.frames[local_game_object.number_of_frames].sprite.visible=false;			
+		}
+		local_game_object.number_of_frames++//(2017_4_12)
+		/*(deteler 2017/4/4)
+		if(project.game_objects[sprites.length-1].number_of_frames!=local_game_object.number_of_frames) {
+			local_game_object.number_of_frames++
+		}
+		*/
+	}
+	
+	//i neededd to make a better loader for when I have many sprites from a project, cause the images seem to load not in real time, so I need to make sure the current sprite gets to be the right one.... by incrementing thed variable below I ensure that the right sprite is put in the right slot...maybe to clean up we can use this second loader for the first case too? try it later...I think it should work
+	//loadproject
+	//var loader_current_sprite=-1;
+	//var loading_project=false;
+	onLoaded2 = function(){
+		loader_current_sprite++;
+		//console.log('image loaded');
+		sprites[loader_current_sprite].sprite = game.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[loader_current_sprite].name);
+		
+		//set hidden to false(2017_4_12)
+		sprites[loader_current_sprite].hidden=false;
+
+		sprite_ = front_layer.create(sprites[loader_current_sprite].sprite);
+		//scale sprite down
+		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
+	
+		game.physics.enable(sprites[loader_current_sprite].sprite, Phaser.Physics.ARCADE);
+		//set it so that the sprites rotate on hte center axis
+		sprites[loader_current_sprite].sprite.anchor.setTo(0.5, 0.5);
+		sprites[loader_current_sprite].clones=[];
+
+		//load frames
+		var game_object;
+		set_current_sprite_name(sprites[loader_current_sprite].name);
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		for(var index in project.game_objects) {
+			//for(var frame in project.game_objects[project.game_objects.length-1].frames) {
+			
+			if(project.game_objects[index].name==sprites[loader_current_sprite].name) {//seems these never macth for top_bear
+				for(var frame in project.game_objects[index].frames) {	
+					if(typeof project.game_objects[index].number_of_frames != 'undefined') {
+						//dangerous(2017/4/4)
+						if(typeof game_object.frames == 'undefined') {
+							game_object.frames=[];
+							game_object.number_of_frames=1;
+							game_object.sprite.visible=true;
+							game_object.current_frame=1;
+							game_object.counter_of_loaded_image_frame=1;
+						}
+						//} else {
+						//	game_object.number_of_frames++;I think this should be incremented in onLoadedFrame_ForProject (2017_4_12)
+						//}
+
+						
+						loader = new Phaser.Loader(game)
+						//loader.image(project.game_objects[index].frames[game_object.number_of_frames-1].image_name, project.game_objects[index].frames[game_object.number_of_frames-1].frame_image_data);
+						var image_name=project.game_objects[index].frames[game_object.counter_of_loaded_image_frame-1].image_name;
+						var frame_image_data=project.game_objects[index].frames[game_object.counter_of_loaded_image_frame-1].frame_image_data;
+						game_object.counter_of_loaded_image_frame++;
+						passed_object={};
+						passed_object.initial_x=game.world.centerX//screen center
+						passed_object.initial_y=game.world.centerY//screen center
+						passed_object.image_name=image_name;
+						loader.image(image_name, frame_image_data);
+						loader.onLoadComplete.addOnce(onLoadedFrame_ForProject,passed_object);
+						loader.start();
+					}
+				}
+			}
+		}
+	}
+
+	var x_scaling_factor_percent;
+	var y_scaling_factor_percent;
+	
+	onLoadedBackground = function(){
+		//console.log('image loaded');
+		bg=game.add.sprite(0,0, "backgroud");
+		//calculate scaling factors
+		//nerdshark: divide the new width by the old width
+		//http://www.wikihow.com/Calculate-Percent-Change
+		var x_substracted= bg.width - game.world.bounds.bottomRight.x;
+		var y_substracted= bg.height - game.world.bounds.bottomRight.y;
+		var x_percentage=parseFloat(x_substracted)/game.world.bounds.bottomRight.x;
+		var y_percentage=parseFloat(y_substracted)/game.world.bounds.bottomRight.y;
+		
+		//console.log("x_percentage"+x_percentage);
+		//if (confirm('Do you want to scale the sprites to the size of the bakground(you will need to refresh and reload project to see the difference)?')) {
+		//	// sclae
+		//	x_scaling_factor_percent=x_percentage;
+		//	y_scaling_factor_percent=y_percentage;
+		//} else {
+			// Do not scale
+			x_scaling_factor_percent=1.0;
+			y_scaling_factor_percent=1.0;
+		//}				
+
+		//nerdshark: if you want to use the raw number directly, then just multiply each dimension of the sprite by it (raw_scaling_factor * sprite x), (raw_scaling_factor * sprite_y)
+		//scale backgroud
+		bg.width =game.world.bounds.bottomRight.x;
+		bg.height =game.world.bounds.bottomRight.y;
+		background_.add(bg);
+		//set it so that the sprites rotate on hte center axis
+		//background_.anchor.setTo(0, 0);
+	}
+
+	
+	document.getElementById("files").onchange = function () {
+	    var reader = new FileReader();
+
+	    reader.onload = function (e) {
+	        // get loaded data and render thumbnail.
+	        document.getElementById("image").src = e.target.result;
+			//game.load.image('userSprite1', 'assets/firstaid.png');
+
+			//prompt for sprite name
+			var name=prompt("Give me a name for this sprite","Sprite-"+guid());
+			for(var obj in sprites){
+				if(sprites[obj].name==name) {
+					alert("You must give each sprite a unique name");
+					return;				
+				}
+			}
+			if(name=="") {
+				alert("You must give each sprite a name");
+				return;
+			}
+			//append image name to object model
+			//add new sprite to object model
+			sprites.push({})
+			sprites[sprites.length-1].name=name;
+				
+			loader = new Phaser.Loader(game);
+			loader.image("img"+name, e.target.result );
+			loader.onLoadComplete.addOnce(onLoaded);
+			loader.start();
+			image={};
+			image.name=name;
+			image.data=e.target.result
+			project.images.push(image);
+			//new game object
+			var game_object={};
+			game_object.frames=[];
+			game_object.name=name
+			project.game_objects.push(game_object);
+			
+			if(typeof project.game_objects[sprites.length-1].frames != 'undefined') {
+				sprites[sprites.length-1].number_of_frames=project.game_objects[sprites.length-1].number_of_frames;//sync frames from project to sprite(2017/4/4)
+			}
+			
+			updateDialogBox();//update the sprite manager
+	    };
+
+	    // read the image file as a data URL.
+	    reader.readAsDataURL(this.files[0]);
+	};
+
+	document.getElementById("files2").onchange = function () {
+	    var reader = new FileReader();
+
+	    reader.onload = function (e) {
+	        // get loaded data and render thumbnail.
+	        document.getElementById("background").src = e.target.result;
+			//game.load.image('userSprite1', 'assets/firstaid.png');
+			loader = new Phaser.Loader(game)
+			loader.image("backgroud", e.target.result );
+			loader.onLoadComplete.addOnce(onLoadedBackground)
+			loader.start()
+			project.background_ = document.getElementById("background").src;	
+	    };
+
+	    // read the image file as a data URL.
+	    reader.readAsDataURL(this.files[0]);
+	}
+	
+		project.game_objects=[];
+	
+	document.getElementById("files3").onchange = function () {
+	    var reader = new FileReader();
+
+	    reader.onload = function (e) {
+	        // get loaded data and render thumbnail.
+	        document.getElementById("frame").src = e.target.result;
+			//game.load.image('userSprite1', 'assets/firstaid.png');
+
+			//prompt for sprite name
+			
+			var new_frame_name = prompt("Give me a name for this frame","Frame-"+guid());
+			for(var obj in project.game_objects) {
+				if(project.game_objects[obj].name==name_of_current_object_in_sprite_manager) {
+					for(var frame in project.game_objects[obj].frames) {
+						if(project.game_objects[obj].frames[frame].alias==new_frame_name) {
+							alert("Error: sprite " + project.game_objects[obj].name + " already has a frame called " + new_name + " every frame alias must be unique.");
+							return;
+						}
+					}
+				}
+			}							
+			if(new_frame_name==null) {
+				return;
+			}
+			var name=name_of_current_object_in_sprite_manager;
+			var sprite_found=false;
+			for(var obj in sprites){
+				if(sprites[obj].name==name) {
+					sprite_found=true;
+				}
+			}
+			if(!sprite_found) {
+					alert("Sprite "+ name + "does not exist");
+					return;								
+			}
+			set_current_sprite_name(name);
+			var game_object;
+			game_object=find_sprite_object_by_name(current_sprite_name);
+			for(obj in 	project.game_objects) {
+				if(project.game_objects[obj].name==name) {
+					if (typeof game_object.number_of_frames == 'undefined') {
+						game_object.frames=[];
+						game_object.number_of_frames=1;
+						game_object.sprite.visible=false;
+						game_object.current_frame=1;
+						//project.game_objects.push({});//object to contain frame info
+						project.game_objects[obj].name=name;
+						project.game_objects[obj].number_of_frames=game_object.number_of_frames;
+						//project.game_objects[project.game_objects.length-1].frames=game_object.frames;
+						project.game_objects[obj].visible=game_object.sprite.visible;
+						project.game_objects[obj].current_frame=game_object.current_frame;
+					} else {
+						game_object.number_of_frames++;
+						project.game_objects[obj].number_of_frames=game_object.number_of_frames;
+					}			
+					var image_name="img"+name+"Frame"+game_object.number_of_frames;
+					
+					//new frame
+					var frame={};
+					frame.frame_image_data=e.target.result
+					frame.image_name=image_name;				
+					frame.alias=new_frame_name;	//this variable is set in the sprite dialog box when new frame is added
+					project.game_objects[obj].frames.push(frame);
+				}
+			}			
+			//project.game_objects[name].frames.push(frame);
+			loader = new Phaser.Loader(game)
+			loader.image(image_name, e.target.result );
+			loader.onLoadComplete.addOnce(onLoadedFrame)
+			loader.start()
+			image={}
+			image.name=image_name;
+			image.data=e.target.result
+			updateDialogBox();
+			//project.images.push(image);
+			
+			
+	    }
+	    // read the image file as a data URL.
+	    reader.readAsDataURL(this.files[0]);
+	}
+
+	function loadHelperFunction(project_json) {
+			project = JSON.parse(project_json);
+			if(typeof project.pages == 'undefined') {//old version of s-found
+				project.pages=[];
+				//new page
+				var page={};
+				page.pagename="main";
+				page.xml=project.block_xml;
+				project.pages.push(page);
+			}
+			updatePages();
+
+			if(typeof project.background_ != 'undefined' && project.background_!="not set") {
+				loader = new Phaser.Loader(game);
+				loader.image("backgroud", project.background_ );
+				loader.onLoadComplete.addOnce(onLoadedBackground);
+				loader.start();								
+			}
+			
+			
+			loader_current_sprite=-1;
+			for(image in project.images) {
+				sprites.push({})
+				sprites[sprites.length-1].name=project.images[image].name;
+				
+				
+				loader = new Phaser.Loader(game);
+				loader.image("img"+project.images[image].name, project.images[image].data );
+				loader.onLoadComplete.addOnce(onLoaded2);
+				loader.start();
+			}
+			
+			Blockly.mainWorkspace.clear();
+			var xml = Blockly.Xml.textToDom(project.pages[0].xml);
+			Blockly.Xml.domToWorkspace(workspace, xml);
+	}
+	document.getElementById("files_project_upload").onchange = function () {
+	    var reader = new FileReader();
+
+	    reader.onload = function (e) {
+				// get loaded data and render thumbnail.
+				var project_json = e.target.result;
+				loadHelperFunction(project_json);
+	    };
+	    // read the image file as a data URL.
+	    reader.readAsText(this.files[0]);
+	};
+	
+	function loadURLproject(URL,RunCode) {
+		if(typeof URL =='undefined'){
+			var URL=prompt("Enter URL to project:");
+		}
+		/*
+		var req = new XMLHttpRequest();  
+		req.open('GET', URL, false);   
+		req.send(null);  
+		if(req.status == 200) {  
+		   project_json=req.responseText;
+		}else{
+				alert("ERROR:"+req.status)
+				return;
+		}
+		*/
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", URL, true);
+		xhr.onload = function (e) {
+			if (xhr.readyState === 4) {
+				if (xhr.status === 200) {
+					project_json=xhr.responseText;
+					loadHelperFunction(project_json);
+					if(RunCode) {
+						evalCode();
+						//ON_STARTUP();//trying to call the onstartup of the function so that it sets up the area before the game starts.
+					}
+				} else {
+					alert("ERROR:"+xhr.statusText);
+				}
+			}
+		};
+		xhr.onerror = function (e) {
+			alert("ERROR:"+xhr.statusText);
+		};
+		xhr.send(null);
+		//alert("project_json:"+project_json);
+		/*
+		project = JSON.parse(project_json);
+		
+		if(typeof project.background_ != 'undefined' && project.background_!="not set") {
+			loader = new Phaser.Loader(game);
+			loader.image("backgroud", project.background_ );
+			loader.onLoadComplete.addOnce(onLoadedBackground);
+			loader.start();								
+					
+
+		}
+		
+		
+		loader_current_sprite=-1;
+		for(image in project.images) {
+			sprites.push({})
+			sprites[sprites.length-1].name=project.images[image].name;
+			
+			
+			loader = new Phaser.Loader(game);
+			loader.image("img"+project.images[image].name, project.images[image].data );
+			loader.onLoadComplete.addOnce(onLoaded2);
+			loader.start();
+		}
+		
+		Blockly.mainWorkspace.clear();
+		var xml = Blockly.Xml.textToDom(project.block_xml);
+		Blockly.Xml.domToWorkspace(workspace, xml);
+	    // read the image file as a data URL.
+	    reader.readAsText(this.files[0]);
+		*/
+	}		
+/*		
+		if(typeof project.background_ != 'undefined' && project.background_!="not set") {
+			loader = new Phaser.Loader(game);
+			loader.image("backgroud", project.background_ );
+			loader.onLoadComplete.addOnce(onLoadedBackground);
+			loader.start();										
+			
+		}
+		
+		
+		loader_current_sprite=-1;
+		for(image in project.images) {
+			sprites.push({})
+			sprites[sprites.length-1].name=project.images[image].name;
+			
+			loader = new Phaser.Loader(game);
+			loader.image("img"+project.images[image].name, project.images[image].data );
+			loader.onLoadComplete.addOnce(onLoaded2);
+			loader.start();
+		}
+		
+		Blockly.mainWorkspace.clear();
+		var xml = Blockly.Xml.textToDom(project.block_xml);
+		Blockly.Xml.domToWorkspace(workspace, xml);
+*/		
+
+	//sprite object model
+	/*
+	spritea.push({})
+	sprite[0].name="test";
+	for(var obj in sprite){
+	print(sprite[obj].name)
+	}
+	"end"
+	*/
+	//(done)ok darkf, I have added the functionality of adding named sprites, now I just need to make blocks that work with the named sprites...  like have a drop-down listbox which lists the sprite name, that is my next goal
+	//(done)need to add the sprite name to the created block as-well
+	//(plan changed)adapt current blocks to accept spritename parameters
+	//(done)add a switch current sprite block, which will act as the sprite parameter for blocks that would take one sprite as parameter
+	//(done)add a switch tanget block for blocks that will need current block as parameter1 and target as parameter2 like the furrent point in direction twords enemy, I will rename to point current block twords target
+	//(fixed) (quickhack, it seems x and y for the object get fonverted to strings, to they just get concatenated with the plus sing.) debug problem with foward, seems to be skipping to a different location now...
+	//add a scrool tool to control speed of execution
+	//maybe call mine s-foundation, since scratch is named after "starting from scratch" mine should be named after "starting form a solid foundation"?
+	//there still seems to be some kind of bug when I use repeated setting angle to degrees and foward, the sprite disapears
+	
+	//big problems
+	//think of a way to do multythreading perhaps https://keithwhor.github.io/multithread.js/
+		//maybe rename switch sprite to "with sprite" and modify JS MutantVM to run each instance of a sprite as a thread? is this even possible with blockly blocks and the JS interpreter?
+		//I could use a comment to label each thread, make it clear that it is not really a comment
+		/*
+		Sadale: amigojapan, you don't really need a separate thread.
+		[10:40pm] amoe がチャットルームに参加しました。
+		[10:40pm] amigojapan: ok Sadale , then how?
+		[10:41pm] Sadale: amigojapan, just use a for loop to iterate thru all sprites. Then, says, when a collision is detected, execute the blocks that handle the collision
+		[10:42pm] amigojapan: Sadale: this "itterate thru all sprites" does nto fit very well with blockly.... basically it creates a big JS script, which is hten evaluated
+		[10:44pm] rxo がチャットルームに参加しました。
+		[10:44pm] amigojapan: Sadale: I guess I could inject the loop at the beginning of the code, I guess... let me thing about it
+amigojapan: Sadale: I will try making a small game as-is,    I think it would be better if we dont need to hide lots of functionality behind the scences...  maybe i can make a basic game loop where the user just inserts blocks where it is nessesary	
+		amigojapan: Sadale: I could implement synchronous multithreading... I have done this before in JS, I could do it again for this program... just take code from my old project.... it is very simple.  say we have 2 threads,    you take all the code and do array1=script1.split("/") array2=script2.split("/")  then you just eval one line from array1, then the next line from array2 and so on... it is very simple
+		amigojapan: Sadale: but then I would need to use eval, and dtop using the JS evaluator that I am using now, that allows for stepping and stuff
+		amigojapan: Adyrhan: anyhow,  I am not very worried about hackers at this point....  I owuld rather use the google sandboxed JS interpreter if possible.... if I use my methof of multithreding, I think I can just inject it before the script made by the user. and get it working in the sandbox... I think, if my calculations are correct
+		//I think hte ocntext would be lost if I used several calls to eval in my VM, the only way I can think that the blockly variables would not dissapear is to remake all of hte blockly blocks in a way that they reffer to an exterrnal global object to hold variables in, maybe I could inject it into any JS that looks like a variable somehow
+		amigojapan: GeDaMo: putting up a game loop when the user gets into the page would be less hiding of hte nitty gritty,  but probably hard to understand for a beginner
+		darkf: so instead of "forever do ..." just make a "when frame begins do ..." block.
+		[01:00am] LoLei がチャットルームを去りました。 (Ping timeout: 240 seconds)
+		[01:02am] amigojapan: darkf: so, I call a function made for each sprite when the program starts?    the problem with this approch I think, is that unlike scratch, if they have an eternal loop inside the funtion, the other sprites wont move at all, it needs to yeald to the other sprites code in some way
+		[01:02am] amigojapan: yeild*
+		[01:04am] pooooooopsy がチャットルームに参加しました。
+		[01:04am] lktp がチャットルームに参加しました。
+		[01:05am] darkf: yes so just dont have loops like that
+		amigojapan: darkf: as I said in the notes, I am tempted to just display a huge hame loop in blocks then the page is loaded.... and then just let the users modify the existing stuff....  have a prototype.... this would show the users kind of hte nitty gritty of game development instead of hiding it	
+		but wouldnt it just need to check for imput and check for collitions in the game loop? hmmm, I will try implimenting a simple game first with an event loop written in blocks... see if it gets hairy
+		amigojapan: I need to implement a way to get user input before I can do that...
+		*/
+	//(done)how to handle imput as events? can an eventListener be connected from phaser to call blockly block procedures as listeners?
+		//maybe look at the starwars hour of code, it seems to accept events defined by the user// this is level 7 ,  but hell, it is compressed :(
+		//January 1st 2016// I posted the question of how to handle events on the blockly google group https://groups.google.com/forum/#!topic/blockly/jex1uugSybg
+		/*reply recieved:
+		Unless I am mistaken there isn't a way currently to call into the context created when running a program with the JSInterpreter. On workaround could be to have a setInterval going inside the interpreter context that is polling an exposed api which is watching for events on the page and responds by calling your users code. https://neil.fraser.name/software/JS-Interpreter/docs.html
+
+		However I beleve that the Code.org Star Wars challenges use the pencilcode editor and not blockly. https://pencilcode.net/edit/first
+		2016-1-2 I got  it semy working by using normal eval() instead of the JS interpreter.... I should make some blocks that are prewritten events (functions) with a drop down to select the key
+		*/
+	
+	
+	//small stuff
+	//(done2016-1-10)implement collisioon detection
+		/*
+		//I have this, boths sprites are right over each other
+		game.physics.enable(sprites[0].sprite, Phaser.Physics.ARCADE);
+		game.physics.enable(sprites[1].sprite, Phaser.Physics.ARCADE);
+		game.physics.startSystem(Phaser.Physics.ARCADE);
+		game.physics.arcade.overlap(sprites[0].sprite , sprites[1].sprite);//this returns true//it seems overlap is pixel perfect after all!//no, I tested it and this is bouding box after all//apparently phaser does not have pixel perfect collision detection at all, they say it would be too expensive
+		game.physics.arcade.collide(sprites[0].sprite , sprites[1].sprite);//but this returns false
+		*/
+	
+	//(done2016-1-8)implement an update event	
+	////(done2016-1-9, but still problem that each eval creates new clones, maybe make a cleanup event to get rid of the clones made in the startup event, or just erase all clones when people hit the stop button)implement making clones of sprites
+		//maybe keep an array of clones inside each sprite, and implement "for each clone of sprite _" block
+		//change the find sprite by name function, so that it works with a clone during the itteration of the for each clone block, also keep a copy of hte original sprite in a variable for debugging purposes, while the current sprite is a clone, perhaps add a field to the sprite called (current clone) which could work in hte find sprite function... all of this is so I dont need to remake the movement functions just for hte clones
+		
+	//(done2016-1-8)implement a way to save and load blcoks(for testing purposes)
+	//(done)allow for backgrounds(cant these just be sprites set all the way back?)
+	//(partly done)allow for setting the depth of a sprite
+	//(instead of this I will have both alert() and prompt(), and also the posibility of using a terminal)implement say, and maybe say _ wait _ secs, also think should be very simillar , for the meantime it shoudl be good enough with the print block, eventually implement this
+	//(instead of this I will have both alert() and prompt(), and also the posibility of using a terminal)implement ask _ hmmm, I think this is already good enough with the prompt block
+
+	//implement costumes next costume , and switch to costume _
+	/*
+	I am thinking how to add animated sprites to my second programming language, maybe I will jsut add a bunch of invisible sprites 
+	and then assign the image of each sprite to the visible sprite during each frame to create an animation, yeah that sounds like a
+	 plan…. I needed to word it out, so each game_object also needs a frames array which is really just a bunch of sprites. and I
+	  need to add a “change to frame number X” block and a “change to next frame” block, and also a frame count variable block… 
+	  this one should take the input of which game object we are talking about….
+	  how to assing the image of a sprite to another sprite in phaser?
+	var fake_ChangeTexture=function (sprite_dest, sprite_source) {
+		var dest_x=sprite_dest.x;
+		var dest_y=sprite_dest.y;
+		sprite_dest.destroy();
+		game.add.sprite(dest_x, dest_y, sprite_source.key, sprite_source.frame);
+	}
+
+	car=find_sprite_object_by_name("car");
+	frog=find_sprite_object_by_name("frog");
+	fake_ChangeTexture(frog.sprite,car.sprite)
+	
+	by the way, I am trying to set a texture of a sprite to the texture of another sprite,  but phaser does not have such a function,
+	 so I am actually making a copy of the data in the source sprite, deleting the source sprite, then making a new sptire that uses
+	  the texture of the sprite I want to copy teh texture….. I hope this does not end up being too slow
+	  but I need to do it this way, I suspect they are going to tell me to use a spritesheet, but they dont udnerstand I am making a
+	   programming IDE and stuff, I really need to do it this way. I mean, I need to copy a texture from one sprite to another
+	   by changing the original sptire into a series of hidden sprites, and changign their texture when the user puts the “change sprite to next frame of animation” block on the main loop of hteir program
+	KaffeeJunky123: amigojapan: wouldn't it be easier to use separate sprites for the different frames of the animation and just hide the sprites that are not the current animation frame?
+	amigojapan:that and I would need to update their X Y and Angle axis to be the same as the original sprite whenever those are changed…. but yeah, it is possible,d effinitly
+	
+	
+	each sprte should contain:
+	-current_fame_number(need to expose this in block)
+	-number_of_frames(need to expose this in block)
+	-a frames array
+		-sprite
+	
+	add_frame(game_Object){
+		if (typeof game_object.number_of_frames == 'undefined') {
+			game_object.number_of_frames=1;
+			game_object.frames=[];
+		} else {
+			game_object.number_of_frames++;
+		}
+		frameImage=loadFrame();
+		game_object.frames.push(frameImage);
+	}
+	
+	//add this function call to any code that changes the position of a sprite
+	function update_position_of_frames(game_Object) {
+		for(frame in game_Object.frames) {
+			frame.sprite.x=game_Object.sprite.x;
+			frame.sprite.y=game_Object.sprite.y;
+			frame.sprite.angle=game_Object.sprite.angle;
+		}
+	}
+	
+	amigojapan: KaffeeJunky123: hmm, interesting there is somethig called “chidl sprites” in phaser, I may be able to make the
+	 animated sprites follow the main sprite just by setting them to be children… isntead of making a complicated fucntion to do
+	  it and needing ot add it to other stuff
+	https://phaser.io/examples/v2/sprites/child-sprites
+	
+	function next_fame(game_Object) {
+		loop thru all frames {
+			if(frame.number==game_object.current_fame_number) {
+				frame.sprite.visible = false;
+				if(game_object.current_fame_number==game_object.number_of_frames) {
+					game_object.current_fame_number=0;
+				} else {
+					game_object.current_fame_number++;
+				}
+			}
+		}
+		loop thru all frames {
+			if(frame.number==game_object.current_fame_number) {
+				frame.sprite.visible=true;
+		}
+	}
+	
+	
+	//save project structure
+	//new project
+	var project = {};
+	project.game_objects=[];
+        project.pages=[];
+	//new page
+	var page={};
+        page.pagename="page1";
+	page.xml="<xml>";
+	project.pages.push(page);
+	//new game object
+	var game_object={};
+	game_object.name="data1";
+	game_object.frames=[];
+	project.game_objects.push(game_object);
+	//new game object
+	var game_object={};
+	game_object.name="data2";
+	game_object.frames=[];
+	project.game_objects.push(game_object);
+	//new frame
+	var frame={};
+	frame.test="hi1";
+	frame.bye="bye1";
+	project.game_objects[0].frames.push(frame);
+	//new frame
+	var frame={};
+	frame.test="hi2";
+	frame.bye="bye2";
+	project.game_objects[0].frames.push(frame);
+	var frame={};
+	frame.test="hi3";
+	frame.bye="bye3";
+	project.game_objects[1].frames.push(frame);
+	var frame={};
+	frame.test="hi4";
+	frame.bye="bye4";
+	project.game_objects[1].frames.push(frame);
+
+	//parsing data structure
+	for(var obj in project.game_objects) {
+          print(project.game_objects[obj].name);
+	  for(var frame in project.game_objects[obj].frames) {
+		print(project.game_objects[obj].frames[frame].test);
+	  }
+	}
+"Json:"+JSON.stringify(project)
+output:
+data1
+hi1
+hi2
+data2
+hi3
+hi4
+Json:{"game_objects":[{"name":"data1","frames":[{"test":"hi1","bye":"bye1"},{"test":"hi2","bye":"bye2"}]},{"name":"data2","frames":[{"test":"hi3","bye":"bye3"},{"test":"hi4","bye":"bye4"}]}],"pages":[{"pagename":"page1","xml":"<xml>"}]}
+
+//pages stuff
+//add functionality to delete a page
+//enssure page names are unique
+https://jsfiddle.net/pnk7wtrf/36/
+<button onclick="addPage()">Add page</button>
+<div id="pages">
+pages div uninitialized
+</div>
+
+//second try
+	//save project structure
+	//new project
+	var project = {};
+	project.game_objects=[];
+  project.pages=[];
+	var page={};
+  page.pagename="main";
+	project.pages.push(page);
+  updatePages();
+
+function updatePages() {
+	document.getElementById("pages").innerHTML="Pages"
+  //parsing data structure
+  for(var pageindex in project.pages) {
+  var finaltag=(project.pages[pageindex].pagename=="main")?"":">(-)"
+  document.getElementById("pages").innerHTML=document.getElementById("pages").innerHTML+" <a href=javascript:clikedLink('"+project.pages[pageindex].pagename+"')"+ " id="+project.pages[pageindex].pagename+">"+project.pages[pageindex].pagename+"</a>"+" <a href=javascript:clikedDeleteLink('"+project.pages[pageindex].pagename+"')"+ " id=del"+project.pages[pageindex].pagename+finaltag+"</a>";
+	}
+}
+function addPage() {
+	//new page
+	var page={};
+  page.pagename=prompt("Enter new page name","page#");
+	page.xml="<xml>";
+ for(var pageindex in project.pages){
+				if(project.pages[pageindex].pagename==page.pagename) {
+        	alert("Error, page name must be unique, '" + page.pagename + "' already exists.")
+          return
+				}	
+ }
+  
+	project.pages.push(page);
+  updatePages();
+}
+function clikedLink(linkName) {
+	alert("s:"+linkName);
+}
+function clikedDeleteLink(linkName) {
+  var answer = confirm("Delete page "+linkName+"? -- warning this cannot be undone, blocks in this page will be deleted!!")
+  if (answer) {
+ for(var pageindex in project.pages){
+				if(project.pages[pageindex].pagename==linkName) {
+					if(project.pages.length==0){
+						break;
+					}else{
+						project.pages.splice(pageindex, 1);	
+					}	
+				}//);
+			}
+  updatePages();
+  }
+}
+
+//adding a sprite adding dialogue box
+https://jsfiddle.net/fmzumvv3/18/
+//submit by link
+https://jsfiddle.net/rdc3ej40/
+deltab: amigojapan: hmm, you have an array with a frames property?
+[6:49pm] deltab: JSON doesn't have a way to represent that
+
+	/*
+	-(done: decided on paged)modules
+		amigojapan: darkf: I think the other hard part will be braking up the projects into “modules” or “Pages”    
+		to be able to break up a project into smalled pices, becuase blockly does not have such a functionality….
+		I want my users to be able to develop in smaller pages, cause making a huge block program in only one workspace
+		would be hell
+
+	-(done)implement hide show sprite blocks
+	-(done)load and save xml for blocks in text mode
+	-(done2016-2-4)implement it in a mock download upload style
+		Meowmers: amigojapan_: Wait, each element of that array is of type File (https://developer.mozilla.org/en-US/docs/Web/API/File)
+		[3:48pm] Meowmers: amigojapan_: After you get your file object, you use https://developer.mozilla.org/en-US/docs/Web/API/FileReader to read the content of that file.
+		[3:48pm] Meowmers: amigojapan_: Then after you use the file reader constructor to create a file reader, you use .readAsText() on that.
+		[3:49pm] Meowmers: amigojapan_: That is going to give you a string with the contents of the file.
+	-(fixed)bug, there seems to be more events of hte same kind fired every time eval is clicked
+	-(changed to adjust to teh fps)can i reduce the eventloop timer to 0 ms, and if so will it still run? what is the optimal event polling time setting?
+	-(I think this is done, check later)stop timmers when script is stopped
+	-I think I will make a free version that needs to be connected online, and a pay version for offline if I see many people download it
+	
+	-(done)make some way of implenting timers, maybe like in scratch (this should be easy for me), or maybe, if possible(not sure if I can do it cause it is functional) make it in the way Javascript does times with set_interval
+	-(done)make frogger in s-found
+	-(done)add a comment to the code that mentions what "page" the code is on
+	-(done)make the programming div 95% width so that the vertical scrollbar is usable on mac
+	-(done)make a way  to detect a colission between two clones of a sprite
+		greg suggested making a second kind of block which would be put under the normal [for each clone of sprite] but
+		one that works for the clones of the target and can be nested inside the other block, use different variable names than the other block too
+		what should I call such a block? [nested loop on target sprite]? man , this is getting hard for noobs to understand
+	-(done)modify timer block to accept an ID thru a variable too (to make bomberman enemy explode in a certain time)
+	-(done)add block to clear timer(put inside timer function itself(is this possible?) (should also accept a variable as input)
+		amigojapan wonders if it is possible to set a clearTimeour() inside a setTimeout()’s callback function  /me googles
+		[5:43pm] amigojapan: yes, seems it is possible to fo it :)
+	-(done)add A and B button to put bomb down
+		(not easy)try to make a general function so it is easy to add any button
+	-(done) make dialog box for managing sprites and frames
+		-(done)fix problem of adding a frame to second object adds the frame to first object
+	-(done)make aliases for frame names
+	-(done)add a block to switch to an aliased frame
+	-(partially done, elminated highlights from code displayed to user)fix highlight problem appearing in code
+	-(done)make terminal window
+		http://stackoverflow.com/questions/155188/trigger-a-button-click-with-javascript-on-the-enter-key-in-a-text-box
+		https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_textarea_get
+		(no)encompasing term object?
+		commands:
+		(done)clear();
+		(done)echo("hello world");
+		(done)x=input("prompt");
+		(done)otherwise just eval anything.
+	-(done)rename the echo block to alert and use the echo block for the terminal output
+	-(done)make input block for terminal input
+	-(later)add all the array blocks from blockly playground for keeping track of the cells of bomberman(do I really need this? ah yes, to create the explotions and put the bombs in hte center of the array)
+	-merge the parts of upload_load_project and url_open_project that are the same into some functions that can be shared
+	-bomberman (use for each clone of bombs colide with bomberman, use foreach baddy collide with bomberman)
+		how will I deal with baddy colides with bomb,try nested forwach, but probably wont work cause of shared object counter?
+		if it does not work make the counter a member of each game_object
+		-(later)testing how to use a 2D array in blocklyplayground
+		-make the game using integer round of hte x and y instead of arrays, this should be easier
+	-mouse event suport
+	-ABS block
+	-print of GUI block
+	-poop game
+	-vewis (make example that follows a character)
+		I think I will just move everything together with the backround except the main character... naybe make
+		a (for everything except currect sprite block) to do this... use that block then move everything in the direction pointed
+		also need to specify if we want the background scaled of now, this should probably show anothed dialogbox with a checkmark
+		coudl also put some values and add a "scale all sprites by this" also with a checkmark.
+	-(sone,but I need to fix loadproject from URL to test it on smartphones)make screen controls(how can I make them repeat while they are pressed like keys do? (maybe a timer for each button huh...))
+		maybe make a function that encapsuled the definition of a key to make it eaasy to add any new keys
+		maybe make a timer which calls the function of a key repeatedly to simulate key pressing until ti is released
+	-add blocks for sprite width and sprite height(should I bother to make it of the current frame? maybe later)
+	-prevent highlighting from causing problems when there is only another view(cause only highllights for this page to appear)
+	-make an export to standalone feature
+	-make particle system
+	-make a block that returns the current angle, call it direction like in scratch?
+	-clear all the sprites when new project is loaded, also make a new project loadable even if user does not refresh window
+	-clear workspace when deleted page
+	-make a place to open examples directly by clicking on urls with screenshot thumbnails
+		
+	priorities:everythiing before bomberman	
+	
+	Sadale: that is good, I still have many things I want to add to my langauge before i participate, like a proper GUI, and make 
+	it easy to add and remove assets like sprites frames sounds(which it still does not have) and backrounds, I want to have views(
+	 following hte main character while the background and other obejcts scroll, I also want to have aliases for frames(today I spent 
+	 a logn time ifguring out which fame number is which frame) and maybe a particle system (so I can display the stinkyness at GGJ)
+	[8:26pm] amigojapan: so one year is good, lots of time to do that, ah I forgot, mouse support, and terminal too,    I also want to 
+	implement many games in my lanaguge so I am not stuck debugging hte language at GGJ
+	
+	Sadale: I am looking at “programming problems for kids”  and I want something even easier than this, https://marekrychlik.com/node/417    , basically I want it to start with simple thinsg like “make a variable, set it to something and print it”, “make a for look that prints from 5 to 32” , “make a function that takes 2 parameter strings and concatenates them, then print the return value”, I think I may need to write them myself,  cause I want many many of these, all the internte problems are too hard
+
+	*/
+  </script>
+
+</body>
+</html>
