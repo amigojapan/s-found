@@ -1774,7 +1774,7 @@ workspace = Blockly.inject('blocklyDiv',
 		finalCode+= "window.id_ = setInterval(pollEvent, 60);\n"; //60 is the average of game.time.fps
 		finalCode+= "console.log('setting interval to 60FPS id:'+window.id_);\n";			
 		finalCode+= "if(URLRunLoading==true){setTimeout(function(){ evalRun=true;ON_STARTUP(); }, 3000);}else{evalRun=true;ON_STARTUP();}\n";//I think this fudge will wait until the ON_STARTUP() function is ready to be called, avoiding the race condition of when the browser is still loading;		
-		destory_all_clones();//this works in nikurabero2 but seems to break bomberman walk test,hmm the debugger does not even stop at this line :(
+		destory_all_clones();//this works in nikurabero2 but seems to break bomberman walk test,hmm the debugger does not even stop at this line :(,hmm in space invaders it seems not to delete the old clones of the ghosts anymore (2017_4_17)
 		set_all_fames_to_first_frame();
 		//eval(finalCode);
 		eval.call(window,finalCode);
@@ -3030,6 +3030,7 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 				//alert(finalCode);
 				if(!evalRun&&!URLRunLoading) {//this if statement prevents the code from running twice when the project loads if the code is already running because of RunAndLoadFromUrl paramenter on the URL
 					//destory_all_clones();
+					destory_all_clones();//this works in nikurabero2 but seems to break bomberman walk test,hmm the debugger does not even stop at this line :(,hmm in space invaders it seems not to delete the old clones of the ghosts anymore (2017_4_17)
 					set_all_fames_to_first_frame();
 					var finalCode = generateJS(false);
 					finalCode+= "if (typeof ON_STARTUP !== 'undefined') {\n";//cehck to see if funtion is defined
