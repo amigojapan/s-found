@@ -1602,7 +1602,8 @@ game_object.sprite.bringToTop()
 					return;
 				}
 				var xml = Blockly.Xml.textToDom(project.pages[pageindex].xml);
-				Blockly.Xml.domToWorkspace(workspace_hidden, xml);	
+				//Blockly.Xml.domToWorkspace(workspace_hidden, xml);	
+                Blockly.Xml.domToWorkspace(xml,workspace_hidden);	
 				//gegerate
 				if(add_highlighting) {
 					Blockly.JavaScript.addReservedWords('highlightBlock');
@@ -1720,7 +1721,8 @@ game_object.sprite.bringToTop()
     function xmlToWS() {	
 			Blockly.mainWorkspace.clear();
 			var xml = Blockly.Xml.textToDom(document.getElementById('funct').value);
-			Blockly.Xml.domToWorkspace(workspace, xml);
+			//Blockly.Xml.domToWorkspace(workspace, xml);
+            Blockly.Xml.domToWorkspace(xml,workspace);
     }
 
     function wsToXML() {	
@@ -3235,7 +3237,8 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 					return;
 				}
 				var xml = Blockly.Xml.textToDom(project.pages[pageindex].xml);
-				Blockly.Xml.domToWorkspace(workspace, xml);	
+				//Blockly.Xml.domToWorkspace(workspace, xml);	
+                Blockly.Xml.domToWorkspace(xml,workspace);	
 			}
 		}
 	}
@@ -3655,7 +3658,8 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
 			
 			Blockly.mainWorkspace.clear();
 			var xml = Blockly.Xml.textToDom(project.pages[0].xml);
-			Blockly.Xml.domToWorkspace(workspace, xml);
+			//Blockly.Xml.domToWorkspace(workspace, xml);
+            Blockly.Xml.domToWorkspace(xml,workspace);
 	}
 	document.getElementById("files_project_upload").onchange = function () {
 	    var reader = new FileReader();
