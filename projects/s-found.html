@@ -1423,10 +1423,15 @@ game_object.sprite.bringToTop()
 	}
 
 	//end phaser
+    /*deprecared
     var workspace = Blockly.inject('blocklyDiv',{media: '../../media/',toolbox: document.getElementById('toolbox')});Blockly.Xml.domToWorkspace(workspace,document.getElementById('startBlocks'));
 
     var workspace_hidden = Blockly.inject('blocklyDiv_hidden',{media: '../../media/',toolbox: document.getElementById('toolbox')});Blockly.Xml.domToWorkspace(workspace,document.getElementById('startBlocks'));
-        
+    */
+    var workspace = Blockly.inject('blocklyDiv',{media: '../../media/',toolbox: document.getElementById('toolbox')});Blockly.Xml.domToWorkspace(document.getElementById('startBlocks'),workspace);
+
+    var workspace_hidden = Blockly.inject('blocklyDiv_hidden',{media: '../../media/',toolbox: document.getElementById('toolbox')});Blockly.Xml.domToWorkspace(document.getElementById('startBlocks'),workspace);
+    
     var myInterpreter = null;
 
     function initApi(interpreter, scope) {
