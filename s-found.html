@@ -8,26 +8,26 @@ ver 0.1
 <head>
   <meta charset="utf-8">
   <title>s-found - A solid foundation for programming beginners.</title>
-  <script src="../NeilFraser-JS-Interpreter-9c09d45/acorn_interpreter.js"></script>
-  <script src="../google-blockly-f7a206a/blockly_compressed.js"></script>
+  <script src="NeilFraser-JS-Interpreter-9c09d45/acorn_interpreter.js"></script>
+  <script src="google-blockly-f7a206a/blockly_compressed.js"></script>
   <!--
 	<script src="../google-blockly-f7a206a/blocks_compressed.js"></script>
   -->
-	<script src="../google-blockly-f7a206a/javascript_compressed.js"></script>
-  <script src="../google-blockly-f7a206a/msg/js/en.js"></script>
-  <script src="../google-blockly-f7a206a/generators/javascript/math.js"></script>
-  <script src="../google-blockly-f7a206a/generators/javascript/text.js"></script>
-  <script src="../google-blockly-f7a206a/generators/javascript/loops.js"></script>
-	<script src="../google-blockly-f7a206a/generators/javascript/variables.js"></script>
+	<script src="google-blockly-f7a206a/javascript_compressed.js"></script>
+  <script src="google-blockly-f7a206a/msg/js/en.js"></script>
+  <script src="google-blockly-f7a206a/generators/javascript/math.js"></script>
+  <script src="google-blockly-f7a206a/generators/javascript/text.js"></script>
+  <script src="google-blockly-f7a206a/generators/javascript/loops.js"></script>
+	<script src="google-blockly-f7a206a/generators/javascript/variables.js"></script>
 	
-	<script src="../google-blockly-f7a206a/blocks/colour.js"></script>
-	<script src="../google-blockly-f7a206a/blocks/lists.js"></script>
-	<script src="../google-blockly-f7a206a/blocks/logic.js"></script>
-	<script src="../google-blockly-f7a206a/blocks/loops.js"></script>
-	<script src="../google-blockly-f7a206a/blocks/math.js"></script>
-	<script src="../google-blockly-f7a206a/blocks/procedures.js"></script>
-	<script src="../google-blockly-f7a206a/blocks/text.js"></script>
-	<script src="../google-blockly-f7a206a/blocks/variables.js"></script>
+	<script src="google-blockly-f7a206a/blocks/colour.js"></script>
+	<script src="google-blockly-f7a206a/blocks/lists.js"></script>
+	<script src="google-blockly-f7a206a/blocks/logic.js"></script>
+	<script src="google-blockly-f7a206a/blocks/loops.js"></script>
+	<script src="google-blockly-f7a206a/blocks/math.js"></script>
+	<script src="google-blockly-f7a206a/blocks/procedures.js"></script>
+	<script src="google-blockly-f7a206a/blocks/text.js"></script>
+	<script src="google-blockly-f7a206a/blocks/variables.js"></script>
 	
   <!--
   <style>
@@ -2708,7 +2708,7 @@ workspace = Blockly.inject('blocklyDiv',
 		var code = 'timersObj['+id+'] = function() {\n';
 		code=code+ statements_statement+'\n';
 		code=code+'}\n';
-		code=code+'var ID = setTimeout(timersObj['+id+'], '+ms+');\n';
+		code=code+'var ID = setInterval(timersObj['+id+'], '+ms+');\n';
 		code=code+'timerIDs.push(ID);\n';
 		return code;
 	};
