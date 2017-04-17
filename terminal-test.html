@@ -1,6 +1,7 @@
 <HTML>
 <HEAD>
 <script>
+<<<<<<< HEAD
 	//also try making an ON_INPUT with a parameter of label where it came from, or a global variable
 	/*
 	var magicNumber = Math.floor(Math.random() * 100);
@@ -99,11 +100,15 @@
 		//http://stackoverflow.com/questions/5551378/javascript-pausing-execution-of-function-to-wait-for-user-input
 		//how about adding an extra parameter that has a callback for then the input is over and caling it then? 
 		//maybe generate it with a unique function name...too bad there is no goto in JS
+=======
+	function input_trigger(varname,prompt) {//call this from block to trigger input
+>>>>>>> origin/gh-pages
 		document.getElementById("txtPrompt").value= varname +' = input("' + prompt + '");'
 		p=document.getElementById("txtPrompt");
 		e=new CustomEvent("keyup");
 		e.keyCode=13;
 		p.dispatchEvent(e);
+<<<<<<< HEAD
 		//wait for input withought making hte browser hang
 		function loop() {
 			if (input!=null) {
@@ -125,6 +130,10 @@
 	function echo(output) {
 		showTerm=true;
 		document.getElementById("termDiv").style.display="block";
+=======
+	}
+	function echo(output) {
+>>>>>>> origin/gh-pages
 		document.getElementById("term").value = document.getElementById("term").value +output + "\n";
 		return "";//avoid showing undefined
 		//for(var a=0;a<100;a++) echo("hello"+a);
@@ -201,10 +210,13 @@
 		document.getElementById("txtPrompt").addEventListener("keyup", function(event) {
 			event.preventDefault();
 			if (event.keyCode == 13) {
+<<<<<<< HEAD
 				//scroll to bottom
 				var textarea = document.getElementById("term");
 				textarea.scrollTop = textarea.scrollHeight;
 
+=======
+>>>>>>> origin/gh-pages
 				command=document.getElementById("txtPrompt").value
 				commands.push(command);
 				//https://regex101.com/r/YFbwIa/1
@@ -221,7 +233,10 @@
 					echo(parsed[2]);
 					input="waiting for new input";
 					document.getElementById("txtPrompt").value="";
+<<<<<<< HEAD
 					document.getElementById("tell_to_user_input_now").style.display="inline";
+=======
+>>>>>>> origin/gh-pages
 					return;
 				}
 				try {
@@ -231,13 +246,24 @@
 				   echo(e);
 				   return;
 				}
+<<<<<<< HEAD
 				//undefined is on next line
 				document.getElementById("term").value = document.getElementById("term").value + output;
 				if(command.substring(0, 5)!="echo(" && input!="waiting for new input") {//add a newlinee if the command is not echo
+=======
+				document.getElementById("term").value = document.getElementById("term").value + output;
+				if(command.substring(0, 5)!="echo(") {//add a newlinee if the command is not echo
+>>>>>>> origin/gh-pages
 					document.getElementById("term").value = document.getElementById("term").value  + "\n";
 				}
 				document.getElementById("txtPrompt").value="";
 				command_index=commands.lenght;
+<<<<<<< HEAD
+=======
+				//scroll to bottom
+				var textarea = document.getElementById("term");
+				textarea.scrollTop = textarea.scrollHeight;
+>>>>>>> origin/gh-pages
 			}
 			if (event.keyCode == 38) {//up arrow
 				if(typeof commands[command_index] == 'undefined') {
@@ -261,17 +287,21 @@
 			}
 		});
 	};
+<<<<<<< HEAD
 	var showTerm=false;
 	function toggleShowTerminal() {
 		showTerm=!showTerm;
 		document.getElementById("termDiv").style.display=showTerm?"block":"none";
 	}
+=======
+>>>>>>> origin/gh-pages
 	//-(done)I will make it just display the thrown exception when an error happens….
 	//-hide the terminal by default, make a "toggle terminal" button
 	//-show the terminal automatically when an echo() command is used
 </script>
 </HEAD>
 <body>
+<<<<<<< HEAD
 	<a href="#" onclick="toggleShowTerminal()">Toggle Show Terminal</a>
 	<div id="termDiv" style="color: yellow; background-color: black;overflow-y: auto; border:1px solid black; width: 600px; display: none;">
 		<textarea rows="15" cols="50" id="term" style="color: yellow; background-color: black;resize: none; height: 80px; max-height: 150px; width: 600px; font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;"></textarea>
@@ -285,3 +315,10 @@
 	<BR>otherwise just eval anything.
 </body>
 </html>
+=======
+	<div id="termDiv" style="overflow-y: auto; border:1px solid black; width: 400px">
+		<textarea rows="15" cols="50" id="term" style="resize: none; height: 80px; max-height: 100px; width: 400px; font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;"></textarea>
+		<BR><input type="text" id="txtPrompt" style="width: 400px" />
+	</div>
+</body>
+>>>>>>> origin/gh-pages

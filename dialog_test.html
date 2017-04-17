@@ -40,6 +40,7 @@
 		updateDialogBox();
 	}
 	function updateDialogBox() {
+<<<<<<< HEAD
 		document.getElementById("sprite_manager_dialogbox").innerHTML="";
 		document.getElementById("sprite_manager_dialogbox").innerHTML += "<a href=http://www.piskelapp.com/ target=\"Sprite editor\">Open exrnal sprite editor in new tab</a> remember to save as PNG.";
 		document.getElementById("sprite_manager_dialogbox").innerHTML +=" <a href=\"#\" onclick='document.getElementById(\"files\").click();'>Add Strite</a>"
@@ -61,6 +62,28 @@
 				document.getElementById("sprite_manager_dialogbox").innerHTML += " <a href=javascript:clikedRenameFrameLink("+obj+","+frame+")"+ " id=Rename"+project.game_objects[obj].frames[frame].alias+">Rename</a>";
 				document.getElementById("sprite_manager_dialogbox").innerHTML += " <a href=javascript:clikedDeleteFrameLink("+obj+","+frame+")"+ " id=del"+project.game_objects[obj].frames[frame].alias+">Delete</a>"
 				document.getElementById("sprite_manager_dialogbox").innerHTML += "</div>";		
+=======
+		document.getElementById("dialogbox").innerHTML="";
+		document.getElementById("dialogbox").innerHTML += "<a href=http://www.piskelapp.com/ target=\"Sprite editor\">Open exrnal sprite editor in new tab</a> remember to save as PNG.";
+		for(var obj in project.game_objects) {
+			document.getElementById("dialogbox").innerHTML += "<div>";
+			document.getElementById("dialogbox").innerHTML +='<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" />';
+			document.getElementById("dialogbox").innerHTML += project.game_objects[obj].name; 
+			document.getElementById("dialogbox").innerHTML += " <a href=javascript:clikedChangeImageLink('"+project.game_objects[obj].name+"')"+ " id=ChangeImg"+project.game_objects[obj].name+">Change image</a>";
+			document.getElementById("dialogbox").innerHTML += " <a href=javascript:clikedRenameLink('"+project.game_objects[obj].name+"')"+ " id=Rename"+project.game_objects[obj].name+">Rename</a>";
+			document.getElementById("dialogbox").innerHTML += " <a href=javascript:clikedDeleteLink('"+project.game_objects[obj].name+"')"+ " id=del"+project.game_objects[obj].name+">Delete</a>"
+			document.getElementById("dialogbox").innerHTML += " <a href=javascript:clikedAddFrameLink('"+project.game_objects[obj].name+"')"+ " id=AddFrame"+project.game_objects[obj].name+">Add frame</a>"
+			document.getElementById("dialogbox").innerHTML += "</div>";
+			for(var frame in project.game_objects[obj].frames) {
+				document.getElementById("dialogbox").innerHTML += "<div>";
+				document.getElementById("dialogbox").innerHTML += "frame"+(parseInt(frame)+1)+"->";
+				document.getElementById("dialogbox").innerHTML +='<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" />';
+				document.getElementById("dialogbox").innerHTML += project.game_objects[obj].frames[frame].alias; 
+				document.getElementById("dialogbox").innerHTML += " <a href=javascript:clikedChangeImageFrameLink('"+project.game_objects[obj].frames[frame].alias+"')"+ " id=ChangeImg"+project.game_objects[obj].frames[frame].alias+">Change image</a>";
+				document.getElementById("dialogbox").innerHTML += " <a href=javascript:clikedRenameFrameLink("+obj+","+frame+")"+ " id=Rename"+project.game_objects[obj].frames[frame].alias+">Rename</a>";
+				document.getElementById("dialogbox").innerHTML += " <a href=javascript:clikedDeleteFrameLink("+obj+","+frame+")"+ " id=del"+project.game_objects[obj].frames[frame].alias+">Delete</a>"
+				document.getElementById("dialogbox").innerHTML += "</div>";		
+>>>>>>> origin/gh-pages
 			}
 		} 
 	}
@@ -92,12 +115,21 @@
 						return;
 					}
 				}
+<<<<<<< HEAD
 				var frame={};
 				frame.alias=new_name;	
 				project.game_objects[obj].frames.push(frame);
 				updateDialogBox();
 				return;	
 			}							
+=======
+			}
+			var frame={};
+			frame.alias=new_name;	
+			project.game_objects[obj].frames.push(frame);
+			updateDialogBox();
+			return;							
+>>>>>>> origin/gh-pages
 		}
 	}
 	function clikedRenameLink(game_object_name) {
@@ -142,6 +174,10 @@
 </script>
 </HEAD>
 <body>
+<<<<<<< HEAD
 	<div id="sprite_manager_dialogbox" style="overflow-y: auto; height:100px; border:1px solid black;">
+=======
+	<div id="dialogbox" style="overflow-y: auto; height:100px; border:1px solid black;">
+>>>>>>> origin/gh-pages
 </body>
 </div>

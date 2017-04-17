@@ -9,6 +9,7 @@ ver 0.1
   <meta charset="utf-8">
   <title>s-found - A solid foundation for programming beginners.</title>
   <script src="https://amigojapan.github.io/s-found/NeilFraser-JS-Interpreter-9c09d45/acorn_interpreter.js"></script>
+<<<<<<< HEAD
   <script src="https://amigojapan.github.io/s-found/google-blockly-f7a206a/blockly_compressed.js"></script>
   <script src="https://amigojapan.github.io/s-found/google-blockly-f7a206a/blocks_compressed.js"></script>
   <script src="https://amigojapan.github.io/s-found/google-blockly-f7a206a/javascript_compressed.js"></script>
@@ -17,6 +18,16 @@ ver 0.1
   <script src="https://amigojapan.github.io/s-found/google-blockly-f7a206a/generators/javascript/math.js"></script>
   <script src="https://amigojapan.github.io/s-found/google-blockly-f7a206a/generators/javascript/text.js"></script>
 	<script src="https://amigojapan.github.io/s-found/google-blockly-f7a206a/generators/javascript/loops.js"></script>
+=======
+  <script src="https://amigojapan.github.io/s-found/google-blockly-a77788d/blockly_compressed.js"></script>
+  <script src="https://amigojapan.github.io/s-found/google-blockly-a77788d/blocks_compressed.js"></script>
+  <script src="https://amigojapan.github.io/s-found/google-blockly-a77788d/javascript_compressed.js"></script>
+  <script src="https://amigojapan.github.io/s-found/google-blockly-a77788d/msg/js/en.js"></script>
+  
+  <script src="https://amigojapan.github.io/s-found/google-blockly-a77788d/generators/javascript/math.js"></script>
+  <script src="https://amigojapan.github.io/s-found/google-blockly-a77788d/generators/javascript/text.js"></script>
+	<script src="https://amigojapan.github.io/s-found/google-blockly-a77788d/generators/javascript/loops.js"></script>
+>>>>>>> origin/gh-pages
   <!--
   <style>
     body {
@@ -301,13 +312,22 @@ ver 0.1
 					<block type="lists_sort"></block>
 					<block type="lists_reverse"></block>
 				</category>
+<<<<<<< HEAD
 		   <category name="Variables" colour="330" custom="VARIABLE"></category>
+=======
+
+		    <category name="Variables" custom="VARIABLE"></category>
+>>>>>>> origin/gh-pages
 		    <category name="Functions" custom="PROCEDURE"></category>
 		    <category name="Advanced">
 		      <block type="procedures_defreturn_functional"></block>
 		      <block type="call_first_class_function"></block>
 		      <block type="set_timer"></block>
+<<<<<<< HEAD
 		      <block type="set_one_time_timer"></block>
+=======
+		      <block type="clear_timer"></block>
+>>>>>>> origin/gh-pages
 					<block type="clear_timer"></block>
 					<block type="set_break_point_here"></block>
 		    </category>
@@ -2072,6 +2092,7 @@ game_object.sprite.bringToTop()
 	  // TODO: Assemble JavaScript into code variable.
 		var code = "parseInt(get_y_value())";
 		return [code, Blockly.JavaScript.ORDER_ATOMIC];
+<<<<<<< HEAD
 	};
 	
 	Blockly.Blocks['sprites_current_frame_number'] = {
@@ -2090,6 +2111,26 @@ game_object.sprite.bringToTop()
 		var code = "parseInt(current_frame_number())";
 		return [code, Blockly.JavaScript.ORDER_ATOMIC];
 	};
+=======
+	};
+	
+	Blockly.Blocks['sprites_current_frame_number'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("get current frame number");
+	    this.setOutput(true, "Number");
+	    this.setColour(210);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+		//oncgange Javascript generation
+	  }
+	};
+	Blockly.JavaScript['sprites_current_frame_number'] = function(block) {
+		// TODO: Assemble JavaScript into code variable.
+		var code = "parseInt(current_frame_number())";
+		return [code, Blockly.JavaScript.ORDER_ATOMIC];
+	};
+>>>>>>> origin/gh-pages
 
 	//this is a little like what the event blocks should look like,  but I am still not sure how to implement them  		https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#9vi23k
 	Blockly.Blocks['events_when_event_happens'] = {
@@ -2313,11 +2354,62 @@ game_object.sprite.bringToTop()
 	  //code+='	debug_current_sprite_name=current_sprite_name;\n';
 	  code+='	current_clone=clone;\n';
 		//all clones traversed code+='	console.log("current_clone"+current_clone);\n';
+<<<<<<< HEAD
 	  code+=statements_statement_code+'\n';
 	  code+='}\n';
 	  code+='current_clone=null;\n';
 	  return code;
 	};
+	Blockly.Blocks['sprites_for_each_clone_of_current_sprite_new'] = {
+	  init: function() {
+	    this.appendStatementInput("STATEMENT_CODE")
+	        .setCheck(null)
+	        .appendField("do when clones collides");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(120);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_for_each_clone_of_current_sprite_new'] = function(block) {
+	  var statements_statement_code = Blockly.JavaScript.statementToCode(block, 'STATEMENT_CODE');
+	  
+	  code=	'var game_object;\n';
+	  code+='game_object=find_sprite_object_by_name_new(current_sprite_name);\n';
+	  code+='for(var clone in game_object.clones) {\n';
+	  code+='  current_clone=clone;\n';
+	  code+='  var game_object_target;\n';
+	  code+='  game_object_target=find_target_sprite_with_clones_object_by_name(target_sprite_name);\n';
+	  code+='  for(var clone_target in game_object_target.clones) {\n';
+	  code+='    current_target_clone=clone_target;\n';
+	  code+='    if(current_sprite_clones_are_colliding_with_target_sprite_clones()) {\n';
+	  code+='      //do when current sprite clone collides with target clone\n';
+=======
+>>>>>>> origin/gh-pages
+	  code+=statements_statement_code+'\n';
+	  code+='      //end\n';
+	  code+='    }\n';
+	  code+='  }\n';
+	  code+='  current_target_clone=null;\n';
+	  code+='}\n';
+	  code+='current_clone=null;\n';
+	  return code;
+	};	
+	Blockly.Blocks['sprites_nested_for_each_clone_of_current_target_sprite'] = {
+	  init: function() {
+	    this.appendStatementInput("STATEMENT_CODE")
+	        .setCheck(null)
+	        .appendField("nested for each clone of current target sprite");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(120);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+<<<<<<< HEAD
+=======
 	Blockly.Blocks['sprites_for_each_clone_of_current_sprite_new'] = {
 	  init: function() {
 	    this.appendStatementInput("STATEMENT_CODE")
@@ -2364,6 +2456,7 @@ game_object.sprite.bringToTop()
 	    this.setHelpUrl('http://www.example.com/');
 	  }
 	};
+>>>>>>> origin/gh-pages
 	var current_target_clone=null;
 	Blockly.JavaScript['sprites_nested_for_each_clone_of_current_target_sprite'] = function(block) {
 	  var statements_statement_code = Blockly.JavaScript.statementToCode(block, 'STATEMENT_CODE');
@@ -2558,11 +2651,17 @@ game_object.sprite.bringToTop()
 	//https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#krmehw
 	Blockly.Blocks['set_timer'] = {
 	  init: function() {
+<<<<<<< HEAD
 		this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
 		this.appendStatementInput("statement")
 			.setCheck(null)
 			.appendField("repeting timer")
+=======
+		this.appendStatementInput("statement")
+			.setCheck(null)
+			.appendField("timer")
+>>>>>>> origin/gh-pages
 			.appendField(new Blockly.FieldTextInput("timer name"), "timer_name")
 			.appendField("milliseconds")
 			.appendField(new Blockly.FieldTextInput("1000"), "milliseconds");
@@ -2594,6 +2693,57 @@ game_object.sprite.bringToTop()
 			id=value_id_var;
 		} else {
 			id="'"+text_timer_name+"'";
+<<<<<<< HEAD
+=======
+		}
+		var ms;
+		if((text_milliseconds=="1000")&&(value_ms_var!="")) {
+			ms=value_ms_var
+		} else {
+			ms=text_milliseconds;
+		}
+		var code = 'timersObj['+id+'] = function() {\n';
+		code=code+ statements_statement+'\n';
+		code=code+'}\n';
+		code=code+'var ID = setInterval(timersObj['+id+'], '+ms+');\n';
+		code=code+'timerIDs.push(ID);\n';
+		return code;
+	};
+	Blockly.Blocks['clear_timer'] = {
+	  init: function() {
+		this.appendValueInput("ID_VAR")
+			.setCheck("String")
+			.setAlign(Blockly.ALIGN_RIGHT)
+			.appendField("clear timer")
+			.appendField(new Blockly.FieldTextInput("timer name"), "timer_name")
+			.appendField("ID");
+		this.setColour(160);
+		this.setTooltip('');
+		this.setHelpUrl('');
+	  }
+	};
+	Blockly.JavaScript['clear_timer'] = function(block) {
+	  var text_timer_name = block.getFieldValue('timer_name');
+	  var statements_statement = Blockly.JavaScript.statementToCode(block, 'statement');
+	  var value_id_var = Blockly.JavaScript.valueToCode(block, 'ID_VAR', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+		var id;
+		if(text_timer_name=="timer name"||text_timer_name=="") {
+			if(value_id_var==""||value_id_var==null) {
+				return "//Error, there is no ID set for this timer";
+			}
+			id=value_id_var;
+		} else {
+			id="'"+text_timer_name+"'";
+		}
+		var code;
+		code='clearInterval(timersObj['+id+']);\n';
+		return code;
+	};
+	function clearTimers() {
+		for(timer in timerIDs) {
+			clearInterval(timerIDs[timer]);
+>>>>>>> origin/gh-pages
 		}
 		var ms;
 		if((text_milliseconds=="1000")&&(value_ms_var!="")) {
@@ -4059,6 +4209,7 @@ deltab: amigojapan: hmm, you have an array with a frames property?
 	-(changed to adjust to teh fps)can i reduce the eventloop timer to 0 ms, and if so will it still run? what is the optimal event polling time setting?
 	-(I think this is done, check later)stop timmers when script is stopped
 	-I think I will make a free version that needs to be connected online, and a pay version for offline if I see many people download it
+<<<<<<< HEAD
 	
 	-(done)make some way of implenting timers, maybe like in scratch (this should be easy for me), or maybe, if possible(not sure if I can do it cause it is functional) make it in the way Javascript does times with set_interval
 	-(done)make frogger in s-found
@@ -4120,6 +4271,69 @@ deltab: amigojapan: hmm, you have an array with a frames property?
 		
 	priorities:everythiing before bomberman	
 	
+=======
+	
+	-(done)make some way of implenting timers, maybe like in scratch (this should be easy for me), or maybe, if possible(not sure if I can do it cause it is functional) make it in the way Javascript does times with set_interval
+	-(done)make frogger in s-found
+	-(done)add a comment to the code that mentions what "page" the code is on
+	-(done)make the programming div 95% width so that the vertical scrollbar is usable on mac
+	-(done)make a way  to detect a colission between two clones of a sprite
+		greg suggested making a second kind of block which would be put under the normal [for each clone of sprite] but
+		one that works for the clones of the target and can be nested inside the other block, use different variable names than the other block too
+		what should I call such a block? [nested loop on target sprite]? man , this is getting hard for noobs to understand
+	-(done)modify timer block to accept an ID thru a variable too (to make bomberman enemy explode in a certain time)
+	-(done)add block to clear timer(put inside timer function itself(is this possible?) (should also accept a variable as input)
+		amigojapan wonders if it is possible to set a clearTimeour() inside a setTimeout()’s callback function  /me googles
+		[5:43pm] amigojapan: yes, seems it is possible to fo it :)
+	-(done)add A and B button to put bomb down
+		(not easy)try to make a general function so it is easy to add any button
+	-(done) make dialog box for managing sprites and frames
+		-(done)fix problem of adding a frame to second object adds the frame to first object
+	-(done)make aliases for frame names
+	-(done)add a block to switch to an aliased frame
+	-(partially done, elminated highlights from code displayed to user)fix highlight problem appearing in code
+	-(done)make terminal window
+		http://stackoverflow.com/questions/155188/trigger-a-button-click-with-javascript-on-the-enter-key-in-a-text-box
+		https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_textarea_get
+		(no)encompasing term object?
+		commands:
+		(done)clear();
+		(done)echo("hello world");
+		(done)x=input("prompt");
+		(done)otherwise just eval anything.
+	-(done)rename the echo block to alert and use the echo block for the terminal output
+	-(done)make input block for terminal input
+	-(later)add all the array blocks from blockly playground for keeping track of the cells of bomberman(do I really need this? ah yes, to create the explotions and put the bombs in hte center of the array)
+	-merge the parts of upload_load_project and url_open_project that are the same into some functions that can be shared
+	-bomberman (use for each clone of bombs colide with bomberman, use foreach baddy collide with bomberman)
+		how will I deal with baddy colides with bomb,try nested forwach, but probably wont work cause of shared object counter?
+		if it does not work make the counter a member of each game_object
+		-(later)testing how to use a 2D array in blocklyplayground
+		-make the game using integer round of hte x and y instead of arrays, this should be easier
+	-mouse event suport
+	-ABS block
+	-print of GUI block
+	-poop game
+	-vewis (make example that follows a character)
+		I think I will just move everything together with the backround except the main character... naybe make
+		a (for everything except currect sprite block) to do this... use that block then move everything in the direction pointed
+		also need to specify if we want the background scaled of now, this should probably show anothed dialogbox with a checkmark
+		coudl also put some values and add a "scale all sprites by this" also with a checkmark.
+	-(sone,but I need to fix loadproject from URL to test it on smartphones)make screen controls(how can I make them repeat while they are pressed like keys do? (maybe a timer for each button huh...))
+		maybe make a function that encapsuled the definition of a key to make it eaasy to add any new keys
+		maybe make a timer which calls the function of a key repeatedly to simulate key pressing until ti is released
+	-add blocks for sprite width and sprite height(should I bother to make it of the current frame? maybe later)
+	-prevent highlighting from causing problems when there is only another view(cause only highllights for this page to appear)
+	-make an export to standalone feature
+	-make particle system
+	-make a block that returns the current angle, call it direction like in scratch?
+	-clear all the sprites when new project is loaded, also make a new project loadable even if user does not refresh window
+	-clear workspace when deleted page
+	-make a place to open examples directly by clicking on urls with screenshot thumbnails
+		
+	priorities:everythiing before bomberman	
+	
+>>>>>>> origin/gh-pages
 	Sadale: that is good, I still have many things I want to add to my langauge before i participate, like a proper GUI, and make 
 	it easy to add and remove assets like sprites frames sounds(which it still does not have) and backrounds, I want to have views(
 	 following hte main character while the background and other obejcts scroll, I also want to have aliases for frames(today I spent 
