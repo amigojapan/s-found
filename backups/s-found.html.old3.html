@@ -1,0 +1,1949 @@
+<!--
+Copyright Usmar A. Padow (amigojapan) usmpadow@gmail.com
+do not use this sourcode at all before consulting with the author first and getting written per
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Blockly and Phaser combined, scratch-like demo</title>
+  <script src="https://amigojapan.github.io/s-found/NeilFraser-JS-Interpreter-9c09d45/acorn_interpreter.js"></script>
+  <script src="https://amigojapan.github.io/s-found/google-blockly-a77788d/blockly_compressed.js"></script>
+  <script src="https://amigojapan.github.io/s-found/google-blockly-a77788d/blocks_compressed.js"></script>
+  <script src="https://amigojapan.github.io/s-found/google-blockly-a77788d/javascript_compressed.js"></script>
+  <script src="https://amigojapan.github.io/s-found/google-blockly-a77788d/msg/js/en.js"></script>
+  <!--
+  <style>
+    body {
+      background-color: #fff;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+    }
+  </style>
+  -->
+  <script type="text/javascript" src="js/phaser.min.js"></script>
+
+  <style type="text/css">
+
+  body {
+
+  margin: 0;
+
+  }
+ 
+ 
+  </style>
+</head>
+<body>
+<!-- seems this is not nessesay for the mock downloads
+  form * {
+    display: block;
+    margin: 10px;
+  }
+
+	<form onsubmit="download(this['name'].value, this['text'].value)" visible=false>
+	  <input type="text" name="name" value="test.txt">
+	  <textarea name="text"></textarea>
+	  <input type="submit" value="Download">
+	</form>
+-->
+	<div id='main-window'>
+		<div id="toolbar">
+			Warning, do not use this program withought the permission of amigojapan, ask permission to usmpadow@gmail.com
+		</div>		
+		<div id="toolbar">
+			Click here to add a sprite:<input type="file" id="files" />
+			<img id="image" />
+		</div>
+		<div id="toolbar">
+			Click here to add a backgroud:<input type="file" id="files2" />
+			<img id="background" />
+		</div>		
+		<div id="toolbar">
+			Click here to open a project:<input type="file" id="files_project_upload" />
+		</div>
+		<div id="phaser-example"></div>
+		<div id="blockly">
+		<!--
+		<h1><a href="https://developers.google.com/blockly/">Blockly</a> &gt;
+    	<a href="../index.html">Demos</a> &gt; JS Interpreter</h1>
+		<p>This is a simple demo of executing code with a sandboxed JavaScript interpreter.</p>
+		<p>&rarr; More info on <a href="https://developers.google.com/blockly/installation/js-interpreter">JSInterpreter</a>...</p>
+		-->
+  	  	<p>
+			<!--
+    		<button onclick="parseCode()">Parse JavaScript</button>
+			-->
+    		<button onclick="stepCode()" id="stepButton" disabled="disabled">Step</button>
+			<button onclick="runCode()">Run</button>
+			 Execution speed <input type="text" value="250" ID="execution_speed">ms
+			 <button onclick="pauseCode()">Pause</button>
+			 <button onclick="stopCode()">Stop</button>
+			 <button onclick="evalCode()">Eval</button>
+			 <button onclick="saveCode()">Save</button>
+			 <button onclick="loadCode()">Load</button>
+			 <button onclick="loadURLproject()">Load project from URL</button>
+  		  </p>
+
+  		<div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+
+		  <xml id="toolbox" style="display: none">
+		    <category name="Events">    
+			  <block type="events_when_event_happens"></block>
+		    </category>
+		    <category name="Motion">    
+			  <block type="motion_foward"></block>
+		      <block type="motion_turn_right"></block>
+		      <block type="motion_turn_left"></block>
+			  <block type="motion_point_in_direction"></block>
+			  <block type="motion_point_in_direction_of_target"></block>
+			  <block type="motion_set_x_to"></block>
+			  <block type="motion_set_y_to"></block>
+		    </category>
+		    <category name="Sprites">    
+			  <block type="sprites_set_current_sprite"></block>
+			  <block type="sprites_set_target_sprite"></block>
+			  <block type="sprites_is_colliding_with_target"></block>
+			  <block type="sprites_create_clone_of_current_sprite"></block>
+			  <block type="sprites_destroy_current_sprite"></block>
+			  <block type="sprites_current_sprite_bring_to_front"></block>
+			  <!-- <block type="sprites_current_sprite_send_to_back"></block> this block does not seem to work so I am hiding it for now-->
+			  <block type="sprites_for_each_clone_of_current_sprite"></block>
+			  <block type="sprites_value_of_x"></block>
+			  <block type="sprites_value_of_y"></block>
+			  <block type="sprites_hide_current_sprite"></block>
+			  <block type="sprites_show_current_sprite"></block>			  
+		    </category>
+		    <category name="Logic">
+		      <block type="controls_if"></block>
+		      <block type="logic_compare"></block>
+		      <block type="logic_operation"></block>
+		      <block type="logic_negate"></block>
+		      <block type="logic_boolean"></block>
+		    </category>
+		    <category name="Loops">
+		      <block type="controls_repeat_ext">
+		        <value name="TIMES">
+		          <block type="math_number">
+		            <field name="NUM">10</field>
+		          </block>
+		        </value>
+		      </block>
+		      <block type="controls_whileUntil"></block>
+		    </category>
+		    <category name="Math">
+		      <block type="math_number"></block>
+		      <block type="math_arithmetic"></block>
+		      <block type="math_single"></block>
+		      <block type="math_modulo">
+		        <value name="DIVIDEND">
+		          <shadow type="math_number">
+		            <field name="NUM">64</field>
+		          </shadow>
+		        </value>
+		        <value name="DIVISOR">
+		          <shadow type="math_number">
+		            <field name="NUM">10</field>
+		          </shadow>
+		        </value>
+		      </block>
+		    </category>
+		    <category name="Text">
+		      <block type="text"></block>
+		      <block type="text_length"></block>
+		      <block type="text_echo"></block>
+		      <!--
+			  <block type="text_print"></block>
+			  -->
+		      <block type="text_prompt_ext">
+		        <value name="TEXT">
+		          <block type="text"></block>
+		        </value>
+		      </block>
+		    </category>
+		    <category name="Variables" custom="VARIABLE"></category>
+		    <category name="Functions" custom="PROCEDURE"></category>
+		    <category name="Functional">
+		      <block type="procedures_defreturn_functional"></block>
+		      <block type="call_first_class_function"></block>
+		      <block type="set_timer"></block>
+		    </category>
+			
+			
+		  </xml>
+		  
+		  <xml id="startBlocks" style="display: none">
+			<!--  
+		    <block type="variables_set" inline="true" x="20" y="20">
+		      <field name="VAR">n</field>
+		      <value name="VALUE">
+		        <block type="math_number">
+		          <field name="NUM">1</field>
+		        </block>
+		      </value>
+		      <next>
+		        <block type="controls_repeat_ext" inline="true">
+		          <value name="TIMES">
+		            <block type="math_number">
+		              <field name="NUM">4</field>
+		            </block>
+		          </value>
+		          <statement name="DO">
+		            <block type="variables_set" inline="true">
+		              <field name="VAR">n</field>
+		              <value name="VALUE">
+		                <block type="math_arithmetic" inline="true">
+		                  <field name="OP">MULTIPLY</field>
+		                  <value name="A">
+		                    <block type="variables_get">
+		                      <field name="VAR">n</field>
+		                    </block>
+		                  </value>
+		                  <value name="B">
+		                    <block type="math_number">
+		                      <field name="NUM">2</field>
+		                    </block>
+		                  </value>
+		                </block>
+		              </value>
+		            </block>
+		          </statement>
+		          <next>
+		            <block type="text_print" inline="false">
+		              <value name="TEXT">
+		                <block type="variables_get">
+		                  <field name="VAR">n</field>
+		                </block>
+		              </value>
+		            </block>
+		          </next>
+		        </block>
+		      </next>
+		    </block>
+		  -->
+		  </xml>
+		  
+
+	</div>
+	<textarea rows="60" cols="80" ID="funct">
+	 Start dropping blocks to produce Javascript
+	</textarea>
+	<BR>
+</div>
+  <script>
+	//phaser
+	var game = new Phaser.Game(600, 400, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update });
+
+
+	function preload() {
+		//game.load.image('star', 'assets/firstaid.png');
+	}
+
+	//globals
+	var current_sprite_name=""
+	var target_sprite_name=""
+	var sprites=[];
+    var debug_current_sprite_name="no sprite selected";
+  	var current_clone=null;
+	
+	//var spriteA;
+	//var SpriteC;
+	//var sprites=[];
+	var angle=0;
+	function create() {
+		//sprites.push("Sprite1");
+		//sprites["Sprite1"].angle=0;
+		//add sprite
+		//spriteA = game.add.sprite(200, 100, 'star');
+		//spriteB = game.add.sprite(0, 0, 'star');
+	}
+
+	var cursors;
+	var background_;
+	var mid_layer;
+	var front_layer;
+
+	function create() {
+	    cursors = game.input.keyboard.createCursorKeys();  
+		game.time.advancedTiming=true; 
+		
+	// Groups for drawing layers
+	
+	background_ = game.add.group();
+	mid_layer = game.add.group();
+	front_layer = game.add.group();
+	/*
+	rich [12:39 AM] 
+you can use 'bringToTop' and 'sendToBack' or 'moveUp' or 'moveDown' to position stuff... or just fiddle with the Group.children array yourself and shift stuff about
+
+amigojapan [12:40 AM] 
+yes rich I understand that...   can I detect collision between sprites in different groups? if so I will make a group for clones that sits behind the top group
+
+drhayes [12:40 AM] 
+In arcade physics you can collide two groups, yes.
+
+rich [12:40 AM] 
+you can collide across groups, sure, or group vs. group, or sprite vs. group (even if sprite is in another group)
+eich electron wrapper and cordova wrapper for software that runs with no internet available
+
+//for some reason this did not work
+set_current_sprite_name("frog");
+game_object=find_sprite_object_by_name(current_sprite_name);
+
+//but this did
+game_object=find_sprite_object_by_name("frog");
+game_object.sprite.bringToTop()
+	*/
+	// It doesn't matter what order you add things to these groups, the draw order will be back, mid, front (unless you change it...)back_layer.create(0, 0, "bg");front_layer.create(0, 0, "front");mid_layer.create(300, 200, "object1");mid_layer.create(500, 400, "object2"); icp likes this
+
+		 
+	}
+	var retVal;
+	function update(){ 
+	}
+	function RadianstoDegrees (angle) {
+	  return angle * (180 / Math.PI);
+	}
+
+	function DegreestoRadians (angle) {
+	  return angle * (Math.PI / 180);
+	}
+	function normalize_angle_hack(angle) {
+		angle+=360; 
+		angle=angle%360; 
+		angle+=360; 
+		angle=angle%360; 
+		return angle;
+	}
+	function clone_sprite() {
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);	
+		
+		//sprites[sprites.length-1].sprite = game.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[sprites.length-1].name);
+		var clone={};
+		clone.sprite = game.add.sprite(game_object.sprite.x, game_object.sprite.y, game_object.sprite.key, game_object.sprite.frame);
+		sprite_ = front_layer.add(clone.sprite);
+		//scale sprite down
+		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
+		clone.sprite.angle=game_object.sprite.angle;
+		game.physics.enable(clone.sprite, Phaser.Physics.ARCADE);
+		//set it so that the sprites rotate on hte center axis
+		clone.sprite.anchor.setTo(0.5, 0.5);
+		game_object.clones.push(clone);
+	}
+	
+	function destroy_current_sprite(){
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		
+		game_object.sprite.destroy();
+		//yet another quickfix due to the difference between sprites and clones
+		if(current_clone!=null){
+			for(var obj in sprites){
+				if(sprites[obj].name==current_sprite_name) {
+					if(sprites[obj].clones.length==0){
+						break;
+					}else{
+						sprites[obj].clones.splice(current_clone, 1);	
+					}	
+				}//);
+			}
+		}
+	}
+	function hide_current_sprite(){
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		
+		game_object.sprite.visible = false;
+	}
+	function show_current_sprite(){
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		
+		game_object.sprite.visible = true;
+	}	
+	function find_sprite_object_by_name(sprite_name){
+		//remember to show an error if no sprite name is given
+		if(sprite_name=="") {
+			//bug, this error does not go away cause we cant get rid of the block unless we reload the page, need to domehow get rid of just the previous block, some kind of undo or some other way to only show this message once, then set a timer for a time to not constantly nag the user
+			return null;
+			//try adding if(evalrun) here 
+			//alert("Error, no sprite name given, you probably need to select a current sprite using the Sprites->set current sprite block");
+		}
+		for(var obj in sprites){
+			if(sprites[obj].name==sprite_name) {
+				if(current_clone!=null) {
+					//quickfix for when a clone is set but we are really looking for another sprite which has no clones, in sprite collision detection
+					//not this wont work well if we are actually looking for hte clones of the target, but that is not what I think we have in mind, at least in space invaders
+					//it should work if the target has clones, so may work anyway
+					//a sideeffect of this is that the bullet gets hidden when I am just trying to hide the alines.
+					if(sprites[obj].clones.length==0){
+						return sprites[obj]
+					}
+					//end quickfix
+					return sprites[obj].clones[current_clone];
+				}else{
+					return sprites[obj];
+				}				
+			}
+		}
+	}
+	function set_current_sprite_name(sprite_name) {
+		//current_sprite_name=sprite_name.data;
+		current_sprite_name=sprite_name;
+	}
+	function set_target_sprite_name(sprite_name) {
+		//target_sprite_name=sprite_name.data;
+		target_sprite_name=sprite_name;
+	}
+	
+
+	function point_in_direction_degrees(angle_degrees) {
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+
+		game_object.sprite.angle=-angle_degrees;
+	}
+	
+	function point_in_direction(a_x,a_y,b_x,b_y) {
+		/*
+		tangentstorm: so to do that, you just subtract a from b.  dx = b.x - a.x  ;  dy = b.y - a.y
+		tangentstorm: just divide dx/dy to get the tangent, and then pass it to the atan() function to get the angle.
+		DazedandC-onfuse: ahh it returns in rads
+		DazedandC-onfuse: ehh the code looks off to me... I really think it should be dy/dx
+		*/
+		
+		var dx = b_x - a_x;
+		var dy = -b_y + a_y;
+		angle_radians=Math.atan2(dy,dx);
+		return RadianstoDegrees(angle_radians);	
+	}
+	//alert(point_in_direction(0,0,10,10));
+	function point_spriteA_in_direction_spriteB(a_x,a_y,b_x,b_y) {
+		var game_object;
+		game_objectA=find_sprite_object_by_name(current_sprite_name);
+		var game_object;
+		game_objectB=find_sprite_object_by_name(target_sprite_name);
+		
+		game_objectA.sprite.angle=point_in_direction(game_objectA.sprite.x,game_objectA.sprite.y,game_objectB.sprite.x,game_objectB.sprite.y);
+	}
+	
+	function foward(distance){
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		
+    	var angle_radians=game_object.sprite.rotation;//angle*Math.PI/180;//converts degrees to radians
+		angle_radians=angle_radians*-1;
+    	var newx=game_object.sprite.x+distance*Math.cos(angle_radians);
+    	var newy=game_object.sprite.y-distance*Math.sin(angle_radians);
+		game_object.sprite.x=newx;
+		game_object.sprite.y=newy;		
+	}
+	function set_x_to(X) {
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		
+		game_object.sprite.x=X;		
+	}
+	function set_y_to(Y) {
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		
+		game_object.sprite.y=Y;		
+	}
+	function turn_right(degrees) {
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		
+	    game_object.sprite.angle=game_object.sprite.angle+degrees;
+	}
+	function turn_left(degrees) {
+		var game_object;
+		game_object=find_sprite_object_by_name(current_sprite_name);
+		
+	    game_object.sprite.angle=game_object.sprite.angle-degrees;
+	}
+	function get_x_value() {
+		return find_sprite_object_by_name(current_sprite_name).sprite.x;
+	} 
+	function get_y_value() {
+		return find_sprite_object_by_name(current_sprite_name).sprite.y;
+	}
+	function is_colliding_with_target() {
+		var game_object;
+		game_objectA=find_sprite_object_by_name(current_sprite_name);
+		var game_object;
+		game_objectB=find_sprite_object_by_name(target_sprite_name);
+		if(game_objectA.sprite.visible!=true||game_objectB.sprite.visible!=true){//quick fix to avoid collision with invisible things which where hidden, I dont think we ever need to collide with hidden objects
+			return false;
+		}
+		return game.physics.arcade.overlap(game_objectA.sprite, game_objectB.sprite);//this returns true//it seems overlap is pixel perfect after all!//no, I tested it and this is bouding box after all//apparently phaser does not have pixel perfect collision detection at all, they say it would be too expensive
+	} 
+	
+	
+	/*	
+	function move_right() {
+		sprite.x+=100;
+	}
+	function move_left() {
+		sprite.x+=-100;
+	}
+	function move_up() {
+		sprite.y+=-100;
+	}
+	function move_down() {
+		sprite.y+=100;
+	}
+	*/
+	//end phaser
+    var workspace = Blockly.inject('blocklyDiv',
+        {media: '../../media/',
+         toolbox: document.getElementById('toolbox')});
+    Blockly.Xml.domToWorkspace(workspace,
+        document.getElementById('startBlocks'));
+
+    var myInterpreter = null;
+
+    function initApi(interpreter, scope) {
+      // Add an API functions (whitelist of save eval)
+      var wrapper = function(distance) {
+        distance = distance ? distance.toString() : '0';
+		distance=parseInt(distance);
+        return interpreter.createPrimitive(foward(distance));
+      };
+      interpreter.setProperty(scope, 'foward',
+          interpreter.createNativeFunction(wrapper));
+
+      var wrapper = function(degrees) {
+        degrees = degrees ? degrees.toString() : '0';
+		degrees=parseInt(degrees);
+        return interpreter.createPrimitive(turn_right(degrees));
+      };
+      interpreter.setProperty(scope, 'turn_right',
+          interpreter.createNativeFunction(wrapper));
+
+      var wrapper = function(degrees) {
+        degrees = degrees ? degrees.toString() : '0';
+		degrees=parseInt(degrees);
+        return interpreter.createPrimitive(turn_left(degrees));
+      };
+      interpreter.setProperty(scope, 'turn_left',
+          interpreter.createNativeFunction(wrapper));
+
+
+      var wrapper = function(text) {
+        text = text ? text.toString() : '';
+        return interpreter.createPrimitive(move_right());
+      };
+      interpreter.setProperty(scope, 'move_right',
+          interpreter.createNativeFunction(wrapper));
+
+      var wrapper = function(X) {
+        X = X ? X.toString() : '0';
+        return interpreter.createPrimitive(set_x_to(X));
+      };
+      interpreter.setProperty(scope, 'set_x_to',
+          interpreter.createNativeFunction(wrapper));
+
+      var wrapper = function(Y) {
+        Y = Y ? Y.toString() : '0';
+        return interpreter.createPrimitive(set_y_to(Y));
+      };
+      interpreter.setProperty(scope, 'set_y_to',
+          interpreter.createNativeFunction(wrapper));
+
+
+      var wrapper = function(text) {
+        return interpreter.createPrimitive(point_spriteA_in_direction_spriteB());
+      };
+      interpreter.setProperty(scope, 'point_spriteA_in_direction_spriteB',
+          interpreter.createNativeFunction(wrapper));
+		  
+      var wrapper = function() {
+        return interpreter.createPrimitive(get_x_value());
+      };
+      interpreter.setProperty(scope, 'get_x_value',
+          interpreter.createNativeFunction(wrapper));
+
+      var wrapper = function() {
+        return interpreter.createPrimitive(get_y_value());
+      };
+      interpreter.setProperty(scope, 'get_y_value',
+          interpreter.createNativeFunction(wrapper));	  
+
+      var wrapper = function(sprite,degrees) {
+        degrees = degrees ? degrees.toString() : '0';
+		degrees=parseInt(degrees);
+        return interpreter.createPrimitive(point_in_direction_degrees(sprite,degrees));
+      };
+      interpreter.setProperty(scope, 'point_in_direction_degrees',
+          interpreter.createNativeFunction(wrapper));
+
+      var wrapper = function(sprite) {
+        return interpreter.createPrimitive(set_current_sprite_name(sprite));
+      };
+      interpreter.setProperty(scope, 'set_current_sprite_name',
+          interpreter.createNativeFunction(wrapper));
+
+      var wrapper = function(sprite) {
+        return interpreter.createPrimitive(set_target_sprite_name(sprite));
+      };
+      interpreter.setProperty(scope, 'set_target_sprite_name',
+          interpreter.createNativeFunction(wrapper));
+
+      var wrapper = function() {
+        return interpreter.createPrimitive(interalPollevent());
+      };
+      interpreter.setProperty(scope, 'interalPollevent',
+          interpreter.createNativeFunction(wrapper));
+
+
+      // Add an API function for the prompt() block.
+      var wrapper = function(text) {
+        text = text ? text.toString() : '';
+        return interpreter.createPrimitive(prompt(text));
+      };
+      interpreter.setProperty(scope, 'prompt',
+          interpreter.createNativeFunction(wrapper));
+
+
+      // Add an API function for the alert() block.
+      var wrapper = function(text) {
+        text = text ? text.toString() : '';
+        return interpreter.createPrimitive(alert(text));
+      };
+      interpreter.setProperty(scope, 'alert',
+          interpreter.createNativeFunction(wrapper));
+
+      // Add an API function for highlighting blocks.
+      var wrapper = function(id) {
+        id = id ? id.toString() : '';
+        return interpreter.createPrimitive(highlightBlock(id));
+      };
+      interpreter.setProperty(scope, 'highlightBlock',
+          interpreter.createNativeFunction(wrapper));
+	  
+      // Add an API function for setInterval.
+	  /*
+      var wrapper = function(funct,interval) {
+		  //id = setInterval(stepCode, parseInt(execution_speed));
+        return interpreter.createPrimitive(setInterval(funct,interval));
+      };
+      interpreter.setProperty(scope, 'setInterval',
+          interpreter.createNativeFunction(wrapper));
+    
+    */
+	}
+    var highlightPause = false;
+
+    function highlightBlock(id) {
+      workspace.highlightBlock(id);
+      highlightPause = true;
+    }
+
+    function parseCode() {
+      // Generate JavaScript code and parse it.
+      Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+      Blockly.JavaScript.addReservedWords('highlightBlock');
+      var code = Blockly.JavaScript.workspaceToCode(workspace);
+	  var xml = Blockly.Xml.workspaceToDom(workspace);
+	  var xml_text = Blockly.Xml.domToPrettyText(xml);
+      myInterpreter = new Interpreter(code, initApi);
+
+      alert('Ready to execute this code:\n\n' + code);
+	  console.log('\n\nXML:\n\n' + xml_text);
+      document.getElementById('stepButton').disabled = '';
+      highlightPause = false;
+      workspace.traceOn(true);
+      workspace.highlightBlock(null);
+    }
+	
+	var id;
+	var evalRun=false;
+    function evalCode() {
+		Blockly.JavaScript.addReservedWords('highlightBlock');
+		Blockly.JavaScript.STATEMENT_PREFIX = '';
+        document.getElementById('funct').value = Blockly.JavaScript.workspaceToCode(workspace);
+        Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+		debuggerCode = Blockly.JavaScript.workspaceToCode(workspace);
+  	  
+	  //var xml = Blockly.Xml.workspaceToDom(workspace);
+  	  //var xml_text = Blockly.Xml.domToPrettyText(xml);
+
+	  //Unless I am mistaken there isn't a way currently to call into the context created when running a program with the JSInterpreter. On workaround could be to have a setInterval going inside the interpreter context that is polling an exposed api which is watching for events on the page and responds by calling your users code. https://neil.fraser.name/software/JS-Interpreter/docs.html
+
+		finalCode = debuggerCode
+		//clear timers
+		clearTimers();
+	  	//cursor key events
+	  	evalRun=true;
+		finalCode+= "var pollEvent = function() {\n";
+		finalCode+= "	if (typeof EACH_FRAME !== 'undefined' && evalRun) {\n";//cehck to see if funtion is defined
+		finalCode+= "		EACH_FRAME();\n";
+		finalCode+= "	}\n";		
+		finalCode+= "	if (cursors.left.isDown) {\n"
+		finalCode+= "		if (typeof LEFT_KEY_PRESSED !== 'undefined') {\n";//cehck to see if funtion is defined
+		finalCode+= "			LEFT_KEY_PRESSED();\n";
+		finalCode+= "		}\n";
+		finalCode+= "	}\n"
+		finalCode+= "	if (cursors.right.isDown) {\n"
+		finalCode+= "		if (typeof RIGHT_KEY_PRESSED !== 'undefined') {\n";//cehck to see if funtion is defined
+		finalCode+= "			RIGHT_KEY_PRESSED();\n";
+		finalCode+= "		}\n";
+		finalCode+= "	}\n"
+		finalCode+= "	if (cursors.up.isDown) {\n"
+		finalCode+= "		if (typeof UP_KEY_PRESSED !== 'undefined') {\n";//cehck to see if funtion is defined
+		finalCode+= "			UP_KEY_PRESSED();\n";
+		finalCode+= "		}\n";
+		finalCode+= "	}\n"
+		finalCode+= "	if (cursors.down.isDown) {\n"
+		finalCode+= "		if (typeof DOWN_KEY_PRESSED !== 'undefined') {\n";//cehck to see if funtion is defined
+		finalCode+= "			DOWN_KEY_PRESSED();\n";
+		finalCode+= "		}\n";
+		finalCode+= "	}\n";
+		finalCode+= "}\n";
+	   	finalCode+= "if (typeof id_ !== 'undefined') window.clearInterval(id_);\n";
+	   	finalCode+= "id_ = setInterval(pollEvent, game.time.fps);\n";
+	   	finalCode+= "ON_STARTUP();\n";		
+        destory_all_clones()
+		eval(finalCode);
+		//myInterpreter = new Interpreter(finalCode, initApi);
+		
+		//var execution_speed =document.getElementById('execution_speed').value;
+		//id = setInterval(stepCode, parseInt(execution_speed));
+    }
+    function runCode() {	
+		var execution_speed =document.getElementById('execution_speed').value;
+		id = setInterval(stepCode, parseInt(execution_speed));
+    }
+	function download(filename, text) {
+      //from http://stackoverflow.com/questions/3665115/create-a-file-in-memory-for-user-to-download-not-through-server
+	  var element = document.createElement('a');
+	  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+	  element.setAttribute('download', filename);
+
+	  element.style.display = 'none';
+	  document.body.appendChild(element);
+
+	  element.click();
+
+	  document.body.removeChild(element);
+	}
+    function saveCode() {	
+	    var xml = Blockly.Xml.workspaceToDom(workspace);
+	    var xml_text = Blockly.Xml.domToPrettyText(xml);
+		document.getElementById('funct').value = xml_text;
+		//mock download
+		project.block_xml = xml_text;
+		var project_json = JSON.stringify(project);
+		var project_name=prompt("Enter project name","GAME.s-found");
+		download(project_name,project_json);
+    }
+    function loadCode() {	
+		Blockly.mainWorkspace.clear();
+		var xml = Blockly.Xml.textToDom(document.getElementById('funct').value);
+		Blockly.Xml.domToWorkspace(workspace, xml);
+    }
+
+	
+    function pauseCode() {
+		  if(id) {
+			  window.clearInterval(id);
+		  }
+    }
+    function stopCode() {
+		  if(id) {
+			  window.clearInterval(id);
+		  }
+	      Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+	      Blockly.JavaScript.addReservedWords('highlightBlock');
+	      var code = Blockly.JavaScript.workspaceToCode(workspace);
+	      myInterpreter = new Interpreter(code, initApi);
+	      highlightPause = false;
+	      workspace.traceOn(true);
+	      workspace.highlightBlock(null);
+		  evalRun=false;
+    }
+
+    function stepCode() {
+      try {
+        var ok = myInterpreter.step();
+      } finally {
+        if (!ok) {
+          // Program complete, no more code to execute.
+          document.getElementById('stepButton').disabled = 'disabled';
+		  if(id) {
+			  window.clearInterval(id);
+		  }
+          return;
+        }
+      }
+      if (highlightPause) {
+        // A block has been highlighted.  Pause execution here.
+        highlightPause = false;
+      } else {
+        // Keep executing until a highlight statement is reached.
+        stepCode();
+      }
+    }
+	//user defined blocks
+	//point in direction https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#8jezk6
+	//move_right and other stuff https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#mvuwrg
+
+	//point in direction https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#putex4
+	
+	Blockly.Blocks['motion_point_in_direction'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("point in direction (degrees)");
+	    this.appendValueInput("ANGLE")
+	        .setCheck("Number")
+	        .setAlign(Blockly.ALIGN_RIGHT)
+	        .appendField(new Blockly.FieldAngle(90), "A");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['motion_point_in_direction'] = function(block) {
+	  var angle_a = block.getFieldValue('A');
+	  var value_angle = Blockly.JavaScript.valueToCode(block, 'ANGLE', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var argument0 = Blockly.JavaScript.valueToCode(block, 'ANGLE',
+      Blockly.JavaScript.ORDER_NONE) || '\'\'';
+	  var angle_final=argument0=="''"?angle_a:argument0;
+	  var code = 'point_in_direction_degrees('+angle_final+');\n';
+	  return code;
+	};
+	
+	//point in direction with sprite selection box https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#vv9mth
+	function dynamicOptions() {
+		//make array of arrays to send as parameter(not original code from this block)
+		//[["select a sprite", "OPT"], ["option", "OPTIONNAME"]]
+		var parent_=[]
+		parent_.push(["select a sprite", "OPT0"]);
+		for(var obj in sprites){
+			parent_.push([sprites[obj].name, sprites[obj].name]);
+		}
+	  	return parent_;
+	}
+	Blockly.Blocks['sprites_set_current_sprite'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	    	.appendField("set the current sprite");
+	    this.appendValueInput("SPRITE_OPTION_BOX")
+			.setCheck("String")
+	        //.appendField(new Blockly.FieldDropdown(parent_), "sprite");
+			.appendField(new Blockly.FieldDropdown(dynamicOptions), "sprite");
+	    //this.appendValueInput("ANGLE")
+	    //    .setCheck("Number")
+	    //    .setAlign(Blockly.ALIGN_RIGHT)
+	    //    .appendField(new Blockly.FieldAngle(90), "A");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_set_current_sprite'] = function(block) {
+	  var dropdown_sprite = block.getFieldValue('sprite');
+	  var value_sprite_option_box = Blockly.JavaScript.valueToCode(block, 'SPRITE_OPTION_BOX', Blockly.JavaScript.ORDER_ATOMIC);
+	  //var angle_a = block.getFieldValue('A');
+	  //var value_angle = Blockly.JavaScript.valueToCode(block, 'ANGLE', Blockly.JavaScript.ORDER_ATOMIC);
+	  var sprite_name = Blockly.JavaScript.valueToCode(block, 'SPRITE_OPTION_BOX', Blockly.JavaScript.ORDER_ATOMIC);
+	  
+	  // TODO: Assemble JavaScript into code variable
+	  //var argument0 = Blockly.JavaScript.valueToCode(block, 'ANGLE',Blockly.JavaScript.ORDER_NONE) || '\'\'';
+	  //override fields if variables provided
+	  var sprite_name_final=value_sprite_option_box==""?dropdown_sprite:value_sprite_option_box;
+	  if(sprite_name_final=="OPT0") {
+		  //alert("You have not selected a sprite in 'set current sprite' block, please select a sprite");
+		  return "//error,failed to select sprite in 'set current sprite' block"
+	  }
+
+	  var code = 'set_current_sprite_name("'+sprite_name_final+'");\n';
+	  return code;
+	};
+	Blockly.Blocks['sprites_set_target_sprite'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	    	.appendField("set the target sprite");
+	    this.appendValueInput("SPRITE_OPTION_BOX")
+			.setCheck("String")
+	        //.appendField(new Blockly.FieldDropdown(parent_), "sprite");
+			.appendField(new Blockly.FieldDropdown(dynamicOptions), "sprite");
+	    //this.appendValueInput("ANGLE")
+	    //    .setCheck("Number")
+	    //    .setAlign(Blockly.ALIGN_RIGHT)
+	    //    .appendField(new Blockly.FieldAngle(90), "A");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_set_target_sprite'] = function(block) {
+	  var dropdown_sprite = block.getFieldValue('sprite');
+	  var value_sprite_option_box = Blockly.JavaScript.valueToCode(block, 'SPRITE_OPTION_BOX', Blockly.JavaScript.ORDER_ATOMIC);
+	  //var angle_a = block.getFieldValue('A');
+	  //var value_angle = Blockly.JavaScript.valueToCode(block, 'ANGLE', Blockly.JavaScript.ORDER_ATOMIC);
+	  var sprite_name = Blockly.JavaScript.valueToCode(block, 'SPRITE_OPTION_BOX', Blockly.JavaScript.ORDER_ATOMIC);
+	  
+	  // TODO: Assemble JavaScript into code variable
+	  //var argument0 = Blockly.JavaScript.valueToCode(block, 'ANGLE',Blockly.JavaScript.ORDER_NONE) || '\'\'';
+	  //override fields if variables provided
+	  var sprite_name_final=value_sprite_option_box==""?dropdown_sprite:value_sprite_option_box;
+	  if(sprite_name_final=="OPT0") {
+		  //alert("You have not selected a sprite in 'set current sprite' block, please select a sprite");
+		  return "//error,failed to select sprite in 'set current sprite' block"
+	  }
+
+	  var code = 'set_target_sprite_name("'+sprite_name_final+'");\n';
+	  return code;
+	};
+	
+	
+	Blockly.Blocks['motion_point_in_direction_of_target'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("point in direction of target");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+
+	Blockly.JavaScript['motion_point_in_direction_of_target'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'point_spriteA_in_direction_spriteB();\n';
+	  return code;
+	};
+	
+	
+	Blockly.Blocks['motion_foward'] = {
+	  init: function() {
+	    this.appendValueInput("DISTANCE")
+	        .setCheck("Number")
+	        .appendField("foward");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['motion_foward'] = function(block) {
+	  var value_distance = Blockly.JavaScript.valueToCode(block, 'DISTANCE', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var argument0 = Blockly.JavaScript.valueToCode(block, 'DISTANCE',
+      Blockly.JavaScript.ORDER_NONE) || '\'\'';
+	  var code = 'foward('+argument0+');\n';
+	  return code;
+	};
+	Blockly.Blocks['motion_turn_right'] = {
+	  init: function() {
+	    this.appendValueInput("DEGREES")
+	        .setCheck("Number")
+	        .appendField("turn right");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['motion_turn_right'] = function(block) {
+	  var value_distance = Blockly.JavaScript.valueToCode(block, 'DEGREES', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var argument0 = Blockly.JavaScript.valueToCode(block, 'DEGREES',
+      Blockly.JavaScript.ORDER_NONE) || '\'\'';
+	  var code = 'turn_right('+argument0+');\n';
+	  return code;
+	};
+	
+	
+	
+	
+	Blockly.Blocks['motion_turn_left'] = {
+	  init: function() {
+	    this.appendValueInput("DEGREES")
+	        .setCheck("Number")
+	        .appendField("turn left");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['motion_turn_left'] = function(block) {
+	  var value_distance = Blockly.JavaScript.valueToCode(block, 'DEGREES', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var argument0 = Blockly.JavaScript.valueToCode(block, 'DEGREES',
+      Blockly.JavaScript.ORDER_NONE) || '\'\'';
+	  var code = 'turn_left('+argument0+');\n';
+	  return code;
+	};
+	
+	Blockly.Blocks['motion_set_x_to'] = {
+	  init: function() {
+	    this.appendValueInput("X")
+	        .setCheck("Number")
+	        .appendField("set x to");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['motion_set_x_to'] = function(block) {
+	  var value_distance = Blockly.JavaScript.valueToCode(block, 'X', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var argument0 = Blockly.JavaScript.valueToCode(block, 'X',
+      Blockly.JavaScript.ORDER_NONE) || '\'\'';
+	  var code = 'set_x_to('+argument0+');\n';
+	  return code;
+	};
+	Blockly.Blocks['motion_set_y_to'] = {
+	  init: function() {
+	    this.appendValueInput("Y")
+	        .setCheck("Number")
+	        .appendField("set y to");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['motion_set_y_to'] = function(block) {
+	  var value_distance = Blockly.JavaScript.valueToCode(block, 'Y', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var argument0 = Blockly.JavaScript.valueToCode(block, 'Y',
+      Blockly.JavaScript.ORDER_NONE) || '\'\'';
+	  var code = 'set_y_to('+argument0+');\n';
+	  return code;
+	};
+	//https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#85m6e7
+	Blockly.Blocks['sprites_value_of_x'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("value of x");
+	    this.setOutput(true, "Number");
+	    this.setColour(210);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_value_of_x'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+		var code = "parseInt(get_x_value())";;
+	  // TODO: Change ORDER_NONE to the correct strength.
+	  //return [code, Blockly.JavaScript.ORDER_NONE];
+	  return [code, Blockly.JavaScript.ORDER_ATOMIC];
+	};
+	
+	Blockly.Blocks['sprites_value_of_y'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("value of y");
+	    this.setOutput(true, "Number");
+	    this.setColour(210);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+		//oncgange Javascript generation
+	  }
+	};
+	Blockly.JavaScript['sprites_value_of_y'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+		var code = "parseInt(get_y_value())";
+	  // TODO: Change ORDER_NONE to the correct strength.
+	  //return [code, Blockly.JavaScript.ORDER_NONE];
+	  return [code, Blockly.JavaScript.ORDER_ATOMIC];
+	};
+	//this is a little like what the event blocks should look like,  but I am still not sure how to implement them  		https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#9vi23k
+	Blockly.Blocks['events_when_event_happens'] = {
+	  init: function() {
+	    this.appendStatementInput("EVENT_CODE")
+	        .setCheck(null)
+	        .appendField("when event happens");
+	    this.appendValueInput("EVENT_NAME")
+	        .setCheck(null)
+	        .appendField(new Blockly.FieldDropdown([["Select an event", "NO_EVENT_SELECTED"], ["On statup", "ON_STARTUP"], ["Each frame", "EACH_FRAME"], ["Left key pressed", "LEFT_KEY_PRESSED"], ["Right key pressed", "RIGHT_KEY_PRESSED"], ["Up key pressed", "UP_KEY_PRESSED"], ["Down key pressed", "DOWN_KEY_PRESSED"]]), "EVENT");
+	    this.setColour(65);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['events_when_event_happens'] = function(block) {
+	  var statements_event_code = Blockly.JavaScript.statementToCode(block, 'EVENT_CODE');
+	  var dropdown_event = block.getFieldValue('EVENT');
+	  var value_event_name = Blockly.JavaScript.valueToCode(block, 'EVENT_NAME', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  if(dropdown_event=="NO_EVENT_SELECTED") {
+	  	return "//error, you did not select an event in the 'when event happens' block\n"
+	  }
+	  var code = 'function ' + dropdown_event +'(){\n'+statements_event_code+'\n}';
+	  return code;
+	};
+	//https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#mtepdf
+	Blockly.Blocks['sprites_create_clone_of_current_sprite'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("create clone of current sprite");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_create_clone_of_current_sprite'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'clone_sprite();\n';
+	  return code;
+	};
+	//made from previous block
+	Blockly.Blocks['sprites_current_sprite_bring_to_front'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("current sprite bring to front");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_current_sprite_bring_to_front'] = function(block) {
+		// TODO: Assemble JavaScript into code variable.
+		/*
+		set_current_sprite_name("frog");
+		game_object=find_sprite_object_by_name(current_sprite_name);
+
+		//but this did
+		game_object=find_sprite_object_by_name("frog");
+		game_object.sprite.bringToTop()
+		*/
+		var code = 	'var go=find_sprite_object_by_name(current_sprite_name);\n';
+		code = code + 'go.sprite.bringToTop();\n';
+		return code;
+	};
+	//made from previous block
+	Blockly.Blocks['sprites_current_sprite_send_to_back'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("current sprite send to back");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_current_sprite_send_to_back'] = function(block) {
+		// TODO: Assemble JavaScript into code variable.
+		/*
+		set_current_sprite_name("frog");
+		game_object=find_sprite_object_by_name(current_sprite_name);
+
+		//but this did
+		game_object=find_sprite_object_by_name("frog");
+		game_object.sprite.bringToTop()
+		
+		I am able to do game_object.sprite.bringToTop() and it works, but when I try game_object.sprite.sendToBack() I get TypeError: game_object.sprite.sendToBack is not a function , I am using Phaser v2.0.2 - Canvas - WebAudio     , any idea what could be wrong?
+		
+		ada answer: game.world.sendToBack(sprite)
+		*/
+		var code = 	'var go=find_sprite_object_by_name(current_sprite_name);\n';
+		code = code + 'go.sprite.sendToBack();\n';
+		return code;
+	};
+	
+	Blockly.Blocks['sprites_destroy_current_sprite'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("Destroy current sprite");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_destroy_current_sprite'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'destroy_current_sprite();\n';
+	  return code;
+	};	
+	Blockly.Blocks['sprites_hide_current_sprite'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("Hide sprite");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_hide_current_sprite'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'hide_current_sprite();\n';
+	  return code;
+	};	
+	Blockly.Blocks['sprites_show_current_sprite'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("Show sprite");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(260);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_show_current_sprite'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'show_current_sprite();\n';
+	  return code;
+	};	
+	//https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#aur2q8
+	Blockly.Blocks['sprites_for_each_clone_of_current_sprite'] = {
+	  init: function() {
+	    this.appendStatementInput("STATEMENT_CODE")
+	        .setCheck(null)
+	        .appendField("for each clone of current sprite");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(120);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['sprites_for_each_clone_of_current_sprite'] = function(block) {
+	  var statements_statement_code = Blockly.JavaScript.statementToCode(block, 'STATEMENT_CODE');
+	  // TODO: Assemble JavaScript into code variable.
+	  code=	'var game_object;\n';
+	  code+=	'game_object=find_sprite_object_by_name(current_sprite_name);\n';
+	  code+=	'for(var clone in game_object.clones){\n';
+	  code+='	debug_current_sprite_name=current_sprite_name;\n';
+	  code+='	current_clone=clone;\n';
+	  code+=statements_statement_code+'\n';
+	  code+='}\n';
+	  code+='current_clone=null;\n';
+	  return code;
+	};
+	Blockly.Blocks['sprites_is_colliding_with_target'] = {
+	  init: function() {
+	    this.appendDummyInput()
+	        .appendField("Is colliding with target");
+	    this.setOutput(true, "Boolean");
+	    this.setColour(210);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+		//oncgange Javascript generation
+	  }
+	};
+	Blockly.JavaScript['sprites_is_colliding_with_target'] = function(block) {
+	  // TODO: Assemble JavaScript into code variable.
+		var code = "is_colliding_with_target()";
+	  // TODO: Change ORDER_NONE to the correct strength.
+	  //return [code, Blockly.JavaScript.ORDER_NONE];
+	  return [code, Blockly.JavaScript.ORDER_ATOMIC];
+	};
+	Blockly.Blocks['text_echo'] = {
+	  init: function() {
+	    this.appendValueInput("strString")
+	        .appendField("echo");
+	    this.setPreviousStatement(true);
+	    this.setNextStatement(true);
+	    this.setColour(120);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	Blockly.JavaScript['text_echo'] = function(block) {
+	  var value_strstring = Blockly.JavaScript.valueToCode(block, 'strString', Blockly.JavaScript.ORDER_ATOMIC);
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = 'if(evalRun){alert('+value_strstring+');}\n';
+	  return code;
+	};
+	//https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#jbko84
+	Blockly.Blocks['functional_first_class_function'] = {
+	  init: function() {
+	    this.appendStatementInput("FUNCTION")
+	        .appendField("set")
+	        .appendField(new Blockly.FieldVariable("item"), "VARIABLE")
+	        .appendField("to the following function:");
+	    this.appendDummyInput()
+	        .appendField("return")
+	        .appendField(new Blockly.FieldVariable("item"), "RETURN");
+	    this.setInputsInline(true);
+	    this.setColour(20);
+	    this.setTooltip('');
+	    this.setHelpUrl('http://www.example.com/');
+		
+	    //this.setMutator(new Blockly.Mutator(['procedures_mutatorarg']));
+		this.setMutator(new Blockly.Mutator(['controls_if_elseif']));
+	       //if (Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT) {
+	       //  this.setCommentText(Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT);
+	       //}
+	  }
+	};
+	
+	Blockly.JavaScript['functional_first_class_function'] = function(block) {
+	  var variable_variable = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('VARIABLE'), Blockly.Variables.NAME_TYPE);
+	  var statements_function = Blockly.JavaScript.statementToCode(block, 'FUNCTION');
+	  var variable_return = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('RETURN'), Blockly.Variables.NAME_TYPE);
+	  // TODO: Assemble JavaScript into code variable.
+	  var code = variable_variable+'= function(){\n'+statements_function+'\nreturn '+variable_return+'\n}';
+	  return code;
+	};
+	//blockly how to get the name of a variable passed to a stateemnt block
+	//Blockly.JavaScript.variableDB_.getName(block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
+	//end blockly
+	var debuggerCode;
+	function destory_all_clones(){
+		for(var sprite in sprites){
+			for(var clone in sprites[sprite].clones){
+				sprites[sprite].clones[clone].sprite.destroy();
+			}
+			sprites[sprite].clones=[];//remove this elements from the clones
+		}
+	}
+	//timer https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#iqgsvm
+	Blockly.Blocks['set_timer'] = {
+	  init: function() {
+		this.appendStatementInput("statement")
+			.setCheck(null)
+			.appendField("timer")
+			.appendField(new Blockly.FieldTextInput("timer name"), "timer_name")
+			.appendField("milliseconds")
+			.appendField(new Blockly.FieldTextInput("1000"), "milliseconds");
+		this.setColour(160);
+		this.setTooltip('');
+		this.setHelpUrl('http://www.example.com/');
+	  }
+	};
+	timersObj={};
+	timerIDs=[];
+	Blockly.JavaScript['set_timer'] = function(block) {
+		var text_timer_name = block.getFieldValue('timer_name');
+		var text_milliseconds = block.getFieldValue('milliseconds');
+		var statements_statement = Blockly.JavaScript.statementToCode(block, 'statement');
+		// TODO: Assemble JavaScript into code variable.
+		var code = 'timersObj["'+text_timer_name+'"] = function() {\n';
+		code=code+ statements_statement+'\n';
+		code=code+'}\n';
+		code=code+'var ID = setInterval(timersObj["'+text_timer_name+'"], '+text_milliseconds+');\n';
+		code=code+'timerIDs.push(ID);\n';
+		return code;
+	};
+	function clearTimers() {
+		for(timer in timerIDs) {
+			clearInterval(timerIDs[timer]);
+		}
+	}
+	//https://blockly-demo.appspot.com/static/blocks/procedures.js
+	Blockly.Blocks['procedures_defreturn_functional'] = {
+  /**
+   * Block for defining a procedure with a return value.
+   * @this Blockly.Block
+   */
+  init: function() {
+	//this.appendValueInput("value_input")
+    //    .setCheck(null)
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldVariable("item"), "variable_name");
+    var nameField = new Blockly.FieldTextInput(
+        Blockly.Msg.PROCEDURES_DEFRETURN_PROCEDURE,
+        Blockly.Procedures.rename);
+    nameField.setSpellcheck(false);
+    this.appendDummyInput()
+        .appendField("=function")
+        .appendField(nameField, 'NAME')
+        .appendField('', 'PARAMS');
+    this.appendValueInput('RETURN')
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField(Blockly.Msg.PROCEDURES_DEFRETURN_RETURN);
+    this.setMutator(new Blockly.Mutator(['procedures_mutatorarg']));
+    if ((this.workspace.options.comments ||
+         (this.workspace.options.parentWorkspace &&
+          this.workspace.options.parentWorkspace.options.comments)) &&
+        Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT) {
+      this.setCommentText(Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT);
+    }
+    this.setColour(Blockly.Blocks.procedures.HUE);
+    this.setTooltip(Blockly.Msg.PROCEDURES_DEFRETURN_TOOLTIP);
+    this.setHelpUrl(Blockly.Msg.PROCEDURES_DEFRETURN_HELPURL);
+    this.arguments_ = [];
+    this.setStatements_(true);
+    this.statementConnection_ = null;
+  },
+  //
+  //contextMenuType_: 'variables_set',
+  /**
+   * Add menu option to create getter/setter block for this setter/getter.
+   * @param {!Array} options List of menu options to add to.
+   * @this Blockly.Block
+   */
+  /*
+  customContextMenu: function(options) {
+    var option = {enabled: true};
+    var name = this.getFieldValue('variable_name');
+    option.text = this.contextMenuMsg_.replace('%1', name);
+    var xmlField = goog.dom.createDom('field', null, name);
+    xmlField.setAttribute('name', 'variable_name');
+    var xmlBlock = goog.dom.createDom('block', null, xmlField);
+    xmlBlock.setAttribute('type', this.contextMenuType_);
+    option.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
+    options.push(option);
+  } 
+  */
+  //
+  setStatements_: Blockly.Blocks['procedures_defnoreturn'].setStatements_,
+  updateParams_: Blockly.Blocks['procedures_defnoreturn'].updateParams_,
+  mutationToDom: Blockly.Blocks['procedures_defnoreturn'].mutationToDom,
+  domToMutation: Blockly.Blocks['procedures_defnoreturn'].domToMutation,
+  decompose: Blockly.Blocks['procedures_defnoreturn'].decompose,
+  compose: Blockly.Blocks['procedures_defnoreturn'].compose,
+  /**
+   * Return the signature of this procedure definition.
+   * @return {!Array} Tuple containing three elements:
+   *     - the name of the defined procedure,
+   *     - a list of all its arguments,
+   *     - that it DOES have a return value.
+   * @this Blockly.Block
+   */
+  getProcedureDef: function() {
+    return [this.getFieldValue('NAME'), this.arguments_, true];
+  },
+  getVars: Blockly.Blocks['procedures_defnoreturn'].getVars,
+  renameVar: Blockly.Blocks['procedures_defnoreturn'].renameVar,
+  customContextMenu: Blockly.Blocks['procedures_defnoreturn'].customContextMenu,
+  callType_: 'procedures_callreturn'
+};
+
+/**
+@license
+Copyright 2015 Hendrik Diel
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+@fileoverview
+this file enables predefined variables. You can add a variables by calling
+addPredefinedVar(name) and remove by calling removePredefinedVar(name).
+@author
+diel.hendrik@gmail.com (Hendrik Diel)
+*/
+(function(){
+  Blockly.Variables.predefinedVars = [];
+  Blockly.Variables.addPredefiendVar = function(name){
+    Blockly.Variables.predefinedVars.push(name);
+  };
+  
+  Blockly.Variables.removePredefiendVar = function(name){
+    var index = array.indexOf(name);
+    if (index > -1) {
+      Blockly.Variables.predefinedVars.splice(index, 1);
+    }
+  };
+  
+  var old = Blockly.Variables.allVariables;
+  Blockly.Variables.allVariables = function(root) {
+    var vars = old.call(this, root);
+    Blockly.Variables.predefinedVars.forEach(function(x){
+      if(vars.indexOf(x) < 0)
+      vars.push(x);
+    });
+    return vars;
+  };
+})();
+Blockly.JavaScript['procedures_defreturn_functional'] = function(block) {
+  // Define a procedure with a return value.
+    var variable_variable_name = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('variable_name'), Blockly.Variables.NAME_TYPE);
+  //var value_value_input = Blockly.JavaScript.valueToCode(block, 'value_input', Blockly.JavaScript.ORDER_ATOMIC);
+  
+  var funcName = Blockly.JavaScript.variableDB_.getName(
+      block.getFieldValue('NAME'), Blockly.Procedures.NAME_TYPE);
+  var branch = Blockly.JavaScript.statementToCode(block, 'STACK');
+  if (Blockly.JavaScript.STATEMENT_PREFIX) {
+    branch = Blockly.JavaScript.prefixLines(
+        Blockly.JavaScript.STATEMENT_PREFIX.replace(/%1/g,
+        '\'' + block.id + '\''), Blockly.JavaScript.INDENT) + branch;
+  }
+  if (Blockly.JavaScript.INFINITE_LOOP_TRAP) {
+    branch = Blockly.JavaScript.INFINITE_LOOP_TRAP.replace(/%1/g,
+        '\'' + block.id + '\'') + branch;
+  }
+  var returnValue = Blockly.JavaScript.valueToCode(block, 'RETURN',
+      Blockly.JavaScript.ORDER_NONE) || '';
+  if (returnValue) {
+    returnValue = '  return ' + returnValue + ';\n';
+  }
+  var args = [];
+  for (var i = 0; i < block.arguments_.length; i++) {
+    args[i] = Blockly.JavaScript.variableDB_.getName(block.arguments_[i],
+        Blockly.Variables.NAME_TYPE);
+  }
+  //custom code
+  /*
+  var xmlField = goog.dom.createDom('field', null, variable_variable_name);
+  xmlField.setAttribute('name', variable_variable_name);
+  var xmlBlock = goog.dom.createDom('block', null, xmlField);
+  xmlBlock.setAttribute('type', 'variables_set');
+  */
+  Blockly.Variables.addPredefiendVar(variable_variable_name);
+
+  var code = variable_variable_name + ' = function(' + args.join(', ') + ') {\n' +
+      branch + returnValue + '}';
+  //end custom code
+  code = Blockly.JavaScript.scrub_(block, code);
+  // Add % so as not to collide with helper functions in definitions list.
+  Blockly.JavaScript.definitions_['%' + funcName] = code;
+  return null;
+};
+
+	//functional variable call 
+	//https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#ndqffg
+Blockly.Blocks['call_first_class_function'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("return to")
+        .appendField(new Blockly.FieldVariable("item"), "return_to")
+        .appendField("call first class function")
+        .appendField(new Blockly.FieldVariable("item"), "variable_name")
+        .appendField("parameter")
+        .appendField(new Blockly.FieldVariable("item"), "parameter");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('');
+    this.setHelpUrl('http://www.example.com/');
+  }
+};
+Blockly.JavaScript['call_first_class_function'] = function(block) {
+  var variable_return_to = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('return_to'), Blockly.Variables.NAME_TYPE);
+  var variable_variable_name = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('variable_name'), Blockly.Variables.NAME_TYPE);
+  var variable_parameter = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('parameter'), Blockly.Variables.NAME_TYPE);
+  // TODO: Assemble JavaScript into code variable.
+  var code = variable_return_to+'='+variable_variable_name+'('+variable_parameter+');\n';
+  return code;
+};
+	//On Startup
+	var workspaceChanged = function() {
+	            //console.log("changed");
+		        // Generate JavaScript code and parse it.
+				Blockly.JavaScript.addReservedWords('highlightBlock');
+				Blockly.JavaScript.STATEMENT_PREFIX = '';
+		        document.getElementById('funct').value = Blockly.JavaScript.workspaceToCode(workspace);
+		        Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+				debuggerCode = Blockly.JavaScript.workspaceToCode(workspace);
+		  	  
+			  //var xml = Blockly.Xml.workspaceToDom(workspace);
+		  	  //var xml_text = Blockly.Xml.domToPrettyText(xml);
+
+			  //Unless I am mistaken there isn't a way currently to call into the context created when running a program with the JSInterpreter. On workaround could be to have a setInterval going inside the interpreter context that is polling an exposed api which is watching for events on the page and responds by calling your users code. https://neil.fraser.name/software/JS-Interpreter/docs.html
+
+			  	//finalCode = "var pollEvent = function() {alert('pollevent')};\n"
+			   	//finalCode+= "id_ = setInterval(pollEvent, 1);\n";//+debuggerCode;
+				//var finalCode = debuggerCode+"while(true){var event=interalPollevent();if(event=='left'){alert('here');}}";
+				//alert(finalCode);
+				destory_all_clones();
+				var finalCode = debuggerCode;
+				finalCode+= "if (typeof ON_STARTUP !== 'undefined') {\n";//cehck to see if funtion is defined
+				finalCode+= "	ON_STARTUP();\n";
+				finalCode+= "}\n";
+				eval(finalCode);
+				
+		        //myInterpreter = new Interpreter(finalCode, initApi);
+
+		        //alert('Ready to execute this code:\n\n' + code);
+		  	  //console.log('\n\nXML:\n\n' + xml_text);
+		        document.getElementById('stepButton').disabled = '';
+		        highlightPause = false;
+		        workspace.traceOn(true);
+		        workspace.highlightBlock(null);
+	}
+	//depracated Blockly.addChangeListener(workspaceChanged());
+	workspace.addChangeListener(workspaceChanged);
+	
+	
+	var project = {}
+	project.images = []
+	project.background_ = "not set";
+	
+	//toolbar code
+	function guid() {
+	  function s4() {
+	    return Math.floor((1 + Math.random()) * 0x10000)
+	      .toString(16)
+	      .substring(1);
+	  }
+	  return s4() + s4();
+	}
+	
+	onLoaded = function(){
+		//console.log('image loaded');
+		sprites[sprites.length-1].sprite = game.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[sprites.length-1].name);
+		sprite_ = front_layer.add(sprites[sprites.length-1].sprite);
+		//scale sprite down
+		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
+
+		game.physics.enable(sprites[sprites.length-1].sprite, Phaser.Physics.ARCADE);
+		//set it so that the sprites rotate on hte center axis
+		sprites[sprites.length-1].sprite.anchor.setTo(0.5, 0.5);
+		sprites[sprites.length-1].clones=[];
+		//scale sprite down
+		//sprites[sprites.length-1].sprite.scale.setTo(2,2);
+		//add sprite to blockly blocks
+		//Blockly.Blocks['motion_point_in_direction'].init()
+	}
+	//i neededd to make a better loader for when I have many sprites from a project, cause the images seem to load not in real time, so I need to make sure the current sprite gets to be the right one.... by incrementing thed variable below I ensure that the right sprite is put in the right slot...maybe to clean up we can use this second loader for the first case too? try it later...I think it should work
+	//loadproject
+	var loader_current_sprite=-1;
+	onLoaded2 = function(){
+		loader_current_sprite++;
+		//console.log('image loaded');
+		sprites[loader_current_sprite].sprite = game.add.sprite(game.world.centerX,game.world.centerY, "img"+sprites[loader_current_sprite].name);
+		sprite_ = front_layer.add(sprites[loader_current_sprite].sprite);
+		//scale sprite down
+		sprite_.scale.setTo(x_scaling_factor_percent, y_scaling_factor_percent);
+	
+		game.physics.enable(sprites[loader_current_sprite].sprite, Phaser.Physics.ARCADE);
+		//set it so that the sprites rotate on hte center axis
+		sprites[loader_current_sprite].sprite.anchor.setTo(0.5, 0.5);
+		sprites[loader_current_sprite].clones=[];
+
+		//this does not work:sprites[sprites.length-1].sprite.scale.setTo(2,2);
+		//add sprite to blockly blocks
+		//load background
+	}
+
+	var x_scaling_factor_percent;
+	var y_scaling_factor_percent;
+	
+	onLoadedBackground = function(){
+		//console.log('image loaded');
+		bg=game.add.sprite(0,0, "backgroud");
+		//calculate scaling factors
+		//nerdshark: divide the new width by the old width
+		//http://www.wikihow.com/Calculate-Percent-Change
+		var x_substracted= bg.width - game.world.bounds.bottomRight.x;
+		var y_substracted= bg.height - game.world.bounds.bottomRight.y;
+		var x_percentage=parseFloat(x_substracted)/game.world.bounds.bottomRight.x;
+		var y_percentage=parseFloat(y_substracted)/game.world.bounds.bottomRight.y;
+		
+		//console.log("x_percentage"+x_percentage);
+		//if (confirm('Do you want to scale the sprites to the size of the bakground(you will need to refresh and reload project to see the difference)?')) {
+		//	// sclae
+		//	x_scaling_factor_percent=x_percentage;
+		//	y_scaling_factor_percent=y_percentage;
+		//} else {
+			// Do not scale
+			x_scaling_factor_percent=1.0;
+			y_scaling_factor_percent=1.0;
+		//}				
+
+		//nerdshark: if you want to use the raw number directly, then just multiply each dimension of the sprite by it (raw_scaling_factor * sprite x), (raw_scaling_factor * sprite_y)
+		//scale backgroud
+		bg.width =game.world.bounds.bottomRight.x;
+		bg.height =game.world.bounds.bottomRight.y;
+		background_.add(bg);
+		//set it so that the sprites rotate on hte center axis
+		//background_.anchor.setTo(0, 0);
+	}
+
+	
+	document.getElementById("files").onchange = function () {
+	    var reader = new FileReader();
+
+	    reader.onload = function (e) {
+	        // get loaded data and render thumbnail.
+	        document.getElementById("image").src = e.target.result;
+			//game.load.image('userSprite1', 'assets/firstaid.png');
+
+			//prompt for sprite name
+			var name=prompt("Give me a name for this sprite","Sprite-"+guid());
+			for(var obj in sprites){
+				if(sprites[obj].name==name) {
+					alert("You must give each sprite a unique name");
+					return;				
+				}
+			}
+			if(name=="") {
+				alert("You must give each sprite a name");
+				return;
+			}
+			//append image name to object model
+			//add new sprite to object model
+			sprites.push({})
+			sprites[sprites.length-1].name=name;
+				
+			loader = new Phaser.Loader(game)
+			loader.image("img"+name, e.target.result );
+			loader.onLoadComplete.addOnce(onLoaded)
+			loader.start()
+			image={}
+			image.name=name;
+			image.data=e.target.result
+			project.images.push(image);
+	
+	    };
+
+	    // read the image file as a data URL.
+	    reader.readAsDataURL(this.files[0]);
+	};
+
+	document.getElementById("files2").onchange = function () {
+	    var reader = new FileReader();
+
+	    reader.onload = function (e) {
+	        // get loaded data and render thumbnail.
+	        document.getElementById("background").src = e.target.result;
+			//game.load.image('userSprite1', 'assets/firstaid.png');
+			loader = new Phaser.Loader(game)
+			loader.image("backgroud", e.target.result );
+			loader.onLoadComplete.addOnce(onLoadedBackground)
+			loader.start()
+			project.background_ = document.getElementById("background").src;	
+	    };
+
+	    // read the image file as a data URL.
+	    reader.readAsDataURL(this.files[0]);
+	};
+
+	
+	document.getElementById("files_project_upload").onchange = function () {
+	    var reader = new FileReader();
+
+	    reader.onload = function (e) {
+	        // get loaded data and render thumbnail.
+	        var project_json = e.target.result;
+			//alert("project_json:"+project_json);
+			
+			project = JSON.parse(project_json);
+			if(typeof project.background_ != 'undefined' || project.background_!="not set") {
+				loader = new Phaser.Loader(game);
+				loader.image("backgroud", project.background_ );
+				loader.onLoadComplete.addOnce(onLoadedBackground);
+				loader.start();								
+						
+
+			}
+			
+			
+			loader_current_sprite=-1;
+			for(image in project.images) {
+				sprites.push({})
+				sprites[sprites.length-1].name=project.images[image].name;
+				
+				loader = new Phaser.Loader(game);
+				loader.image("img"+project.images[image].name, project.images[image].data );
+				loader.onLoadComplete.addOnce(onLoaded2);
+				loader.start();
+			}
+			
+			Blockly.mainWorkspace.clear();
+			var xml = Blockly.Xml.textToDom(project.block_xml);
+			Blockly.Xml.domToWorkspace(workspace, xml);
+			
+	    };
+	    // read the image file as a data URL.
+	    reader.readAsText(this.files[0]);
+	};
+	
+	function loadURLproject() {
+		var URL=prompt("Enter URL to project:");
+		var req = new XMLHttpRequest();  
+		req.open('GET', URL, false);   
+		req.send(null);  
+		if(req.status == 200) {  
+		   project_json=req.responseText;
+		}else{
+				alert("ERROR:"+req.status)
+		}
+		//alert("project_json:"+project_json);
+		
+		project = JSON.parse(project_json);
+		
+		
+		
+		if(typeof project.background_ != 'undefined' || project.background_!="not set") {
+			loader = new Phaser.Loader(game);
+			loader.image("backgroud", project.background_ );
+			loader.onLoadComplete.addOnce(onLoadedBackground);
+			loader.start();										
+			
+		}
+		
+		
+		loader_current_sprite=-1;
+		for(image in project.images) {
+			sprites.push({})
+			sprites[sprites.length-1].name=project.images[image].name;
+			
+			loader = new Phaser.Loader(game);
+			loader.image("img"+project.images[image].name, project.images[image].data );
+			loader.onLoadComplete.addOnce(onLoaded2);
+			loader.start();
+		}
+		
+		Blockly.mainWorkspace.clear();
+		var xml = Blockly.Xml.textToDom(project.block_xml);
+		Blockly.Xml.domToWorkspace(workspace, xml);
+		
+	}
+	//sprite object model
+	/*
+	spritea.push({})
+	sprite[0].name="test";
+	for(var obj in sprite){
+	print(sprite[obj].name)
+	}
+	"end"
+	*/
+	//(done)ok darkf, I have added the functionality of adding named sprites, now I just need to make blocks that work with the named sprites...  like have a drop-down listbox which lists the sprite name, that is my next goal
+	//(done)need to add the sprite name to the created block as-well
+	//(plan changed)adapt current blocks to accept spritename parameters
+	//(done)add a switch current sprite block, which will act as the sprite parameter for blocks that would take one sprite as parameter
+	//(done)add a switch tanget block for blocks that will need current block as parameter1 and target as parameter2 like the furrent point in direction twords enemy, I will rename to point current block twords target
+	//(fixed) (quickhack, it seems x and y for the object get fonverted to strings, to they just get concatenated with the plus sing.) debug problem with foward, seems to be skipping to a different location now...
+	//add a scrool tool to control speed of execution
+	//maybe call mine s-foundation, since scratch is named after "starting from scratch" mine should be named after "starting form a solid foundation"?
+	//there still seems to be some kind of bug when I use repeated setting angle to degrees and foward, the sprite disapears
+	
+	//big problems
+	//think of a way to do multythreading perhaps https://keithwhor.github.io/multithread.js/
+		//maybe rename switch sprite to "with sprite" and modify JS MutantVM to run each instance of a sprite as a thread? is this even possible with blockly blocks and the JS interpreter?
+		//I could use a comment to label each thread, make it clear that it is not really a comment
+		/*
+		Sadale: amigojapan, you don't really need a separate thread.
+		[10:40pm] amoe がチャットルームに参加しました。
+		[10:40pm] amigojapan: ok Sadale , then how?
+		[10:41pm] Sadale: amigojapan, just use a for loop to iterate thru all sprites. Then, says, when a collision is detected, execute the blocks that handle the collision
+		[10:42pm] amigojapan: Sadale: this "itterate thru all sprites" does nto fit very well with blockly.... basically it creates a big JS script, which is hten evaluated
+		[10:44pm] rxo がチャットルームに参加しました。
+		[10:44pm] amigojapan: Sadale: I guess I could inject the loop at the beginning of the code, I guess... let me thing about it
+amigojapan: Sadale: I will try making a small game as-is,    I think it would be better if we dont need to hide lots of functionality behind the scences...  maybe i can make a basic game loop where the user just inserts blocks where it is nessesary	
+		amigojapan: Sadale: I could implement synchronous multithreading... I have done this before in JS, I could do it again for this program... just take code from my old project.... it is very simple.  say we have 2 threads,    you take all the code and do array1=script1.split("/") array2=script2.split("/")  then you just eval one line from array1, then the next line from array2 and so on... it is very simple
+		amigojapan: Sadale: but then I would need to use eval, and dtop using the JS evaluator that I am using now, that allows for stepping and stuff
+		amigojapan: Adyrhan: anyhow,  I am not very worried about hackers at this point....  I owuld rather use the google sandboxed JS interpreter if possible.... if I use my methof of multithreding, I think I can just inject it before the script made by the user. and get it working in the sandbox... I think, if my calculations are correct
+		//I think hte ocntext would be lost if I used several calls to eval in my VM, the only way I can think that the blockly variables would not dissapear is to remake all of hte blockly blocks in a way that they reffer to an exterrnal global object to hold variables in, maybe I could inject it into any JS that looks like a variable somehow
+		amigojapan: GeDaMo: putting up a game loop when the user gets into the page would be less hiding of hte nitty gritty,  but probably hard to understand for a beginner
+		darkf: so instead of "forever do ..." just make a "when frame begins do ..." block.
+		[01:00am] LoLei がチャットルームを去りました。 (Ping timeout: 240 seconds)
+		[01:02am] amigojapan: darkf: so, I call a function made for each sprite when the program starts?    the problem with this approch I think, is that unlike scratch, if they have an eternal loop inside the funtion, the other sprites wont move at all, it needs to yeald to the other sprites code in some way
+		[01:02am] amigojapan: yeild*
+		[01:04am] pooooooopsy がチャットルームに参加しました。
+		[01:04am] lktp がチャットルームに参加しました。
+		[01:05am] darkf: yes so just dont have loops like that
+		amigojapan: darkf: as I said in the notes, I am tempted to just display a huge hame loop in blocks then the page is loaded.... and then just let the users modify the existing stuff....  have a prototype.... this would show the users kind of hte nitty gritty of game development instead of hiding it	
+		but wouldnt it just need to check for imput and check for collitions in the game loop? hmmm, I will try implimenting a simple game first with an event loop written in blocks... see if it gets hairy
+		amigojapan: I need to implement a way to get user input before I can do that...
+		*/
+	//(done)how to handle imput as events? can an eventListener be connected from phaser to call blockly block procedures as listeners?
+		//maybe look at the starwars hour of code, it seems to accept events defined by the user// this is level 7 ,  but hell, it is compressed :(
+		//January 1st 2016// I posted the question of how to handle events on the blockly google group https://groups.google.com/forum/#!topic/blockly/jex1uugSybg
+		/*reply recieved:
+		Unless I am mistaken there isn't a way currently to call into the context created when running a program with the JSInterpreter. On workaround could be to have a setInterval going inside the interpreter context that is polling an exposed api which is watching for events on the page and responds by calling your users code. https://neil.fraser.name/software/JS-Interpreter/docs.html
+
+		However I beleve that the Code.org Star Wars challenges use the pencilcode editor and not blockly. https://pencilcode.net/edit/first
+		2016-1-2 I got  it semy working by using normal eval() instead of the JS interpreter.... I should make some blocks that are prewritten events (functions) with a drop down to select the key
+		*/
+	
+	
+	//small stuff
+	//(done2016-1-10)implement collisioon detection
+		/*
+		//I have this, boths sprites are right over each other
+		game.physics.enable(sprites[0].sprite, Phaser.Physics.ARCADE);
+		game.physics.enable(sprites[1].sprite, Phaser.Physics.ARCADE);
+		game.physics.startSystem(Phaser.Physics.ARCADE);
+		game.physics.arcade.overlap(sprites[0].sprite , sprites[1].sprite);//this returns true//it seems overlap is pixel perfect after all!//no, I tested it and this is bouding box after all//apparently phaser does not have pixel perfect collision detection at all, they say it would be too expensive
+		game.physics.arcade.collide(sprites[0].sprite , sprites[1].sprite);//but this returns false
+		*/
+	
+	//(done2016-1-8)implement an update event	
+	////(done2016-1-9, but still problem that each eval creates new clones, maybe make a cleanup event to get rid of the clones made in the startup event, or just erase all clones when people hit the stop button)implement making clones of sprites
+		//maybe keep an array of clones inside each sprite, and implement "for each clone of sprite _" block
+		//change the find sprite by name function, so that it works with a clone during the itteration of the for each clone block, also keep a copy of hte original sprite in a variable for debugging purposes, while the current sprite is a clone, perhaps add a field to the sprite called (current clone) which could work in hte find sprite function... all of this is so I dont need to remake the movement functions just for hte clones
+		
+	//(done2016-1-8)implement a way to save and load blcoks(for testing purposes)
+	//(done)allow for backgrounds(cant these just be sprites set all the way back?)
+	//(partly done)allow for setting the depth of a sprite
+	//(instead of this I will have both alert() and prompt(), and also the posibility of using a terminal)implement say, and maybe say _ wait _ secs, also think should be very simillar , for the meantime it shoudl be good enough with the print block, eventually implement this
+	//(instead of this I will have both alert() and prompt(), and also the posibility of using a terminal)implement ask _ hmmm, I think this is already good enough with the prompt block
+
+	//implement costumes next costume , and switch to costume _
+	/*
+	I am thinking how to add animated sprites to my second programming language, maybe I will jsut add a bunch of invisible sprites 
+	and then assign the image of each sprite to the visible sprite during each frame to create an animation, yeah that sounds like a
+	 plan…. I needed to word it out, so each game_object also needs a frames array which is really just a bunch of sprites. and I
+	  need to add a “change to frame number X” block and a “change to next frame” block, and also a frame count variable block… 
+	  this one should take the input of which game object we are talking about….
+	  how to assing the image of a sprite to another sprite in phaser?
+	var fake_ChangeTexture=function (sprite_dest, sprite_source) {
+		var dest_x=sprite_dest.x;
+		var dest_y=sprite_dest.y;
+		sprite_dest.destroy();
+		game.add.sprite(dest_x, dest_y, sprite_source.key, sprite_source.frame);
+	}
+
+	car=find_sprite_object_by_name("car");
+	frog=find_sprite_object_by_name("frog");
+	fake_ChangeTexture(frog.sprite,car.sprite)
+	
+	by the way, I am trying to set a texture of a sprite to the texture of another sprite,  but phaser does not have such a function,
+	 so I am actually making a copy of the data in the source sprite, deleting the source sprite, then making a new sptire that uses
+	  the texture of the sprite I want to copy teh texture….. I hope this does not end up being too slow
+	  but I need to do it this way, I suspect they are going to tell me to use a spritesheet, but they dont udnerstand I am making a
+	   programming IDE and stuff, I really need to do it this way. I mean, I need to copy a texture from one sprite to another
+	   by changing the original sptire into a series of hidden sprites, and changign their texture when the user puts the “change sprite to next frame of animation” block on the main loop of hteir program
+	KaffeeJunky123: amigojapan: wouldn't it be easier to use separate sprites for the different frames of the animation and just hide the sprites that are not the current animation frame?
+	amigojapan:that and I would need to update their X Y and Angle axis to be the same as the original sprite whenever those are changed…. but yeah, it is possible,d effinitly
+	/*
+	//(done)implement hide show sprite blocks
+	//make a block that returns the current angle, call it direction like in scratch?
+	//(done)load and save xml for blocks in text mode
+		//(done2016-2-4)implement it in a mock download upload style
+		/*
+		Meowmers: amigojapan_: Wait, each element of that array is of type File (https://developer.mozilla.org/en-US/docs/Web/API/File)
+		[3:48pm] Meowmers: amigojapan_: After you get your file object, you use https://developer.mozilla.org/en-US/docs/Web/API/FileReader to read the content of that file.
+		[3:48pm] Meowmers: amigojapan_: Then after you use the file reader constructor to create a file reader, you use .readAsText() on that.
+		[3:49pm] Meowmers: amigojapan_: That is going to give you a string with the contents of the file.
+		*/
+	//clear all the sprites when new project is loaded
+	//(fixed)bug, there seems to be more events of hte same kind fired every time eval is clicked
+	//(changed to adjust to teh fps)can i reduce the eventloop timer to 0 ms, and if so will it still run? what is the optimal event polling time setting?
+	//stop timmers when script is stopped
+	//I think I will make a free version that needs to be connected online, and a pay version for offline if I see many people download it
+	
+	//make some way of implenting timers, maybe like in scratch (this should be easy for me), or maybe, if possible(not sure if I can do it cause it is functional) make it in the way Javascript does times with set_interval
+	//make frogger in s-found
+	
+  </script>
+
+</body>
+</html>
+0

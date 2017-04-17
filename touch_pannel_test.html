@@ -1,0 +1,198 @@
+<HTML>
+<HEAD>
+	<!--
+<style>
+	#btnA, #btnUp, #btnB, #btnLeft, #btnDown, #btnRight {
+		font-size:25px;
+		height:25px; 
+		width: 25px; 
+		border:1px solid black; 
+		display: inline;
+	}
+</style>
+-->
+<script>
+	var onScreenKeyboard={};
+	onScreenKeyboard.btnAPressed=false;
+	function btnAmouseDown() {
+		onScreenKeyboard.btnAPressed=true;
+	}
+	function btnAmouseUp() {
+		onScreenKeyboard.btnAPressed=false;
+	}
+	
+	onScreenKeyboard.btnBPressed=false;
+	function btnBmouseDown() {
+		onScreenKeyboard.btnBPressed=true;
+	}
+	function btnBmouseUp() {
+		onScreenKeyboard.btnBPressed=false;
+	}
+	
+	onScreenKeyboard.btnUpPressed=false;
+	function btnUpmouseDown() {
+		onScreenKeyboard.btnUpPressed=true;
+	}
+	function btnUpmouseUp() {
+		onScreenKeyboard.btnUpPressed=false;
+	}
+		
+	onScreenKeyboard.btnDownPressed=false;
+	function btnDownmouseDown() {
+		onScreenKeyboard.btnDownPressed=true;
+	}
+	function btnDownmouseUp() {
+		onScreenKeyboard.btnDownPressed=false;
+	}
+		
+	onScreenKeyboard.btnLeftPressed=false;
+	function btnLeftmouseDown() {
+		onScreenKeyboard.btnLeftPressed=true;
+	}
+	function btnLeftmouseUp() {
+		onScreenKeyboard.btnLeftPressed=false;
+	}
+		
+	onScreenKeyboard.btnRightPressed=false;
+	function btnRightmouseDown() {
+		onScreenKeyboard.btnRightPressed=true;
+	}
+	function btnRightmouseUp() {
+		onScreenKeyboard.btnRightPressed=false;
+	}	
+		
+	var kb_id;
+	function showScreenKeyboard() {
+		if (typeof kb_id !== 'undefined') window.clearInterval(kb_id);
+		kb_id = setInterval(logbuttons,100);
+		document.getElementById("on_screen_controls").style.display="inline-block";
+	}
+	
+	function logbuttons() {
+		document.getElementById("buttons_output").innerHTML = "";
+		var nothing_pressed=true;
+		if(onScreenKeyboard.btnAPressed) {
+			console.log("A");
+			document.getElementById("buttons_output").innerHTML += "A button pressed\n";
+			nothing_pressed=false;
+		}
+		if(onScreenKeyboard.btnBPressed) {
+			console.log("B");
+			nothing_pressed=false;
+			document.getElementById("buttons_output").innerHTML += "B button pressed\n";
+		}		
+		if(onScreenKeyboard.btnUpPressed) {
+			console.log("Up");
+			nothing_pressed=false;
+			document.getElementById("buttons_output").innerHTML += "Up button pressed\n";
+		}		
+		if(onScreenKeyboard.btnDownPressed) {
+			console.log("Down");
+			nothing_pressed=false;
+			document.getElementById("buttons_output").innerHTML += "Down button pressed\n";
+		}		
+		if(onScreenKeyboard.btnLeftPressed) {
+			console.log("Left");
+			nothing_pressed=false;
+			document.getElementById("buttons_output").innerHTML += "Left button pressed\n";
+		}		
+		if(onScreenKeyboard.btnRightPressed) {
+			console.log("Right");
+			nothing_pressed=false;
+			document.getElementById("buttons_output").innerHTML += "Right button pressed\n";
+		}				
+		if(nothing_pressed==true) {
+			document.getElementById("buttons_output").innerHTML = "no button pressed";	
+		}
+	}
+	window.addEventListener('load', function(){
+		var box1 = document.getElementById('btnA')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnAmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnAmouseUp();
+			e.preventDefault()
+		}, false)
+		var box1 = document.getElementById('btnB')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnBmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnBmouseUp();
+			e.preventDefault()
+		}, false)
+		var box1 = document.getElementById('btnUp')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnUpmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnUpmouseUp();
+			e.preventDefault()
+		}, false)
+		var box1 = document.getElementById('btnDown')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnDownmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnDownmouseUp();
+			e.preventDefault()
+		}, false)	
+		var box1 = document.getElementById('btnLeft')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnLeftmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnLeftmouseUp();
+			e.preventDefault()
+		}, false)
+		var box1 = document.getElementById('btnRight')
+		box1.addEventListener('touchstart', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+			btnRightmouseDown();
+			e.preventDefault()
+		}, false)
+		box1.addEventListener('touchend', function(e){
+			var touchobj = e.changedTouches[0] // reference first touch point for this event
+			btnRightmouseUp();
+			e.preventDefault()
+		}, false)	 			 		 
+	}, false)
+/*
+	window.onload = function() {
+		//document.getElementById('btnA').ontouchstart= btnAmouseDown;
+		//document.getElementById('btnA').addEventListener('touchstart', btnAmouseDown);
+		document.getElementById('btnA').addEventListener("touchstart", function(event){  
+			alert("a button down");
+			console.log('down fired');
+			btnAmouseDown();
+			event.target.classList.add('down');
+		}, true);
+	}
+*/
+</script>
+</HEAD>
+<body>
+	<a href="#" onclick="showScreenKeyboard()">Show Screen Controller</a>
+	<div id="on_screen_controls" style="border:1px solid black; display: none;">
+		<div id="btnA" class="box" onmousedown="btnAmouseDown()" onmouseup="btnAmouseUp()" style="display: inline;"><img src="images/A.png"></div><div id="btnUp" onmousedown="btnUpmouseDown()" onmouseup="btnUpmouseUp()"style="display: inline;"><img src="images/arrow_up.png"></div><div id="btnB" onmousedown="btnBmouseDown()" onmouseup="btnBmouseUp()"style="display: inline;"><img src="images/B.png"></div><BR>
+		<div id="btnLeft" onmousedown="btnLeftmouseDown()" onmouseup="btnLeftmouseUp()" style="display: inline;"><img src="images/arrow_left.png"></div><div id="btnDown" onmousedown="btnDownmouseDown()" onmouseup="btnDownmouseUp()" style="display: inline;"><img src="images/arrow_down.png"></div><div id="btnRight" onmousedown="btnRightmouseDown()" onmouseup="btnRightmouseUp()" style="display: inline;"><img src="images/arrow_right.png"></div><BR>
+	</div>
+		<div id="buttons_output">
+
+</body>

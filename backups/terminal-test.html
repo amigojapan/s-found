@@ -1,0 +1,198 @@
+<HTML>
+<HEAD>
+<script>
+	function clear() {
+		document.getElementById("term").value = "";
+		return "";
+	}
+	function cb(varname){
+		alert(varname+" welcome!");
+	}//input_trigger(n,"what is your name?,cb);
+	function input_trigger(varname,prompt,callback) {//call this from block to trigger input
+		//this seems to show how to do non blocking waiting, which I will need for the s-found block
+		//http://stackoverflow.com/questions/5551378/javascript-pausing-execution-of-function-to-wait-for-user-input
+		//how about adding an extra parameter that has a callback for then the input is over and caling it then? 
+		//maybe generate it with a unique function name...too bad there is no goto in JS
+		document.getElementById("txtPrompt").value= varname +' = input("' + prompt + '");'
+		p=document.getElementById("txtPrompt");
+		e=new CustomEvent("keyup");
+		e.keyCode=13;
+		p.dispatchEvent(e);
+		//wait for input withought making hte browser hang
+		function loop() {
+			if (input!=null) {
+				setTimeout(loop, 0);
+			}
+			else {
+				callback(eval(varname));
+			}
+		}
+		loop();
+		/*
+		document.getElementById("txtPrompt").value= varname +' = input("' + prompt + '");'
+		p=document.getElementById("txtPrompt");
+		e=new CustomEvent("keyup");
+		e.keyCode=13;
+		p.dispatchEvent(e);
+		*/
+	}
+	function echo(output) {
+		showTerm=true;
+		document.getElementById("termDiv").style.display="block";
+		document.getElementById("term").value = document.getElementById("term").value +output + "\n";
+		return "";//avoid showing undefined
+		//for(var a=0;a<100;a++) echo("hello"+a);
+	}
+	function maze(x,y) {
+		var n=x*y-1;
+		if (n<0) {alert("illegal maze dimensions");return;}
+		var horiz =[]; for (var j= 0; j<x+1; j++) horiz[j]= [],
+			verti =[]; for (var j= 0; j<x+1; j++) verti[j]= [],
+			here = [Math.floor(Math.random()*x), Math.floor(Math.random()*y)],
+			path = [here],
+			unvisited = [];
+		for (var j = 0; j<x+2; j++) {
+			unvisited[j] = [];
+			for (var k= 0; k<y+1; k++)
+				unvisited[j].push(j>0 && j<x+1 && k>0 && (j != here[0]+1 || k != here[1]+1));
+		}
+		while (0<n) {
+			var potential = [[here[0]+1, here[1]], [here[0],here[1]+1],
+				[here[0]-1, here[1]], [here[0],here[1]-1]];
+			var neighbors = [];
+			for (var j = 0; j < 4; j++)
+				if (unvisited[potential[j][0]+1][potential[j][1]+1])
+					neighbors.push(potential[j]);
+			if (neighbors.length) {
+				n = n-1;
+				next= neighbors[Math.floor(Math.random()*neighbors.length)];
+				unvisited[next[0]+1][next[1]+1]= false;
+				if (next[0] == here[0])
+					horiz[next[0]][(next[1]+here[1]-1)/2]= true;
+				else 
+					verti[(next[0]+here[0]-1)/2][next[1]]= true;
+				path.push(here = next);
+			} else 
+				here = path.pop();
+		}
+		return {x: x, y: y, horiz: horiz, verti: verti};
+	}
+	 
+	function display(m) {
+		var text= [];
+		for (var j= 0; j<m.x*2+1; j++) {
+			var line= [];
+			if (0 == j%2)
+				for (var k=0; k<m.y*4+1; k++)
+					if (0 == k%4) 
+						line[k]= '+';
+					else
+						if (j>0 && m.verti[j/2-1][Math.floor(k/4)])
+							line[k]= ' ';
+						else
+							line[k]= '-';
+			else
+				for (var k=0; k<m.y*4+1; k++)
+					if (0 == k%4)
+						if (k>0 && m.horiz[(j-1)/2][k/4-1])
+							line[k]= ' ';
+						else
+							line[k]= '|';
+					else
+						line[k]= ' ';
+			if (0 == j) line[1]= line[2]= line[3]= ' ';
+			if (m.x*2-1 == j) line[4*m.y]= ' ';
+			text.push(line.join('')+'\r\n');
+		}
+		return text.join('');
+	}//display(maze(10,14));
+	var commands=[];
+	var command_index;
+	var command
+	var input=null;
+	var parsed;
+	window.onload = function() {
+		document.getElementById("txtPrompt").addEventListener("keyup", function(event) {
+			event.preventDefault();
+			if (event.keyCode == 13) {
+				command=document.getElementById("txtPrompt").value
+				commands.push(command);
+				//https://regex101.com/r/YFbwIa/1
+				if(input=="waiting for new input") {
+					var expretion = parsed[1]+" = '" + document.getElementById("txtPrompt").value+"';"
+					eval(expretion);
+					document.getElementById("txtPrompt").value="";
+					input=null;
+					return;
+				}
+				const regex = /(.*).*=.*input\("(.*)"\);/g;
+				parsed = regex.exec(command)
+				if(parsed!=null) {//store input from user
+					echo(parsed[2]);
+					input="waiting for new input";
+					document.getElementById("txtPrompt").value="";
+					return;
+				}
+				try {
+					output= eval(command);
+				}
+				catch (e) {
+				   echo(e);
+				   return;
+				}
+				document.getElementById("term").value = document.getElementById("term").value + output;
+				if(command.substring(0, 5)!="echo(") {//add a newlinee if the command is not echo
+					document.getElementById("term").value = document.getElementById("term").value  + "\n";
+				}
+				document.getElementById("txtPrompt").value="";
+				command_index=commands.lenght;
+				//scroll to bottom
+				var textarea = document.getElementById("term");
+				textarea.scrollTop = textarea.scrollHeight;
+			}
+			if (event.keyCode == 38) {//up arrow
+				if(typeof commands[command_index] == 'undefined') {
+					command_index=commands.length-1;
+				} else {
+					if(command_index>0) {
+						command_index--;
+					}
+				}
+				document.getElementById("txtPrompt").value = commands[command_index];
+			}
+			if (event.keyCode == 40) {//down arrow
+				if(typeof commands[command_index] == 'undefined') {
+					command_index=commands.length-1;
+				} else {
+					if(command_index<commands.length-1) {
+						command_index++;
+					}
+				}
+				document.getElementById("txtPrompt").value = commands[command_index];
+			}
+		});
+	};
+	var showTerm=false;
+	function toggleShowTerminal() {
+		showTerm=!showTerm;
+		document.getElementById("termDiv").style.display=showTerm?"block":"none";
+	}
+	//-(done)I will make it just display the thrown exception when an error happens….
+	//-hide the terminal by default, make a "toggle terminal" button
+	//-show the terminal automatically when an echo() command is used
+</script>
+</HEAD>
+<body>
+	<a href="#" onclick="toggleShowTerminal()">Toggle Show Terminal</a>
+	<div id="termDiv" style="overflow-y: auto; border:1px solid black; width: 400px; display: none;">
+		<textarea rows="15" cols="50" id="term" style="resize: none; height: 80px; max-height: 100px; width: 400px; font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;"></textarea>
+		<BR><input type="text" id="txtPrompt" style="width: 400px" />
+	</div>
+	<BR>terminal is hidden by default!
+	<BR>Commands:
+	<BR>clear()
+	<BR>echo("hello world")
+	<BR>input("prompt")
+	<BR>otherwise just eval anything.
+</body>
+</html>

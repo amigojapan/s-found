@@ -1,0 +1,147 @@
+<HTML>
+<HEAD>
+<script>
+	var project = {};
+	function start() {
+		//new project
+		
+		project.game_objects=[];
+			project.pages=[];
+		//new page
+		var page={};
+			page.pagename="page1";
+		page.xml="<xml>";
+		project.pages.push(page);
+		//new game object
+		var game_object={};
+		game_object.name="data1";
+		game_object.frames=[];
+		project.game_objects.push(game_object);
+		//new game object
+		var game_object={};
+		game_object.name="data2";
+		game_object.frames=[];
+		project.game_objects.push(game_object);
+		//new frame
+		var frame={};
+		frame.alias="hi1";
+		project.game_objects[0].frames.push(frame);
+		//new frame
+		var frame={};
+		frame.alias="hi2";
+		project.game_objects[0].frames.push(frame);
+		var frame={};
+		frame.alias="hi3";
+		project.game_objects[1].frames.push(frame);
+		var frame={};
+		frame.alias="hi4";
+		project.game_objects[1].frames.push(frame);
+		//parsing data structure
+		updateDialogBox();
+	}
+	function updateDialogBox() {
+		document.getElementById("sprite_manager_dialogbox").innerHTML="";
+		document.getElementById("sprite_manager_dialogbox").innerHTML += "<a href=http://www.piskelapp.com/ target=\"Sprite editor\">Open exrnal sprite editor in new tab</a> remember to save as PNG.";
+		document.getElementById("sprite_manager_dialogbox").innerHTML +=" <a href=\"#\" onclick='document.getElementById(\"files\").click();'>Add Strite</a>"
+		for(var obj in project.game_objects) {
+			document.getElementById("sprite_manager_dialogbox").innerHTML += "<div>";
+			document.getElementById("sprite_manager_dialogbox").innerHTML +='<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" />';
+			document.getElementById("sprite_manager_dialogbox").innerHTML += project.game_objects[obj].name; 
+			document.getElementById("sprite_manager_dialogbox").innerHTML += " <a href=javascript:clikedChangeImageLink('"+project.game_objects[obj].name+"')"+ " id=ChangeImg"+project.game_objects[obj].name+">Change image</a>";
+			document.getElementById("sprite_manager_dialogbox").innerHTML += " <a href=javascript:clikedRenameLink('"+project.game_objects[obj].name+"')"+ " id=Rename"+project.game_objects[obj].name+">Rename</a>";
+			document.getElementById("sprite_manager_dialogbox").innerHTML += " <a href=javascript:clikedDeleteLink('"+project.game_objects[obj].name+"')"+ " id=del"+project.game_objects[obj].name+">Delete</a>"
+			document.getElementById("sprite_manager_dialogbox").innerHTML += " <a href=javascript:clikedAddFrameLink('"+project.game_objects[obj].name+"')"+ " id=AddFrame"+project.game_objects[obj].name+">Add frame</a>"
+			document.getElementById("sprite_manager_dialogbox").innerHTML += "</div>";
+			for(var frame in project.game_objects[obj].frames) {
+				document.getElementById("sprite_manager_dialogbox").innerHTML += "<div>";
+				document.getElementById("sprite_manager_dialogbox").innerHTML += "frame"+(parseInt(frame)+1)+"->";
+				document.getElementById("sprite_manager_dialogbox").innerHTML +='<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" />';
+				document.getElementById("sprite_manager_dialogbox").innerHTML += project.game_objects[obj].frames[frame].alias; 
+				document.getElementById("sprite_manager_dialogbox").innerHTML += " <a href=javascript:clikedChangeImageFrameLink('"+project.game_objects[obj].frames[frame].alias+"')"+ " id=ChangeImg"+project.game_objects[obj].frames[frame].alias+">Change image</a>";
+				document.getElementById("sprite_manager_dialogbox").innerHTML += " <a href=javascript:clikedRenameFrameLink("+obj+","+frame+")"+ " id=Rename"+project.game_objects[obj].frames[frame].alias+">Rename</a>";
+				document.getElementById("sprite_manager_dialogbox").innerHTML += " <a href=javascript:clikedDeleteFrameLink("+obj+","+frame+")"+ " id=del"+project.game_objects[obj].frames[frame].alias+">Delete</a>"
+				document.getElementById("sprite_manager_dialogbox").innerHTML += "</div>";		
+			}
+		} 
+	}
+	function clikedRenameFrameLink(obj,frame) {
+		var new_name = prompt("Give me a name for this sprite","Sprite-"+guid());
+		for(var frm in project.game_objects[obj].frames) {
+			if(project.game_objects[obj].frames[frm].alias==new_name) {
+				alert("Error:there is already a frame alias named:" + new_name + ", for this sprite, every frame name must be unique.");
+				return;
+			}
+		}
+		project.game_objects[obj].frames[frame].alias=new_name;
+		updateDialogBox();
+	}
+	function clikedDeleteFrameLink(obj,frame) {
+	  var answer = confirm("Delete frame "+project.game_objects[obj].frames[frame].alias+"? -- warning this cannot be undone!!")
+	  if (answer) {
+			project.game_objects[obj].frames.splice(frame, 1);
+			updateDialogBox();
+	  }
+	}
+	function clikedAddFrameLink(game_object_name) {
+		var new_name = prompt("Give me a name for this frame","Frame-"+guid());
+		for(var obj in project.game_objects) {
+			if(project.game_objects[obj].name==game_object_name) {
+				for(var frame in project.game_objects[obj].frames) {
+					if(project.game_objects[obj].frames[frame].alias==new_name) {
+						alert("Error: sprite " + project.game_objects[obj].name + " already has a frame called " + new_name + " every frame alias must be unique.");
+						return;
+					}
+				}
+				var frame={};
+				frame.alias=new_name;	
+				project.game_objects[obj].frames.push(frame);
+				updateDialogBox();
+				return;	
+			}							
+		}
+	}
+	function clikedRenameLink(game_object_name) {
+		var new_name = prompt("Give me a name for this sprite","Sprite-"+guid());
+		for(var obj in project.game_objects) {
+			if(project.game_objects[obj].name==new_name) {
+				alert("Error:there is already a sprite named:" + new_name + ", every sprite name must be unique.");
+				return;
+			}
+		}
+		for(var obj in project.game_objects) {
+			if(project.game_objects[obj].name==game_object_name) {
+				project.game_objects[obj].name=new_name;
+				updateDialogBox(); 
+				return;
+			}
+		}
+	}
+	function guid() {
+	  function s4() {
+	    return Math.floor((1 + Math.random()) * 0x10000)
+	      .toString(16)
+	      .substring(1);
+	  }
+	  return s4() + s4();
+	}
+	function clikedDeleteLink(game_object_name) {
+		var answer = confirm("Delete sprite "+game_object_name+"? -- warning this cannot be undone!!")
+		if (answer) {
+			for(var obj in project.game_objects) {
+				if(project.game_objects[obj].name==game_object_name) {
+					project.game_objects.splice(obj, 1);
+					updateDialogBox(); 
+					return;
+				}
+			}
+		}
+	}
+	window.onload = function() {
+		start();
+	};
+</script>
+</HEAD>
+<body>
+	<div id="sprite_manager_dialogbox" style="overflow-y: auto; height:100px; border:1px solid black;">
+</body>
+</div>

@@ -1,0 +1,62 @@
+	-(done: decided on paged)modules
+		amigojapan: darkf: I think the other hard part will be braking up the projects into “modules” or “Pages”    
+		to be able to break up a project into smalled pices, becuase blockly does not have such a functionality….
+		I want my users to be able to develop in smaller pages, cause making a huge block program in only one workspace
+		would be hell
+
+	-(done)implement hide show sprite blocks
+	-(done)load and save xml for blocks in text mode
+	-(done2016-2-4)implement it in a mock download upload style
+		Meowmers: amigojapan_: Wait, each element of that array is of type File (https://developer.mozilla.org/en-US/docs/Web/API/File)
+		[3:48pm] Meowmers: amigojapan_: After you get your file object, you use https://developer.mozilla.org/en-US/docs/Web/API/FileReader to read the content of that file.
+		[3:48pm] Meowmers: amigojapan_: Then after you use the file reader constructor to create a file reader, you use .readAsText() on that.
+		[3:49pm] Meowmers: amigojapan_: That is going to give you a string with the contents of the file.
+	-(fixed)bug, there seems to be more events of hte same kind fired every time eval is clicked
+	-(changed to adjust to teh fps)can i reduce the eventloop timer to 0 ms, and if so will it still run? what is the optimal event polling time setting?
+	-(I think this is done, check later)stop timmers when script is stopped
+	-I think I will make a free version that needs to be connected online, and a pay version for offline if I see many people download it
+	
+	-(done)make some way of implenting timers, maybe like in scratch (this should be easy for me), or maybe, if possible(not sure if I can do it cause it is functional) make it in the way Javascript does times with set_interval
+	-(done)make frogger in s-found
+	-(done)add a comment to the code that mentions what "page" the code is on
+	-(done)make the programming div 95% width so that the vertical scrollbar is usable on mac
+	-(done)make a way  to detect a colission between two clones of a sprite
+		greg suggested making a second kind of block which would be put under the normal [for each clone of sprite] but
+		one that works for the clones of the target and can be nested inside the other block, use different variable names than the other block too
+		what should I call such a block? [nested loop on target sprite]? man , this is getting hard for noobs to understand
+	-modify timer block to accept an ID thru a variable too (to make bomberman enemy explode in a certain time)
+	-add block to clear timer(put intide timer function itself(is this possible?) (should also accept a variable as input)
+		amigojapan wonders if it is possible to set a clearTimeour() inside a setTimeout()’s callback function  /me googles
+		[5:43pm] amigojapan: yes, seems it is possible to fo it :)
+	-add A and B button to put bomb down
+		try to make a general function so it is easy to add any button
+		https://phaser.io/examples/v2/input/key
+		Phaser.Keyboard.A
+	-(partially done, need to interage with the main project) make dialog box for managing sprites and frames
+		-fix problem of adding a frame to second object adds the frame to first object
+	-make aliases for frame names
+	-add a block to switch to an aliased frame
+	-for some other game modify collision block or make other block od "clone colide with clone" how to know which clone colised 
+		with which clone? maybe have a way to return both IDs as strings? does not seem ideal.
+	-(partially done, elminated highlights from code displayed to user)fix highlight problem appearing in code
+	-make terminal window
+	-bomberman (use for each clone of bombs colide with bomberman, use foreach baddy collide with bomberman)
+		how will I deal with baddy colides with bomb,try nested forwach, but probably wont work cause of shared object counter?
+		if it does not work make the counter a member of each game_object
+	-vewis (make example that follows a character)
+		I think I will just move everything together with the backround except the main character... naybe make
+		a (for everything except currect sprite block) to do this... use that block then move everything in the direction pointed
+		also need to specify if we want the background scaled of now, this should probably show anothed dialogbox with a checkmark
+		coudl also put some values and add a "scale all sprites by this" also with a checkmark.
+	-(partly done, need to apply all buttons and then integrate with main project)make screen controls(how can I make them repeat while they are pressed like keys do? (maybe a timer for each button huh...))
+		maybe make a function that encapsuled the definition of a key to make it eaasy to add any new keys
+		maybe make a timer which calls the function of a key repeatedly to simulate key pressing until ti is released
+	-add blocks for sprite width and sprite height(should I bother to make it of the current frame? maybe later)
+	-prevent highlighting from causing problems when there is only another view(cause only highllights for this page to appear)
+	-make an export to standalone feature
+	-make particle system
+	-make a block that returns the current angle, call it direction like in scratch?
+	-clear all the sprites when new project is loaded, also make a new project loadable even if user does not refresh window
+	-clear workspace when deleted page
+
+	priorities: make possible collision detection between 2 sprite cclones(done), fix problem with sprite manager
