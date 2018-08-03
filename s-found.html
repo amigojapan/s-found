@@ -981,7 +981,8 @@ ver 0.1
 		if (answer) {
 			for(sprite in sprites) {
 				if(sprites[sprite].name==game_object_name) {
-					delete sprites[sprite];
+					//delete sprites[sprite]; //https://github.com/amigojapan/s-found/issues/3
+					sprites[sprite].sprite.destroy()//this should fix the issue
 				}
 			}
 			for(var obj in project.game_objects) {
