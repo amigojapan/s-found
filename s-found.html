@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <!--
@@ -275,7 +276,9 @@ ver 0.1
 		      <block type="text"></block>
 		      <block type="text_length"></block>
 		      <block type="text_echo"></block>
-		      <block type="text_input_term"></block>
+              <block type="text_input_term"></block>
+              <block type="text_cls"></block>
+              
 		      
 		      <!--
 		      
@@ -639,7 +642,7 @@ ver 0.1
 	function termOnLoseFocus() {
 		lockKeysForGame();
 	}
-	function clear() {
+	function cls() {
 		document.getElementById("term").value = "";
 		return "";
 	}
@@ -711,6 +714,9 @@ ver 0.1
 		document.getElementById("term").value = document.getElementById("term").value +output + "\n";
 		return "";//avoid showing undefined
 		//for(var a=0;a<100;a++) echo("hello"+a);
+	}
+    function clear() {
+		document.getElementById("term").value = "";
 	}
 	function maze(x,y) {
 		/*
@@ -3465,6 +3471,22 @@ Blockly.JavaScript['api_http_response_text'] = function(block) {
   return [code, Blockly.JavaScript.ORDER_NONE];
 };
 
+Blockly.Blocks['text_cls'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("clear terminal");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(120);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+Blockly.JavaScript['text_cls'] = function(block) {
+  // TODO: Assemble JavaScript into code variable.
+  var code = 'cls();\n';
+  return code;
+};
 //blockly end
 	function update_workspace_code_in_projet() {
 		var xml = Blockly.Xml.workspaceToDom(workspace);
