@@ -352,6 +352,8 @@ ver 0.1
 		   <category name="Variables" colour="330" custom="VARIABLE"></category>
 		    <category name="Functions" custom="PROCEDURE"></category>
 		    <category name="Advanced">
+					<block type="http_request"></block>
+					<block type="api_http_response_text"></block>
 		      <block type="procedures_defreturn_functional"></block>
 		      <block type="call_first_class_function"></block>
 		      <block type="set_timer"></block>
@@ -3398,6 +3400,72 @@ Blockly.JavaScript['call_first_class_function'] = function(block) {
   var code = variable_return_to+'='+variable_variable_name+'('+variable_parameter+');\n';
   return code;
 };
+Blockly.Blocks['http_request'] = {
+  init: function() {
+		this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.appendDummyInput()
+        .appendField("HTTP Request");
+    this.appendValueInput("URL")
+        .setCheck("String")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("URL");
+    this.appendValueInput("post_data")
+        .setCheck("String")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("post data");
+    this.appendStatementInput("response")
+        .setCheck(null);
+    this.setColour(260);
+    this.setTooltip('');
+    this.setHelpUrl('http://www.example.com/');
+  }
+};
+Blockly.JavaScript['http_request'] = function(block) {
+  var value_url = Blockly.JavaScript.valueToCode(block, 'URL', Blockly.JavaScript.ORDER_ATOMIC);
+  var value_post_data = Blockly.JavaScript.valueToCode(block, 'post_data', Blockly.JavaScript.ORDER_ATOMIC);
+  var statements_response = Blockly.JavaScript.statementToCode(block, 'response');
+  // TODO: Assemble JavaScript into code variable.
+  var code ="";
+	    code+="try {\n";
+			code+="if(window.location.hostname=='amigojapan.github.io'){alert('access restricted to HTTP request on this web page, please download the offline version to gain access to this feature');return;}\n";
+	    code+= 'var http = new XMLHttpRequest();\n';
+		  code+= 'var url = '+value_url+';\n';
+      code+= 'var params = '+value_post_data+'\n';
+	if(value_post_data){
+		  code+= 'http.open(\'POST\', url, true);\n';
+	} else {
+		  code+= 'http.open(\'GET\', url, true);\n';
+	}
+      code+= '//Send the proper header information along with the request\n';
+      code+= 'http.setRequestHeader(\'Content-type\', \'application/x-www-form-urlencoded\');\n';
+      code+= 'http.onreadystatechange = function() {//Call a function when the state changes.\n';
+			code+= '	if(http.readyState == 4 && http.status == 200) {\n';
+      code+=    	statements_response+'\n';
+			code+= '  }\n';
+      code+= '}\n';
+			code+= 'http.send(params);\n';
+			code+="} catch(err) {alert('ERROR'+err)}\n";
+  return code;
+};
+Blockly.Blocks['api_http_response_text'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("http response text");
+    this.setOutput(true, "String");
+    this.setColour(260);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+Blockly.JavaScript['api_http_response_text'] = function(block) {
+  // TODO: Assemble JavaScript into code variable.
+  var code = 'http.responseText';
+  // TODO: Change ORDER_NONE to the correct strength.
+  return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+//blockly end
 	function update_workspace_code_in_projet() {
 		var xml = Blockly.Xml.workspaceToDom(workspace);
 		var xml_text = Blockly.Xml.domToPrettyText(xml);
