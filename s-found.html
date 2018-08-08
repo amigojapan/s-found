@@ -67,31 +67,31 @@
         <strong>example programs:</strong>
         <BR> click on links below to load examples, then click Run
         <BR><a href=/s-found/s-found.html?LoadFromUrl=https://amigojapan.github.io/s-found/projects/Arrow_game/new_arrow_game.s-found>
-            Start s-found load [Arrow game] example
+            [Arrow game] example
             </a>
         <BR><a href=/s-found/s-found.html?LoadFromUrl=https://amigojapan.github.io/s-found/projects/space_invaders/space-invaders_bg4.s-found>
-            Start s-found load [Space invaders] game example
+            [Space invaders] game example
             </a>
         <BR><a href=/s-found/s-found.html?LoadFromUrl=https://amigojapan.github.io/s-found/projects/frogger/frogger_frog_in_front.s-found>
-            Start s-found load [Frogger] game example
+            [Frogger] game example
             </a>
         <BR><a href=/s-found/s-found.html?LoadFromUrl=https://amigojapan.github.io/s-found/projects/bomberman/bmwalk_aliases_latest.s-found.txt>
-            Start s-found load [Bomberman walk] game example
+            [Bomberman walk] game example
             </a>
-        <BR><a href=/s-found/s-found.html?LoadFromUrl=https://amigojapan.github.io/s-found/projects/nikutabero2/n75.s-found>
-            Start s-found load [niku tabero2 test number 75 demo] game example
-            </a>    
         <BR><a href=/s-found/s-found.html?LoadFromUrl=https://amigojapan.github.io/s-found/projects/terminal_examples/terminal_guess_my_number5.s-found>
-            Start s-found load [Guess my number] game example
+            [termianl example Guess my number game] example
             </a>
         <BR><a href=/s-found/s-found.html?LoadFromUrl=https://amigojapan.github.io/s-found/projects/terminal_examples/terminal_example2.s-found>
-            Start s-found load [Terminal example2 simple cli and ascii art]
-            </a> 
+            [Terminal example simple cli and ascii art]
+            </a>
+            <BR><a href=/s-found/s-found.html?LoadFromUrl=https://amigojapan.github.io/s-found/projects/terminal_examples/current_bitcoin_value2.s-found>
+            [HTTP Request and json parser example, current bitcoin value]
+                </a>             
             <BR><a href=/s-found/s-found.html?LoadFromUrl=https://amigojapan.github.io/s-found/projects/terminal_examples/cli_gui4.s-found>
-            Start s-found load [Terminal example3 cli interacting with gui]
+            [Terminal example3 cli interacting with gui]
             </a> 
         <BR><a href=/s-found/s-found.html?LoadFromUrl=https://amigojapan.github.io/s-found/projects/terminal_examples/fibonaci_term.s-found>
-            Start s-found load [Fibonacci example]
+            [Terminal example Fibonacci]
             </a> 
         </div> 
         <div id='main-window' style="text-align: center; background:#942192">
@@ -2002,6 +2002,8 @@
                     set_all_fames_to_first_frame();
                     //eval(finalCode);
                     document.getElementById('code_text_area').value = finalCode;
+                    //scroll down to the code area
+                    location.hash ='code_text_area';
                 }
                 function runCode() {	
                     var execution_speed =document.getElementById('execution_speed').value;
