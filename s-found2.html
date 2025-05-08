@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeMirror Editor with Autocomplete</title>
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.19/lib/codemirror.min.css">
+    <!-- Dracula Theme (Optional) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.19/theme/dracula.min.css">
+    <!-- Show Hint CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.19/addon/hint/show-hint.css">
+</head>
+<body>
+    <!-- Textarea for the CodeMirror editor -->
+    <textarea id="code">
+function greet(name) {
+    console.log("Hello, " + name + "!");
+}
+greet("World");
+    </textarea>
+
+    <!-- CodeMirror JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.19/lib/codemirror.min.js"></script>
+    <!-- Mode for JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.19/mode/javascript/javascript.min.js"></script>
+    <!-- Show Hint Addon -->
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.19/addon/hint/show-hint.js"></script>
+    <!-- JavaScript Hint Addon -->
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.19/addon/hint/javascript-hint.js"></script>
+
+    <!-- Initialize CodeMirror -->
+    <script>
+        var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+            lineNumbers: true,
+            mode: "javascript",
+            theme: "dracula",
+            hintOptions: {
+                hint: CodeMirror.hint.javascript
+            }
+        });
+
+        // Automatic autocompletion on inputRead
+        editor.on("inputRead", function(cm, change) {
+            cm.showHint();
+        });
+    </script>
+</body>
+</html>
