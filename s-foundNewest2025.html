@@ -24,16 +24,6 @@
             <script src="google-blockly-f7a206a/blocks/text.js"></script>
             <script src="google-blockly-f7a206a/blocks/variables.js"></script>
     
-            <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>s-found 2 the new tool to make 2d web games and games on android</title>
-        <!-- CodeMirror CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.19/lib/codemirror.min.css">
-        <!-- Dracula Theme (Optional) -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.19/theme/dracula.min.css">
-        <!-- Show Hint CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.19/addon/hint/show-hint.css">
-        
         <style>
             a:active {
                 color: yellow;
@@ -71,7 +61,7 @@
             }
         </style>
     </HEAD>
-    <BODY>    
+    <BODY>
     <div id="examples-dialog" style="display:block; position: absolute; top:50%; left:50%; background-color: darkgray;    border: solid 4px lightgray; display: none;" ID="warning_div">
         <span class="closebtn"  onclick="this.parentElement.style.display='none';">&times;</span> 
         <strong>example programs:</strong>
@@ -104,355 +94,327 @@
             [Terminal example Fibonacci]
             </a> 
         </div> 
-        <div id='main-window' style="text-align: left; background:#942192">
-                <div id="arcade-cabinet" style="width: 655px; text-align: center; margin: 0 auto; background: #000; color: #fff;">
-                    <div id="arcade-banner" style="width: 655px; height: 53px;">
-                        <img src="images/-S-Found2-banner.png" height==50, width=200">
-                    </div> 
-                    <div id="toolbar" style="display: inline;">
-                        <input type="file" id="files" style="display:none; "/>
-                        <img id="image" style="display:none;"/>
-                        <a href="#" onclick='hide_sprite_manager_dialogbox();document.getElementById("run-game").style.display = "none";document.getElementById("code-editor").style.display = "block"; // Hideshow_sprite_manager_dialogbox();updateDialogBox();'>Code editor</a>
-                        <a href="#" onclick='hide_sprite_manager_dialogbox();document.getElementById("run-game").style.display = "block";document.getElementById("code-editor").style.display = "none";'>Run mode</a>
-                        <a href="#" onclick='document.getElementById("run-game").style.display = "none";document.getElementById("code-editor").style.display = "none";show_sprite_manager_dialogbox();updateDialogBox();'>Sprite Manager</a>
-                        <input type="file" id="files3" style="display:none;"/>
-                        <img id="frame" style="display:none;"/>
-                        <input type="file" id="files2" style="display:none;"/>
-                        <img id="background" style="display:none;"/>
-
-                        <a href="#" onclick='document.getElementById("files2").click();'>Add Background</a>
-                        
-                        <a href="#" onclick="toggleShowTerminal()">Show Terminal</a>
-                        
-                        <a href="#" onclick="showScreenKeyboard()">Screen Controller</a>
-                        
-                        <input type="file" id="files_project_upload" style="display:none;"/>
-                        <a href="#" onclick='document.getElementById("files_project_upload").click();'>Open Project</a>
-                        <a href="#" onclick='document.getElementById("examples-dialog").style.display="block";'>Examples</a>
-                    </div>
-                    <div id="sprite_manager_dialogbox" style="overflow-y: auto; height: 300px; border:1px solid yellow;display: none; text-align: left;"></div>                    
-                    <div id="run-game">
-                    <div id="arcade-border-left" style="float: left;width: 21px; height: 500px; display: inline;">
-                        <img src="images/arcade_cabinet_border2.png">
-                    </div>    
-                    <div id="arcade-border-right" style="float: right;width: 21px; height: 500px; display: inline;">
-                        <img src="images/arcade_cabinet_border2.png">
-                    </div>
-                
-                    <div id="phaser" style="float: center; width: 600px; height: 400px; display: inline;"></div>
-                    <div id="on_screen_controls" style="border:1px solid black; display: none;">
-                        <div id="btnA" onmousedown="btnAmouseDown()" onmouseup="btnAmouseUp()" style="display: inline;"><img src="images/A.png"></div><div id="btnUp" onmousedown="btnUpmouseDown()" onmouseup="btnUpmouseUp()"style="display: inline;"><img src="images/arrow_up.png"></div><div id="btnB" onmousedown="btnBmouseDown()" onmouseup="btnBmouseUp()"style="display: inline;"><img src="images/B.png"></div><BR>
-                        <div id="btnLeft" onmousedown="btnLeftmouseDown()" onmouseup="btnLeftmouseUp()" style="display: inline;"><img src="images/arrow_left.png"></div><div id="btnDown" onmousedown="btnDownmouseDown()" onmouseup="btnDownmouseUp()" style="display: inline;"><img src="images/arrow_down.png"></div><div id="btnRight" onmousedown="btnRightmouseDown()" onmouseup="btnRightmouseUp()" style="display: inline;"><img src="images/arrow_right.png"></div><BR>
-                    </div>
-                    <div id="termDiv" style="text-align: left; color: yellow; background-color: black;overflow-y: auto; border:1px solid black; width: 600px; display: none;">
-                        <textarea rows="15" cols="50" id="term" style="color: yellow; background-color: black;resize: none; height: 150px; max-height: 150px; width: 600px; font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;"></textarea>
-                        <div><BR><input type="text" id="txtPrompt" style="color: yellow; background-color: black;width: 400px" onfocus="termOnGetFocus();" onblur="termOnLoseFocus();"/><span id="tell_to_user_input_now" style="display: none; color: red; background-color: black"><--waiting for input</span></div>
-                    </div>
-                    <dix id="controls menu">
-                        <p>
-                            <button onclick="wsToXML()">WS->XML</button>
-                            <button onclick="xmlToWS()">XML->WS</button>
-                            <button onclick="showJS()">show JS</button>
-                            Speed <input type="text" value="250" ID="execution_speed">ms
-                            <input type="checkbox" ID="real-time-eval-checkbox"> Real-Time eval 
-                            <button onclick="call_init();">call ON_STARUP()</button>
-                            <button onclick="stopCode()">Stop</button>
-                            <button onclick="evalCode()">Run</button>
-                            <button onclick="saveCode()">Save project</button>
-                            <button onclick="loadURLproject()">Load project from URL</button>
-                            <button onclick="addPage()">Add page</button>
-                        </p>
-                    </dix>
-                </dix> 
-                <div id="bottom border" style="height: 10px; background-color: black;"></div>
-                </div>
-                <div id="bottom border" style="height: 10px; background-color: black;"></div>
+        <div id='main-window' style="text-align: center; background:#942192">
+             
+            <div class="alert" style="display:none;" ID="warning_div">
+                <span class="closebtn"  onclick="this.parentElement.style.display='none';">&times;</span> 
+                <strong>Warning!</strong> <div ID="warning_message"></div>
             </div>
-            <!---<BR><BR><BR><BR><BR><BR>-->
-            <div id="blockly" style="display : none;">
-                    <div id="programming-stuff" style="text-align: left;">
-                    <div id="pages" style="text-align: left;">
-                        pages div failed to initialize
-                    </div>
-                    <div id="blocklyDiv" style="height: 600px; width: 95%;"></div>
-                    <div id="blocklyDiv_hidden" style="height: 600px; width: 95%; display: none;"></div>
-
-                    <xml id="toolbox" style="display: none">
-                        <category name="Events">    
-                        <block type="events_when_event_happens"></block>
-                        <block type="block_change_stage"></block>
-                        </category>
-                        <category name="Motion">    
-                        <block type="motion_foward"></block>
-                        <block type="motion_turn_right"></block>
-                        <block type="motion_turn_left"></block>
-                        <block type="motion_point_in_direction"></block>
-                        <block type="motion_point_in_direction_of_target"></block>
-                            <block type="motion_point_in_direction_of_point"></block>
-                        <block type="motion_set_x_to"></block>
-                        <block type="motion_set_y_to"></block>
-                        </category>
-                        <category name="Sprites">    
-                        <block type="sprites_set_current_sprite"></block>
-                        <block type="sprites_set_target_sprite"></block>
-                        <block type="sprites_set_current_sprite_to_target_sprite"></block>
-                        <block type="sprites_is_colliding_with_target"></block>
-                        <block type="sprites_create_clone_of_current_sprite"></block>
-                        <block type="sprites_destroy_current_sprite"></block>
-                        <block type="sprites_next_frame"></block>
-                        <block type="sprites_set_frame_to_frame_number"></block>
-                            <block type="sprites_set_frame_to_frame_number2"></block>
-                        <block type="sprites_current_sprite_bring_to_front"></block>
-                        <!-- <block type="sprites_current_sprite_send_to_back"></block> this block does not seem to work so I am hiding it for now-->
-                        <block type="sprites_for_each_clone_of_current_sprite"></block>
-                        <block type="sprites_for_each_clone_of_current_sprite_new"></block>
-                        <block type="sprites_nested_for_each_clone_of_current_target_sprite"></block>
-                        <block type="sprites_value_of_x"></block>
-                        <block type="sprites_value_of_y"></block>
-                            <block type="sprites_sprite_width"></block>
-                            <block type="sprites_sprite_height"></block>
-                            <block type="sprites_world_width"></block>
-                            <block type="sprites_world_height"></block>	
-                            <block type="sprites_distance_between_sprite_and_target"></block>
-                        <block type="sprites_current_frame_number"></block>
-                        <block type="sprites_hide_current_sprite"></block>
-                        <block type="sprites_show_current_sprite"></block>			  
-                        </category>
-                        <category name="Logic">
-                        <block type="controls_if"></block>
-                        <block type="logic_compare"></block>
-                        <block type="logic_operation"></block>
-                        <block type="logic_negate"></block>
-                        <block type="logic_boolean"></block>
-                        </category>
-                            <category name="Loops" colour="120">
-                                <block type="controls_repeat_ext">
-                                    <value name="TIMES">
-                                        <shadow type="math_number">
-                                            <field name="NUM">10</field>
-                                        </shadow>
-                                    </value>
-                                </block>
-                                <block type="controls_repeat" disabled="true"></block>
-                                <block type="controls_whileUntil"></block>
-                                <block type="controls_for">
-                                    <value name="FROM">
-                                        <shadow type="math_number">
-                                            <field name="NUM">1</field>
-                                        </shadow>
-                                    </value>
-                                    <value name="TO">
-                                        <shadow type="math_number">
-                                            <field name="NUM">10</field>
-                                        </shadow>
-                                    </value>
-                                    <value name="BY">
-                                        <shadow type="math_number">
-                                            <field name="NUM">1</field>
-                                        </shadow>
-                                    </value>
-                                </block>
-                                <block type="controls_forEach"></block>
-                                <block type="controls_flow_statements"></block>
-                            </category>
-                        <category name="Math">
-                        <block type="math_number"></block>
-                        <block type="math_arithmetic"></block>
-                        <block type="math_single"></block>
-                        <block type="math_random_int"></block>
-                        <block type="to_number"></block>
-                        <block type="math_modulo">
-                            <value name="DIVIDEND">
-                            <shadow type="math_number">
-                                <field name="NUM">64</field>
-                            </shadow>
-                            </value>
-                            <value name="DIVISOR">
-                            <shadow type="math_number">
-                                <field name="NUM">10</field>
-                            </shadow>
-                            </value>
-                        </block>
-                        </category>
-                        <category name="Text">
-                        <block type="text"></block>
-                        <block type="text_length"></block>
-                        <block type="text_echo"></block>
-                        <block type="text_input_term"></block>
-                        <block type="text_cls"></block>
-                        
-                        
-                        <!--
-                        
-                        
-                        
-                        <block type="text_print"></block>
-                        -->
-                        <block type="text_alert"></block>
-                        <block type="text_prompt"></block>			  
-                        <block type="user_answer"></block>
-                        <block type="label"></block>
-                        <block type="text_join"></block>
-                        <!--
-                        <block type="text_prompt_ext">
-                            <value name="TEXT">
-                            <block type="text"></block>
-                            </value>
-                        </block>
-                        -->
-                        </category>
-
-                            <category name="Lists" colour="260">
-                                <block type="lists_create_with">
-                                    <mutation items="0"></mutation>
-                                </block>
-                                <block type="lists_create_with"></block>
-                                <block type="lists_repeat">
-                                    <value name="NUM">
-                                        <shadow type="math_number">
-                                            <field name="NUM">5</field>
-                                        </shadow>
-                                    </value>
-                                </block>
-                                <block type="lists_length"></block>
-                                <block type="lists_isEmpty"></block>
-                                <block type="lists_indexOf">
-                                    <value name="VALUE">
-                                        <block type="variables_get">
-                                            <field name="VAR">list</field>
-                                        </block>
-                                    </value>
-                                </block>
-                                <block type="lists_getIndex">
-                                    <value name="VALUE">
-                                        <block type="variables_get">
-                                            <field name="VAR">list</field>
-                                        </block>
-                                    </value>
-                                </block>
-                                <block type="lists_setIndex">
-                                    <value name="LIST">
-                                        <block type="variables_get">
-                                            <field name="VAR">list</field>
-                                        </block>
-                                    </value>
-                                </block>
-                                <block type="lists_getSublist">
-                                    <value name="LIST">
-                                        <block type="variables_get">
-                                            <field name="VAR">list</field>
-                                        </block>
-                                    </value>
-                                </block>
-                                <block type="lists_split">
-                                    <value name="DELIM">
-                                        <shadow type="text">
-                                            <field name="TEXT">,</field>
-                                        </shadow>
-                                    </value>
-                                </block>
-                                <block type="lists_sort"></block>
-                                <block type="lists_reverse"></block>
-                            </category>
-                    <category name="Variables" colour="330" custom="VARIABLE"></category>
-                        <category name="Functions" custom="PROCEDURE"></category>
-                        <category name="Advanced">
-                                <block type="http_request"></block>
-                                <block type="api_http_response_text"></block>
-                                <block type="api_fetch_json_value"></block>
-                                <block type="procedures_defreturn_functional"></block>
-                                <block type="call_first_class_function"></block>
-                                <block type="set_timer"></block>
-                                <block type="set_one_time_timer"></block>
-                                <block type="clear_timer"></block>
-                                <block type="set_break_point_here"></block>
-                        </category>
-                        
-                        
-                    </xml>
+            <div id="arcade-cabinet" style="width: 655px; text-align: center; margin: 0 auto; background: #000; color: #fff;">
+                <div id="arcade-banner" style="width: 655px; height: 53px;">
+                    <img src="images/arcade_cabinet_banner.png">
+                </div> 
+                <div id="arcade-border-left" style="float: left;width: 21px; height: 500px; display: inline;">
+                    <img src="images/arcade_cabinet_border2.png">
+                </div>
+                <div id="toolbar" style="display: inline;">
+                    <input type="file" id="files" style="display:none; "/>
+                    <img id="image" style="display:none;"/>
+                    <a href="#" onclick='show_sprite_manager_dialogbox();updateDialogBox();'>Sprite Manager</a>
+                    <input type="file" id="files3" style="display:none;"/>
+                    <img id="frame" style="display:none;"/>
+                    <input type="file" id="files2" style="display:none;"/>
+                    <img id="background" style="display:none;"/>
+                    <a href="#" onclick='document.getElementById("files2").click();'>Add Background</a>
                     
-                    <xml id="startBlocks" style="display: none">
-                        <!--  
-                        <block type="variables_set" inline="true" x="20" y="20">
-                        <field name="VAR">n</field>
-                        <value name="VALUE">
-                            <block type="math_number">
-                            <field name="NUM">1</field>
+                    <a href="#" onclick="toggleShowTerminal()">Show Terminal</a>
+                    
+                    <a href="#" onclick="showScreenKeyboard()">Screen Controller</a>
+                    
+                    <input type="file" id="files_project_upload" style="display:none;"/>
+                    <a href="#" onclick='document.getElementById("files_project_upload").click();'>Open Project</a>
+                    <a href="#" onclick='document.getElementById("examples-dialog").style.display="block";'>Examples</a>
+                </div>
+                <div id="arcade-border-right" style="float: right;width: 21px; height: 500px; display: inline;">
+                    <img src="images/arcade_cabinet_border2.png">
+                </div>
+                <div id="sprite_manager_dialogbox" style="overflow-y: auto; height: 300px; border:1px solid yellow;display: none; text-align: left;"></div>
+                <div id="phaser" style="float: center; width: 600px; height: 400px; display: inline;"></div>
+                <div id="on_screen_controls" style="border:1px solid black; display: none;">
+                    <div id="btnA" onmousedown="btnAmouseDown()" onmouseup="btnAmouseUp()" style="display: inline;"><img src="images/A.png"></div><div id="btnUp" onmousedown="btnUpmouseDown()" onmouseup="btnUpmouseUp()"style="display: inline;"><img src="images/arrow_up.png"></div><div id="btnB" onmousedown="btnBmouseDown()" onmouseup="btnBmouseUp()"style="display: inline;"><img src="images/B.png"></div><BR>
+                    <div id="btnLeft" onmousedown="btnLeftmouseDown()" onmouseup="btnLeftmouseUp()" style="display: inline;"><img src="images/arrow_left.png"></div><div id="btnDown" onmousedown="btnDownmouseDown()" onmouseup="btnDownmouseUp()" style="display: inline;"><img src="images/arrow_down.png"></div><div id="btnRight" onmousedown="btnRightmouseDown()" onmouseup="btnRightmouseUp()" style="display: inline;"><img src="images/arrow_right.png"></div><BR>
+                </div>
+                <div id="termDiv" style="text-align: left; color: yellow; background-color: black;overflow-y: auto; border:1px solid black; width: 600px; display: none;">
+                    <textarea rows="15" cols="50" id="term" style="color: yellow; background-color: black;resize: none; height: 150px; max-height: 150px; width: 600px; font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;"></textarea>
+                    <div><BR><input type="text" id="txtPrompt" style="color: yellow; background-color: black;width: 400px" onfocus="termOnGetFocus();" onblur="termOnLoseFocus();"/><span id="tell_to_user_input_now" style="display: none; color: red; background-color: black"><--waiting for input</span></div>
+                </div>
+                <dix id="controls menu">
+                    <p>
+                        <button onclick="wsToXML()">WS->XML</button>
+                        <button onclick="xmlToWS()">XML->WS</button>
+                        <button onclick="showJS()">show JS</button>
+                        Speed <input type="text" value="250" ID="execution_speed">ms
+                        <input type="checkbox" ID="real-time-eval-checkbox"> Real-Time eval 
+                        <button onclick="call_init();">call ON_STARUP()</button>
+                        <button onclick="stopCode()">Stop</button>
+                        <button onclick="evalCode()">Run</button>
+                        <button onclick="saveCode()">Save project</button>
+                        <button onclick="loadURLproject()">Load project from URL</button>
+                        <button onclick="addPage()">Add page</button>
+                    </p>
+                </dix>
+            </dix> 
+            <div id="bottom border" style="height: 10px; background-color: black;"></div>
+            </div>
+            <div id="bottom border" style="height: 10px; background-color: black;"></div>
+            <!---<BR><BR><BR><BR><BR><BR>-->
+            <div id="programming-stuff" style="text-align: left;">
+                <div id="pages" style="text-align: left;">
+                    pages div failed to initialize
+                </div>
+                <div id="blocklyDiv" style="height: 600px; width: 95%;"></div>
+                <div id="blocklyDiv_hidden" style="height: 600px; width: 95%; display: none;"></div>
+
+                <xml id="toolbox" style="display: none">
+                    <category name="Events">    
+                    <block type="events_when_event_happens"></block>
+                    <block type="block_change_stage"></block>
+                    </category>
+                    <category name="Motion">    
+                    <block type="motion_foward"></block>
+                    <block type="motion_turn_right"></block>
+                    <block type="motion_turn_left"></block>
+                    <block type="motion_point_in_direction"></block>
+                    <block type="motion_point_in_direction_of_target"></block>
+                        <block type="motion_point_in_direction_of_point"></block>
+                    <block type="motion_set_x_to"></block>
+                    <block type="motion_set_y_to"></block>
+                    </category>
+                    <category name="Sprites">    
+                    <block type="sprites_set_current_sprite"></block>
+                    <block type="sprites_set_target_sprite"></block>
+                    <block type="sprites_set_current_sprite_to_target_sprite"></block>
+                    <block type="sprites_is_colliding_with_target"></block>
+                    <block type="sprites_create_clone_of_current_sprite"></block>
+                    <block type="sprites_destroy_current_sprite"></block>
+                    <block type="sprites_next_frame"></block>
+                    <block type="sprites_set_frame_to_frame_number"></block>
+                        <block type="sprites_set_frame_to_frame_number2"></block>
+                    <block type="sprites_current_sprite_bring_to_front"></block>
+                    <!-- <block type="sprites_current_sprite_send_to_back"></block> this block does not seem to work so I am hiding it for now-->
+                    <block type="sprites_for_each_clone_of_current_sprite"></block>
+                    <block type="sprites_for_each_clone_of_current_sprite_new"></block>
+                    <block type="sprites_nested_for_each_clone_of_current_target_sprite"></block>
+                    <block type="sprites_value_of_x"></block>
+                    <block type="sprites_value_of_y"></block>
+                        <block type="sprites_sprite_width"></block>
+                        <block type="sprites_sprite_height"></block>
+                        <block type="sprites_world_width"></block>
+                        <block type="sprites_world_height"></block>	
+                        <block type="sprites_distance_between_sprite_and_target"></block>
+                    <block type="sprites_current_frame_number"></block>
+                    <block type="sprites_hide_current_sprite"></block>
+                    <block type="sprites_show_current_sprite"></block>			  
+                    </category>
+                    <category name="Logic">
+                    <block type="controls_if"></block>
+                    <block type="logic_compare"></block>
+                    <block type="logic_operation"></block>
+                    <block type="logic_negate"></block>
+                    <block type="logic_boolean"></block>
+                    </category>
+                        <category name="Loops" colour="120">
+                            <block type="controls_repeat_ext">
+                                <value name="TIMES">
+                                    <shadow type="math_number">
+                                        <field name="NUM">10</field>
+                                    </shadow>
+                                </value>
                             </block>
+                            <block type="controls_repeat" disabled="true"></block>
+                            <block type="controls_whileUntil"></block>
+                            <block type="controls_for">
+                                <value name="FROM">
+                                    <shadow type="math_number">
+                                        <field name="NUM">1</field>
+                                    </shadow>
+                                </value>
+                                <value name="TO">
+                                    <shadow type="math_number">
+                                        <field name="NUM">10</field>
+                                    </shadow>
+                                </value>
+                                <value name="BY">
+                                    <shadow type="math_number">
+                                        <field name="NUM">1</field>
+                                    </shadow>
+                                </value>
+                            </block>
+                            <block type="controls_forEach"></block>
+                            <block type="controls_flow_statements"></block>
+                        </category>
+                    <category name="Math">
+                    <block type="math_number"></block>
+                    <block type="math_arithmetic"></block>
+                    <block type="math_single"></block>
+                    <block type="math_random_int"></block>
+                    <block type="to_number"></block>
+                    <block type="math_modulo">
+                        <value name="DIVIDEND">
+                        <shadow type="math_number">
+                            <field name="NUM">64</field>
+                        </shadow>
                         </value>
-                        <next>
-                            <block type="controls_repeat_ext" inline="true">
-                            <value name="TIMES">
-                                <block type="math_number">
-                                <field name="NUM">4</field>
-                                </block>
-                            </value>
-                            <statement name="DO">
-                                <block type="variables_set" inline="true">
-                                <field name="VAR">n</field>
+                        <value name="DIVISOR">
+                        <shadow type="math_number">
+                            <field name="NUM">10</field>
+                        </shadow>
+                        </value>
+                    </block>
+                    </category>
+                    <category name="Text">
+                    <block type="text"></block>
+                    <block type="text_length"></block>
+                    <block type="text_echo"></block>
+                    <block type="text_input_term"></block>
+                    <block type="text_cls"></block>
+                    
+                    
+                    <!--
+                    
+                    
+                    
+                    <block type="text_print"></block>
+                    -->
+                    <block type="text_alert"></block>
+                    <block type="text_prompt"></block>			  
+                    <block type="user_answer"></block>
+                    <block type="label"></block>
+                    <block type="text_join"></block>
+                    <!--
+                    <block type="text_prompt_ext">
+                        <value name="TEXT">
+                        <block type="text"></block>
+                        </value>
+                    </block>
+                    -->
+                    </category>
+
+                        <category name="Lists" colour="260">
+                            <block type="lists_create_with">
+                                <mutation items="0"></mutation>
+                            </block>
+                            <block type="lists_create_with"></block>
+                            <block type="lists_repeat">
+                                <value name="NUM">
+                                    <shadow type="math_number">
+                                        <field name="NUM">5</field>
+                                    </shadow>
+                                </value>
+                            </block>
+                            <block type="lists_length"></block>
+                            <block type="lists_isEmpty"></block>
+                            <block type="lists_indexOf">
                                 <value name="VALUE">
-                                    <block type="math_arithmetic" inline="true">
-                                    <field name="OP">MULTIPLY</field>
-                                    <value name="A">
-                                        <block type="variables_get">
-                                        <field name="VAR">n</field>
-                                        </block>
-                                    </value>
-                                    <value name="B">
-                                        <block type="math_number">
-                                        <field name="NUM">2</field>
-                                        </block>
-                                    </value>
+                                    <block type="variables_get">
+                                        <field name="VAR">list</field>
                                     </block>
                                 </value>
-                                </block>
-                            </statement>
-                            <next>
-                                <block type="text_print" inline="false">
-                                <value name="TEXT">
+                            </block>
+                            <block type="lists_getIndex">
+                                <value name="VALUE">
+                                    <block type="variables_get">
+                                        <field name="VAR">list</field>
+                                    </block>
+                                </value>
+                            </block>
+                            <block type="lists_setIndex">
+                                <value name="LIST">
+                                    <block type="variables_get">
+                                        <field name="VAR">list</field>
+                                    </block>
+                                </value>
+                            </block>
+                            <block type="lists_getSublist">
+                                <value name="LIST">
+                                    <block type="variables_get">
+                                        <field name="VAR">list</field>
+                                    </block>
+                                </value>
+                            </block>
+                            <block type="lists_split">
+                                <value name="DELIM">
+                                    <shadow type="text">
+                                        <field name="TEXT">,</field>
+                                    </shadow>
+                                </value>
+                            </block>
+                            <block type="lists_sort"></block>
+                            <block type="lists_reverse"></block>
+                        </category>
+                <category name="Variables" colour="330" custom="VARIABLE"></category>
+                    <category name="Functions" custom="PROCEDURE"></category>
+                    <category name="Advanced">
+                            <block type="http_request"></block>
+                            <block type="api_http_response_text"></block>
+                            <block type="api_fetch_json_value"></block>
+                            <block type="procedures_defreturn_functional"></block>
+                            <block type="call_first_class_function"></block>
+                            <block type="set_timer"></block>
+                            <block type="set_one_time_timer"></block>
+                            <block type="clear_timer"></block>
+                            <block type="set_break_point_here"></block>
+                    </category>
+                    
+                    
+                </xml>
+                
+                <xml id="startBlocks" style="display: none">
+                    <!--  
+                    <block type="variables_set" inline="true" x="20" y="20">
+                    <field name="VAR">n</field>
+                    <value name="VALUE">
+                        <block type="math_number">
+                        <field name="NUM">1</field>
+                        </block>
+                    </value>
+                    <next>
+                        <block type="controls_repeat_ext" inline="true">
+                        <value name="TIMES">
+                            <block type="math_number">
+                            <field name="NUM">4</field>
+                            </block>
+                        </value>
+                        <statement name="DO">
+                            <block type="variables_set" inline="true">
+                            <field name="VAR">n</field>
+                            <value name="VALUE">
+                                <block type="math_arithmetic" inline="true">
+                                <field name="OP">MULTIPLY</field>
+                                <value name="A">
                                     <block type="variables_get">
                                     <field name="VAR">n</field>
                                     </block>
                                 </value>
+                                <value name="B">
+                                    <block type="math_number">
+                                    <field name="NUM">2</field>
+                                    </block>
+                                </value>
                                 </block>
-                            </next>
+                            </value>
+                            </block>
+                        </statement>
+                        <next>
+                            <block type="text_print" inline="false">
+                            <value name="TEXT">
+                                <block type="variables_get">
+                                <field name="VAR">n</field>
+                                </block>
+                            </value>
                             </block>
                         </next>
                         </block>
-                    -->
-                    </xml>
-                    </div>
-                </div>
+                    </next>
+                    </block>
+                -->
+                </xml>
+                
 
-                <div ID="code-editor" style="display : none; width: 655px; margin: 0 auto;">
-                    <textarea ID="code_text_area">//Start coding here</textarea>
-                </div>
-                <!-- CodeMirror JavaScript -->
-                <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.19/lib/codemirror.min.js"></script>
-                <!-- Mode for JavaScript -->
-                <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.19/mode/javascript/javascript.min.js"></script>
-                <!-- Show Hint Addon -->
-                <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.19/addon/hint/show-hint.js"></script>
-                <!-- JavaScript Hint Addon -->
-                <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.19/addon/hint/javascript-hint.js"></script>
-
-                <!-- Initialize CodeMirror -->
-                <script>
-                    var editor = CodeMirror.fromTextArea(document.getElementById("code_text_area"), {
-                        lineNumbers: true,
-                        mode: "javascript",
-                        theme: "dracula",
-                        hintOptions: {
-                            hint: CodeMirror.hint.javascript
-                        }
-                    });
-
-                    // Automatic autocompletion on inputRead
-                    editor.on("inputRead", function(cm, change) {
-                        cm.showHint();
-                    });
-                    editor.setSize("655px", "600px")
-                    </script> 
+        
+                <textarea rows="60" cols="90" ID="code_text_area" style="color:yellow; background-color: black">
+                    Start dropping blocks to produce Javascript
+                </textarea> 
             </div> 
         </div>
         <script>
@@ -636,7 +598,8 @@
                     
                 onScreenKeyboard.btnDownPressed=false;
                 function btnDownmouseDown() {
-                    onScreenKeyboard.btnDownPressed=true                }
+                    onScreenKeyboard.btnDownPressed=true;
+                }
                 function btnDownmouseUp() {
                     onScreenKeyboard.btnDownPressed=false;
                 }
