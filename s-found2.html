@@ -4418,6 +4418,14 @@
                         alert("ERROR:"+xhr.statusText);
                     };
                     xhr.send(null);
+
+                    //hideIDE here if project needs to be running in publish mode
+                    document.getElementById("arcade-banner").style.display="none";
+                    document.getElementById("toolbar").style.display="none";
+                    document.getElementById("arcade-border-left").style.display="none";
+                    document.getElementById("arcade-border-right").style.display="none";
+                    document.getElementById("controls menu").style.display="none";
+                    //*[@id="arcade-border-left"]
                     //alert("project_json:"+project_json);
                     /*
                     project = JSON.parse(project_json);
