@@ -29,7 +29,7 @@
         var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
             lineNumbers: true,
             mode: "javascript",
-            theme: "dracula",
+            theme: "3024-night",
             hintOptions: {
                 hint: CodeMirror.hint.javascript
             }
@@ -39,6 +39,7 @@
         editor.on("inputRead", function(cm, change) {
             cm.showHint();
         });
+        //can someoen help me figuure out why the following page https://amigojapan.github.io/s-found/s-found2.html# has a text alignment problem is seems, when you click Code editor, a codemirror editor appears, but the text inside appears even mroe to the left than hte line numbers, any ideas?
     </script>
 </body>
 </html>

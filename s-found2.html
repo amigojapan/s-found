@@ -7,7 +7,7 @@
             <script src="google-blockly-f7a206a/blockly_compressed.js"></script>
             <!--
             <script src="../google-blockly-f7a206a/blocks_compressed.js"></script>
-            -->
+            
             <script src="google-blockly-f7a206a/javascript_compressed.js"></script>
             <script src="google-blockly-f7a206a/msg/js/en.js"></script>
             <script src="google-blockly-f7a206a/generators/javascript/math.js"></script>
@@ -15,6 +15,7 @@
             <script src="google-blockly-f7a206a/generators/javascript/loops.js"></script>
             <script src="google-blockly-f7a206a/generators/javascript/variables.js"></script>
             
+
             <script src="google-blockly-f7a206a/blocks/colour.js"></script>
             <script src="google-blockly-f7a206a/blocks/lists.js"></script>
             <script src="google-blockly-f7a206a/blocks/logic.js"></script>
@@ -24,6 +25,8 @@
             <script src="google-blockly-f7a206a/blocks/text.js"></script>
             <script src="google-blockly-f7a206a/blocks/variables.js"></script>
     
+            -->
+
             <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>s-found 2 the new tool to make 2d web games and games on android</title>
@@ -45,7 +48,7 @@
                 color: yellow;
             }
             body {
-            margin: 0;
+                margin: 0;
             }
 
             /*for alert box*/
@@ -68,6 +71,16 @@
 
             .closebtn:hover {
                     color: black;
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                height: 100vh;
+            }
+
+            #code-editor {
+                flex: 1;
             }
         </style>
     </HEAD>
@@ -112,7 +125,7 @@
                     <div id="toolbar" style="display: inline;">
                         <input type="file" id="files" style="display:none; "/>
                         <img id="image" style="display:none;"/>
-                        <a href="#" onclick='hide_sprite_manager_dialogbox();document.getElementById("run-game").style.display = "none";document.getElementById("code-editor").style.display = "block"; // Hideshow_sprite_manager_dialogbox();updateDialogBox();'>Code editor</a>
+                        <a href="#" onclick='hide_sprite_manager_dialogbox();document.getElementById("run-game").style.display = "none";document.getElementById("code-editor").style.visibility="visible";document.getElementById("code-editor").style.display = "block"; // Hideshow_sprite_manager_dialogbox();updateDialogBox();'>Code editor</a>
                         <a href="#" onclick='hide_sprite_manager_dialogbox();document.getElementById("run-game").style.display = "block";document.getElementById("code-editor").style.display = "none";'>Run mode</a>
                         <a href="#" onclick='document.getElementById("run-game").style.display = "none";document.getElementById("code-editor").style.display = "none";show_sprite_manager_dialogbox();updateDialogBox();'>Sprite Manager</a>
                         <input type="file" id="files3" style="display:none;"/>
@@ -168,7 +181,7 @@
                 </div>
                 <div id="bottom border" style="height: 10px; background-color: black;"></div>
             </div>
-            <!---<BR><BR><BR><BR><BR><BR>-->
+            <!---<BR><BR><BR><BR><BR><BR>
             <div id="blockly" style="display : none;">
                     <div id="programming-stuff" style="text-align: left;">
                     <div id="pages" style="text-align: left;">
@@ -203,7 +216,6 @@
                         <block type="sprites_set_frame_to_frame_number"></block>
                             <block type="sprites_set_frame_to_frame_number2"></block>
                         <block type="sprites_current_sprite_bring_to_front"></block>
-                        <!-- <block type="sprites_current_sprite_send_to_back"></block> this block does not seem to work so I am hiding it for now-->
                         <block type="sprites_for_each_clone_of_current_sprite"></block>
                         <block type="sprites_for_each_clone_of_current_sprite_new"></block>
                         <block type="sprites_nested_for_each_clone_of_current_target_sprite"></block>
@@ -282,24 +294,11 @@
                         <block type="text_cls"></block>
                         
                         
-                        <!--
-                        
-                        
-                        
-                        <block type="text_print"></block>
-                        -->
                         <block type="text_alert"></block>
                         <block type="text_prompt"></block>			  
                         <block type="user_answer"></block>
                         <block type="label"></block>
                         <block type="text_join"></block>
-                        <!--
-                        <block type="text_prompt_ext">
-                            <value name="TEXT">
-                            <block type="text"></block>
-                            </value>
-                        </block>
-                        -->
                         </category>
 
                             <category name="Lists" colour="260">
@@ -372,59 +371,12 @@
                     </xml>
                     
                     <xml id="startBlocks" style="display: none">
-                        <!--  
-                        <block type="variables_set" inline="true" x="20" y="20">
-                        <field name="VAR">n</field>
-                        <value name="VALUE">
-                            <block type="math_number">
-                            <field name="NUM">1</field>
-                            </block>
-                        </value>
-                        <next>
-                            <block type="controls_repeat_ext" inline="true">
-                            <value name="TIMES">
-                                <block type="math_number">
-                                <field name="NUM">4</field>
-                                </block>
-                            </value>
-                            <statement name="DO">
-                                <block type="variables_set" inline="true">
-                                <field name="VAR">n</field>
-                                <value name="VALUE">
-                                    <block type="math_arithmetic" inline="true">
-                                    <field name="OP">MULTIPLY</field>
-                                    <value name="A">
-                                        <block type="variables_get">
-                                        <field name="VAR">n</field>
-                                        </block>
-                                    </value>
-                                    <value name="B">
-                                        <block type="math_number">
-                                        <field name="NUM">2</field>
-                                        </block>
-                                    </value>
-                                    </block>
-                                </value>
-                                </block>
-                            </statement>
-                            <next>
-                                <block type="text_print" inline="false">
-                                <value name="TEXT">
-                                    <block type="variables_get">
-                                    <field name="VAR">n</field>
-                                    </block>
-                                </value>
-                                </block>
-                            </next>
-                            </block>
-                        </next>
-                        </block>
-                    -->
                     </xml>
                     </div>
                 </div>
-
-                <div ID="code-editor" style="display : none; width: 655px; margin: 0 auto;">
+                -->
+                
+                <div ID="code-editor" style="visibility: hidden;">
                     <textarea ID="code_text_area">//Start coding here</textarea>
                 </div>
                 <!-- CodeMirror JavaScript -->
@@ -451,7 +403,7 @@
                     editor.on("inputRead", function(cm, change) {
                         cm.showHint();
                     });
-                    editor.setSize("655px", "600px")
+                    editor.setSize("100%", "900px")
                     </script> 
             </div> 
         </div>
