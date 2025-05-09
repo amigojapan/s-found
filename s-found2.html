@@ -3,9 +3,10 @@
             <meta charset="utf-8">
             <title>s-found - A solid foundation for programming beginners.</title>    
             <script type="text/javascript" src="js/2017_2_2/phaser.js"></script>
+            <!--
             <script src="NeilFraser-JS-Interpreter-9c09d45/acorn_interpreter.js"></script>
             <script src="google-blockly-f7a206a/blockly_compressed.js"></script>
-            <!--
+            
             <script src="../google-blockly-f7a206a/blocks_compressed.js"></script>
             
             <script src="google-blockly-f7a206a/javascript_compressed.js"></script>
@@ -163,17 +164,17 @@
                     </div>
                     <dix id="controls menu">
                         <p>
-                            <button onclick="wsToXML()">WS->XML</button>
-                            <button onclick="xmlToWS()">XML->WS</button>
-                            <button onclick="showJS()">show JS</button>
+                            <!--<button onclick="wsToXML()">WS->XML</button>-->
+                            <!--<button onclick="xmlToWS()">XML->WS</button>-->
+                            <!--<button onclick="showJS()">show JS</button>-->
                             Speed <input type="text" value="250" ID="execution_speed">ms
-                            <input type="checkbox" ID="real-time-eval-checkbox"> Real-Time eval 
-                            <button onclick="call_init();">call ON_STARUP()</button>
+                            <!--<input type="checkbox" ID="real-time-eval-checkbox"> Real-Time eval -->
+                            <!--<button onclick="call_init();">call ON_STARUP()</button>-->
                             <button onclick="stopCode()">Stop</button>
                             <button onclick="evalCode()">Run</button>
                             <button onclick="saveCode()">Save project</button>
                             <button onclick="loadURLproject()">Load project from URL</button>
-                            <button onclick="addPage()">Add page</button>
+                            <!--<button onclick="addPage()">Add page</button>-->
                         </p>
                     </dix>
                 </dix> 
@@ -390,7 +391,7 @@
 
                 <!-- Initialize CodeMirror -->
                 <script>
-                    var editor = CodeMirror.fromTextArea(document.getElementById("code_text_area"), {
+                    editor = CodeMirror.fromTextArea(document.getElementById("code_text_area"), {
                         lineNumbers: true,
                         mode: "javascript",
                         theme: "dracula",
@@ -408,6 +409,15 @@
             </div> 
         </div>
         <script>
+
+                function set_all_fames_to_first_frame() {
+                    var go;
+                    for(var sprite in sprites) {
+                        set_current_sprite_name(sprites[sprite].name)
+                        go=find_sprite_object_by_name(current_sprite_name);
+                        if_frames_exist_set_frame_to_first_frame(go);
+                    }
+                }
                 var URLRunLoading=false;
                 function getParameterByName(name) {
                 name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -452,6 +462,7 @@
                             */
                             var side='start';
                             var rtl=false;
+                            /*
                             workspace = Blockly.inject('blocklyDiv',
                       {comments: true,
                        collapse: true,
@@ -480,7 +491,8 @@
                       });
                                 //toolboxPosition: side == 'top' || side == 'start' ? 'start' : 'end',
                                 workspace.addChangeListener(workspaceChanged);
-                    //binding screen controller events
+                   */
+                                //binding screen controller events
                     var box1 = document.getElementById('btnA')
                     box1.addEventListener('touchstart', function(e){
                         var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
@@ -1018,6 +1030,7 @@
                 }
             
                 //globals
+                var editor
                 var current_sprite_name=""
                 var target_sprite_name=""
                 var sprites=[];
@@ -1625,7 +1638,7 @@
                     var workspace_hidden;
                     var workspace;
             
-                     var workspace_hidden = Blockly.inject('blocklyDiv_hidden',{media: '../../media/',toolbox: document.getElementById('toolbox')});Blockly.Xml.domToWorkspace(document.getElementById('startBlocks'),workspace_hidden);
+                     //var workspace_hidden = Blockly.inject('blocklyDiv_hidden',{media: '../../media/',toolbox: document.getElementById('toolbox')});Blockly.Xml.domToWorkspace(document.getElementById('startBlocks'),workspace_hidden);
             
                 /*deprecared
                 var workspace = Blockly.inject('blocklyDiv',{media: '../../media/',toolbox: document.getElementById('toolbox')});Blockly.Xml.domToWorkspace(workspace,document.getElementById('startBlocks'));
@@ -1869,7 +1882,7 @@
                 var id;
                 var evalRun=false;
               function evalCode() {
-                    update_workspace_code_in_projet();
+                    //update_workspace_code_in_projet();
                     //terminal
                     number_of_inputs=0;
                     lockKeysForGame();
@@ -1877,13 +1890,25 @@
                     //var xml_text = Blockly.Xml.domToPrettyText(xml);
             
                   //Unless I am mistaken there isn't a way currently to call into the context created when running a program with the JSInterpreter. On workaround could be to have a setInterval going inside the interpreter context that is polling an exposed api which is watching for events on the page and responds by calling your users code. https://neil.fraser.name/software/JS-Interpreter/docs.html
-            
-                    finalCode = generateJS(true);
+                    //finalCode = generateJS(true);//**here too?
+                    //const textarea = document.getElementById("code_text_area");
+                    const fullText = editor.getValue();
+
+                    finalCode= "function ON_STARTUP(){}\n";
+                    finalCode+= "//Beginningn User code:\n";
+                    finalCode+= fullText+"\n";
+                    finalCode+= "//End user code\n";
+
                     //clear timers
                     clearTimers();
                   //cursor key events
                   //evalRun=true;
+                  
                     //***TODO:handle isUP https://github.com/photonstorm/phaser/issues/474
+                    //finalCode+= "if (typeof ON_STARTUP !== 'undefined') {\n";//cehck to see if funtion is defined
+                    //finalCode+= "	function ON_STARTUP(){}\n";
+                    //finalCode+= "}\n";
+
                     finalCode+= "var pollEvent = function() {\n";
                     finalCode+= "	if (typeof EACH_FRAME !== 'undefined' && evalRun) {\n";//cehck to see if funtion is defined
                     finalCode+= "		EACH_FRAME();\n";
@@ -1923,9 +1948,11 @@
                     finalCode+= "window.id_ = setInterval(pollEvent, 60);\n"; //60 is the average of game.time.fps
                     finalCode+= "console.log('setting interval to 60FPS id:'+window.id_);\n";			
                     finalCode+= "if(URLRunLoading==true){setTimeout(function(){ evalRun=true;ON_STARTUP();hide_warning();}, 10000);}else{evalRun=true;ON_STARTUP();}\n";//I think this fudge will wait until the ON_STARTUP() function is ready to be called, avoiding the race condition of when the browser is still loading;		
+                    
                     destory_all_clones();//this works in nikurabero2 but seems to break bomberman walk test,hmm the debugger does not even stop at this line :(
                     set_all_fames_to_first_frame();
                     //eval(finalCode);
+                    //alert(finalCode);
                     eval.call(window,finalCode);
                     //myInterpreter = new Interpreter(finalCode, initApi);
                     
@@ -1933,7 +1960,7 @@
                     //id = setInterval(stepCode, parseInt(execution_speed));
                 }
                 function showJS() {
-                    update_workspace_code_in_projet();
+                    //update_workspace_code_in_projet();
                     //terminal
                     number_of_inputs=0;
                     lockKeysForGame();
@@ -2020,7 +2047,7 @@
                     //mock download
                     project.block_xml = xml_text;
                     */
-                    update_workspace_code_in_projet();
+                    //update_workspace_code_in_projet();
                     var project_json = JSON.stringify(project);
                     var project_name=prompt("Enter project name","GAME.s-found");
                     download(project_name,project_json);
@@ -2094,6 +2121,7 @@
             
             //the following line is an imperitive do not erase
             //imperitive:do not interlace this block(this is not a commend)	
+             /*
                 Blockly.Blocks['motion_point_in_direction'] = {
                   init: function() {
                     this.appendDummyInput()
@@ -2681,14 +2709,14 @@
                 };
                 Blockly.JavaScript['sprites_current_sprite_bring_to_front'] = function(block) {
                     // TODO: Assemble JavaScript into code variable.
-                    /*
-                    set_current_sprite_name("frog");
-                    game_object=find_sprite_object_by_name(current_sprite_name);
+                    
+                    //set_current_sprite_name("frog");
+                    //game_object=find_sprite_object_by_name(current_sprite_name);
             
                     //but this did
-                    game_object=find_sprite_object_by_name("frog");
-                    game_object.sprite.bringToTop()
-                    */
+                    //game_object=find_sprite_object_by_name("frog");
+                    //game_object.sprite.bringToTop()
+                    
                     var code = 	'var go=find_sprite_object_by_name(current_sprite_name);\n';
                     code = code + 'go.sprite.bringToTop();\n';
                     return code;
@@ -2707,18 +2735,18 @@
                 };
                 Blockly.JavaScript['sprites_current_sprite_send_to_back'] = function(block) {
                     // TODO: Assemble JavaScript into code variable.
-                    /*
-                    set_current_sprite_name("frog");
-                    game_object=find_sprite_object_by_name(current_sprite_name);
+                    
+                    //set_current_sprite_name("frog");
+                    //game_object=find_sprite_object_by_name(current_sprite_name);
             
                     //but this did
-                    game_object=find_sprite_object_by_name("frog");
-                    game_object.sprite.bringToTop()
+                    //game_object=find_sprite_object_by_name("frog");
+                    //game_object.sprite.bringToTop()
                     
-                    I am able to do game_object.sprite.bringToTop() and it works, but when I try game_object.sprite.sendToBack() I get TypeError: game_object.sprite.sendToBack is not a function , I am using Phaser v2.0.2 - Canvas - WebAudio     , any idea what could be wrong?
+                    //I am able to do game_object.sprite.bringToTop() and it works, but when I try game_object.sprite.sendToBack() I get TypeError: game_object.sprite.sendToBack is not a function , I am using Phaser v2.0.2 - Canvas - WebAudio     , any idea what could be wrong?
                     
-                    ada answer: game.world.sendToBack(sprite)
-                    */
+                    //ada answer: game.world.sendToBack(sprite)
+                    
                     var code = 	'var go=find_sprite_object_by_name(current_sprite_name);\n';
                     code = code + 'go.sprite.sendToBack();\n';
                     return code;
@@ -2984,6 +3012,7 @@
                 //blockly how to get the name of a variable passed to a stateemnt block
                 //Blockly.JavaScript.variableDB_.getName(block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
                 //end blockly
+                */
                 var debuggerCode;
                 function destory_all_sprites(){//this does not seem to work, and it iok for now cause I plan on reloading the whole page every time, but this is difficult for developing, eventually I shoudl fix it...stop and start does nto work with clones :(
                     for(var sprite in sprites){
@@ -3051,7 +3080,7 @@
                     code=code+'timerIDs.push(ID);\n';
                     return code;
                 };
-                */
+                
                 //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#krmehw
                 Blockly.Blocks['set_timer'] = {
                   init: function() {
@@ -3190,17 +3219,20 @@
                     code='clearInterval(timersObj['+id+']);\n';
                     return code;
                 };
+                */
                 function clearTimers() {
                     for(timer in timerIDs) {
                         clearInterval(timerIDs[timer]);
                     }
                 }
+                /*
                 //https://blockly-demo.appspot.com/static/blocks/procedures.js
                 Blockly.Blocks['procedures_defreturn_functional'] = {
               /**
                * Block for defining a procedure with a return value.
                * @this Blockly.Block
                */
+              /*
               init: function() {
                 //this.appendValueInput("value_input")
                 //    .setCheck(null)
@@ -3252,12 +3284,14 @@
               } 
               */
               //
+              /*
               setStatements_: Blockly.Blocks['procedures_defnoreturn'].setStatements_,
               updateParams_: Blockly.Blocks['procedures_defnoreturn'].updateParams_,
               mutationToDom: Blockly.Blocks['procedures_defnoreturn'].mutationToDom,
               domToMutation: Blockly.Blocks['procedures_defnoreturn'].domToMutation,
               decompose: Blockly.Blocks['procedures_defnoreturn'].decompose,
               compose: Blockly.Blocks['procedures_defnoreturn'].compose,
+              */
               /**
                * Return the signature of this procedure definition.
                * @return {!Array} Tuple containing three elements:
@@ -3266,6 +3300,7 @@
                *     - that it DOES have a return value.
                * @this Blockly.Block
                */
+              /*
               getProcedureDef: function() {
                 return [this.getFieldValue('NAME'), this.arguments_, true];
               },
@@ -3274,7 +3309,7 @@
               customContextMenu: Blockly.Blocks['procedures_defnoreturn'].customContextMenu,
               callType_: 'procedures_callreturn'
             };
-            
+            */
             /**
             @license
             Copyright 2015 Hendrik Diel
@@ -3297,6 +3332,7 @@
             @author
             diel.hendrik@gmail.com (Hendrik Diel)
             */
+           /*
             (function(){
               Blockly.Variables.predefinedVars = [];
               Blockly.Variables.addPredefiendVar = function(name){
@@ -3354,6 +3390,7 @@
               var xmlBlock = goog.dom.createDom('block', null, xmlField);
               xmlBlock.setAttribute('type', 'variables_set');
               */
+             /*
               Blockly.Variables.addPredefiendVar(variable_variable_name);
             
               var code = variable_variable_name + ' = function(' + args.join(', ') + ') {\n' +
@@ -3506,6 +3543,7 @@
               return [code, Blockly.JavaScript.ORDER_NONE];
             };
             //blockly end
+            */
                 function update_workspace_code_in_projet() {
                     var xml = Blockly.Xml.workspaceToDom(workspace);
                     var xml_text = Blockly.Xml.domToPrettyText(xml);
@@ -3544,7 +3582,7 @@
                                     destory_all_clones();
                                 }
                                 set_all_fames_to_first_frame();
-                                var finalCode = generateJS(false);
+                                var finalCode = generateJS(false);//**get the textare text here change form generateJS
                                 finalCode+= "if (typeof ON_STARTUP !== 'undefined') {\n";//cehck to see if funtion is defined
                                 finalCode+= "	ON_STARTUP();\n";
                                 finalCode+= "}\n";
@@ -3563,7 +3601,7 @@
                 var workspaceChanged = function() {
                     var checkbox = document.getElementById("real-time-eval-checkbox");
                     if (checkbox.checked) {
-                        update_workspace_code_in_projet();
+                        //update_workspace_code_in_projet();
                         call_init();
                     }
                 }
@@ -3596,6 +3634,7 @@
                     https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#fznnhx
                 */
                 //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#q8cnym
+                /*
                 Blockly.Blocks['text_input_term'] = {
                   init: function() {
                     this.appendValueInput("prompt")
@@ -3720,6 +3759,7 @@
                   return code;
                 };	
                 */
+               /*
                 var user_answer="no answer given";
                 Blockly.Blocks['user_answer'] = {
                   init: function() {
@@ -3803,7 +3843,7 @@
                 //End Blocks
             //imperitive:start interlacing blocks(this is not a commend)
                 //depracated Blockly.addChangeListener(workspaceChanged());
-                
+                */
                 
                 //global variables
                 //timers
@@ -3821,12 +3861,14 @@
                 updatePages();
             
                 function updatePages() {
+                    /*
                     document.getElementById("pages").innerHTML="Pages"
                   //parsing data structure
                   for(var pageindex in project.pages) {
                   var finaltag=(project.pages[pageindex].pagename=="main")?"":">(-)"
                   document.getElementById("pages").innerHTML=document.getElementById("pages").innerHTML+" <a href=javascript:clikedLink('"+project.pages[pageindex].pagename+"')"+ " id="+project.pages[pageindex].pagename+">"+project.pages[pageindex].pagename+"</a>"+" <a href=javascript:clikedDeleteLink('"+project.pages[pageindex].pagename+"')"+ " id=del"+project.pages[pageindex].pagename+finaltag+"</a>";
                     }
+                */
                 }
                 function addPage() {
                     //new page
@@ -3844,7 +3886,7 @@
                     updatePages();
                 }
                 function clikedLink(linkName) {
-                    update_workspace_code_in_projet();
+                    //update_workspace_code_in_projet();
                     //alert("s:"+linkName);
                     current_page=linkName;
                     for(var pageindex in project.pages){
@@ -3898,10 +3940,9 @@
                             }
                             */
                             //***TODO:need to also delete the object from teh canvas, but for now i will just reload hte project after saving it,that is more sure to work
-                  updatePages();
+                   updatePages();
                   }
                 }
-                
                 //toolbar code
                 function guid() {
                   function s4() {
@@ -3910,14 +3951,7 @@
                   return s4() + s4();
                 }
             
-                function set_all_fames_to_first_frame() {
-                    var go;
-                    for(var sprite in sprites) {
-                        set_current_sprite_name(sprites[sprite].name)
-                        go=find_sprite_object_by_name(current_sprite_name);
-                        if_frames_exist_set_frame_to_first_frame(go);
-                    }
-                }
+                
                 function if_frames_exist_set_frame_to_first_frame(go) {
                     for(var frame in go.frames) {
                         go.frames[frame].sprite.visible=false
@@ -4117,6 +4151,7 @@
             
                 
                 document.getElementById("files").onchange = function () {
+                    alert("here in file load")
                     var reader = new FileReader();
             
                     reader.onload = function (e) {
