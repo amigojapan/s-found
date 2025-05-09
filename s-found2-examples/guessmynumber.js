@@ -18,18 +18,18 @@ function mathRandomInt(a, b) {
 function guess(value) {
   number_of_tries = number_of_tries + 1;
   if (number_of_tries == 10) {
-    if(evalRun){echo((String('10 tries! you lose! the numer was:') + String(magic_number)));}
+    echo((String('10 tries! you lose! the numer was:') + String(magic_number)));
   } else {
     if (value < magic_number) {
-      if(evalRun){echo('Too low.');}
-      if(evalRun){input_trigger_label('entry','what is your guess?:',ON_INPUT)};
+      echo('Too low.');
+      input_trigger_label('entry','what is your guess?:',ON_INPUT);
     }
     if (value > magic_number) {
-      if(evalRun){echo('Too high.');}
-      if(evalRun){input_trigger_label('entry','what is your guess?:',ON_INPUT)};
+      echo('Too high.');
+      input_trigger_label('entry','what is your guess?:',ON_INPUT);
     }
     if (value == magic_number) {
-      if(evalRun){echo('you got it!');}
+      echo('you got it!');
     }
   }
 }
@@ -38,9 +38,8 @@ function guess(value) {
 function ON_STARTUP(){
   magic_number = mathRandomInt(1, 100);
   number_of_tries = 0;
-  if(evalRun){echo('computer: I have chosen a number from 1 to 100, you have 10 tries');}
-  if(evalRun){input_trigger_label('entry','what is your guess?:',ON_INPUT)};
-
+  echo('computer: I have chosen a number from 1 to 100, you have 10 tries');
+  input_trigger_label('entry','what is your guess?:',ON_INPUT);
 }
 function ON_INPUT(){
   if ((label) == 'entry') {

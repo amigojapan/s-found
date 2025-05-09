@@ -1,7 +1,7 @@
 <HTML>
     <HEAD>
             <meta charset="utf-8">
-            <title>s-found - A solid foundation for programming beginners.</title>    
+            <title>s-found 2 - a simplified way to make 2D games in code.</title>    
             <script type="text/javascript" src="js/2017_2_2/phaser.js"></script>
             <!--
             <script src="NeilFraser-JS-Interpreter-9c09d45/acorn_interpreter.js"></script>
@@ -1827,6 +1827,7 @@
                 function parseCode() {
                   // Generate JavaScript code and parse it.
                   //Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+                  /*
                   Blockly.JavaScript.addReservedWords('highlightBlock');
                   var code = Blockly.JavaScript.workspaceToCode(workspace);
                   var xml = Blockly.Xml.workspaceToDom(workspace);
@@ -1839,6 +1840,7 @@
                   highlightPause = false;
                   //workspace.traceOn(true);
                   workspace.highlightBlock(null);
+                  */
                 }
                 
                 //var generation_complete=false;
@@ -1852,21 +1854,21 @@
                         var xml_text = Blockly.Xml.domToPrettyText(xml);
                         */				
                         for(var pageindex in project.pages){
-                            Code=Code+"\n\n//"+project.pages[pageindex].pagename+"\n\n"
-                            workspace_hidden.clear();
-                            if(project.pages[pageindex].xml=="uninitialized xml") {
-                                return;
-                            }
-                            var xml = Blockly.Xml.textToDom(project.pages[pageindex].xml);
+                            //Code=Code+"\n\n//"+project.pages[pageindex].pagename+"\n\n"
+                            //workspace_hidden.clear();
+                            //if(project.pages[pageindex].xml=="uninitialized xml") {
+                            //    return;
+                            //}
+                            //var xml = Blockly.Xml.textToDom(project.pages[pageindex].xml);
                             //Blockly.Xml.domToWorkspace(workspace_hidden, xml);	
-                            Blockly.Xml.domToWorkspace(xml,workspace_hidden);	
+                            //Blockly.Xml.domToWorkspace(xml,workspace_hidden);	
                             //gegerate
                             if(add_highlighting) {
-                                Blockly.JavaScript.addReservedWords('highlightBlock');
+                                //Blockly.JavaScript.addReservedWords('highlightBlock');
                                 //Blockly.JavaScript.STATEMENT_PREFIX = '';
                                 //Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
                             }
-                            Code = Code + Blockly.JavaScript.workspaceToCode(workspace_hidden);
+                            //Code = Code + Blockly.JavaScript.workspaceToCode(workspace_hidden);
                         }
                         
                         //document.getElementById("code_text_area").value = Code;
@@ -1881,7 +1883,17 @@
                 }
                 var id;
                 var evalRun=false;
-              function evalCode() {
+
+                function showTermL(){
+                    showTerm=true;
+                    document.getElementById("termDiv").style.display=showTerm?"block":"none";
+                }
+                function hideTerm(){
+                    showTerm=false;
+                    document.getElementById("termDiv").style.display=showTerm?"block":"none";
+                }
+
+                function evalCode() {
                     //update_workspace_code_in_projet();
                     //terminal
                     number_of_inputs=0;
@@ -1953,7 +1965,13 @@
                     set_all_fames_to_first_frame();
                     //eval(finalCode);
                     //alert(finalCode);
-                    eval.call(window,finalCode);
+                    try{
+                        eval.call(window,finalCode);
+                    }catch(e){
+                        showTermL()
+                        echo("Error, exceptions caughht:\n"+e)
+                    }
+                    
                     //myInterpreter = new Interpreter(finalCode, initApi);
                     
                     //var execution_speed =document.getElementById('execution_speed').value;
@@ -2048,8 +2066,9 @@
                     project.block_xml = xml_text;
                     */
                     //update_workspace_code_in_projet();
+                    project.JScode= editor.getValue();
                     var project_json = JSON.stringify(project);
-                    var project_name=prompt("Enter project name","GAME.s-found");
+                    var project_name=prompt("Enter project name","GAME.s-found2");
                     download(project_name,project_json);
                 }
             
@@ -2078,13 +2097,13 @@
                           window.clearInterval(id);
                       }
                       //Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
-                      Blockly.JavaScript.addReservedWords('highlightBlock');
-                      var code = Blockly.JavaScript.workspaceToCode(workspace);
-                      myInterpreter = new Interpreter(code, initApi);
-                      highlightPause = false;
+                      //Blockly.JavaScript.addReservedWords('highlightBlock');
+                      //var code = Blockly.JavaScript.workspaceToCode(workspace);
+                      //myInterpreter = new Interpreter(code, initApi);
+                      //highlightPause = false;
                       //workspace.traceOn(true);
-                      workspace.highlightBlock(null);
-                      evalRun=false;
+                      //workspace.highlightBlock(null);
+                      //evalRun=false;
                       unblockKeys();
                 }
                 function unblockKeys() {
@@ -4345,11 +4364,12 @@
                             loader.onLoadComplete.addOnce(onLoaded2);
                             loader.start();
                         }
-                        
-                        Blockly.mainWorkspace.clear();
-                        var xml = Blockly.Xml.textToDom(project.pages[0].xml);
+                        //**add loading js code
+                        editor.setValue(project.JScode)
+                        //Blockly.mainWorkspace.clear();
+                        //var xml = Blockly.Xml.textToDom(project.pages[0].xml);
                         //Blockly.Xml.domToWorkspace(workspace, xml);
-                        Blockly.Xml.domToWorkspace(xml,workspace);
+                        //Blockly.Xml.domToWorkspace(xml,workspace);
                 }
                 document.getElementById("files_project_upload").onchange = function () {
                     var reader = new FileReader();
