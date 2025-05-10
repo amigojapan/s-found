@@ -4419,12 +4419,15 @@
                     };
                     xhr.send(null);
 
-                    //hideIDE here if project needs to be running in publish mode
-                    document.getElementById("arcade-banner").style.display="none";
-                    document.getElementById("toolbar").style.display="none";
-                    document.getElementById("arcade-border-left").style.display="none";
-                    document.getElementById("arcade-border-right").style.display="none";
-                    document.getElementById("controls menu").style.display="none";
+                    if(RunCode) {
+                        //hideIDE here if project needs to be running in publish mode
+                        document.getElementById("arcade-banner").style.display="none";
+                        document.getElementById("toolbar").style.display="none";
+                        document.getElementById("arcade-border-left").style.display="none";
+                        document.getElementById("arcade-border-right").style.display="none";
+                        document.getElementById("controls menu").style.display="none";
+                        //will need to add option to add screen controls
+                    }
                     //*[@id="arcade-border-left"]
                     //alert("project_json:"+project_json);
                     /*
